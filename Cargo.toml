@@ -1,0 +1,6 @@
+[package]
+name = "img2h3m"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
