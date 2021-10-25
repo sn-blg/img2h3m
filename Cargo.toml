@@ -1,6 +1,16 @@
 [package]
 name = "img2h3m"
 version = "0.1.0"
+authors = ["sn-blg"]
 edition = "2021"
+description = "CLI utility for converting image to homm3 mini map"
+license = "MIT"
 
 [dependencies]
+clap = "2.33.3"
+
+[profile.release]
+opt-level = 'z'  # Optimize for size
+lto = true
+codegen-units = 1
+panic = 'abort'
