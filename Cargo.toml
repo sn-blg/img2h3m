@@ -8,6 +8,7 @@ license = "MIT"
 
 [dependencies]
 clap = "2.33.3"
+libflate = "1.1.1"
 
 [profile.release]
 opt-level = 'z'  # Optimize for size
