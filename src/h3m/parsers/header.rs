@@ -1,27 +1,8 @@
 use crate::h3m::enums::*;
+use crate::h3m::parsers::common::*;
 use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, LE};
-use std::io::{Cursor, Read, Seek, SeekFrom};
-
-fn skip_bytes<RS: Read + Seek>(input: &mut RS, count: u32) -> H3mResult<()> {
-    input.seek(SeekFrom::Current(count as i64))?;
-    Ok(())
-}
-
-fn read_bool<R: Read>(input: &mut R) -> H3mResult<bool> {
-    let value = input.read_u8()?;
-    match value {
-        0x00 => Ok(false),
-        0x01 => Ok(true),
-        _ => Err(H3mError::ParseError),
-    }
-}
-
-fn skip_string<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
-    let size = input.read_u32::<LE>()?;
-    skip_bytes(input, size)?;
-    Ok(())
-}
+use std::io::{Read, Seek};
 
 fn read_version<R: Read>(input: &mut R) -> H3mResult<Version> {
     let version = input.read_u32::<LE>()?;
@@ -56,19 +37,19 @@ fn skip_hota_additional_header_data<RS: Read + Seek>(input: &mut RS) -> H3mResul
     Ok(())
 }
 
-struct H3mHeaderInfo {
-    map_size: Size,
-    has_underground: bool,
+pub struct H3mHeaderInfo {
+    pub map_size: Size,
+    pub has_underground: bool,
 }
 
-fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> {
+pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> {
     let version = read_version(input)?;
     if version != Version::HotA {
         return Err(H3mError::ParseError);
     }
 
     skip_hota_additional_header_data(input)?;
-    skip_bytes(input, 1)?; // players_existence
+    skip_bool(input)?; // players_existence
 
     let map_size = read_size(input)?;
     let has_underground = read_bool(input)?;
@@ -79,21 +60,5 @@ fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> {
     Ok(H3mHeaderInfo {
         map_size,
         has_underground,
-    })
-}
-
-pub struct H3mInfo {
-    pub map_size: Size,
-    pub has_underground: bool,
-}
-
-pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
-    let mut raw_map = Cursor::new(raw_map);
-
-    let header_info = read_header(&mut raw_map)?;
-
-    Ok(H3mInfo {
-        map_size: header_info.map_size,
-        has_underground: header_info.has_underground,
     })
 }
