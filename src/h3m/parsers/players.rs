@@ -4,21 +4,15 @@ use byteorder::{ReadBytesExt, LE};
 use std::io::{Read, Seek};
 
 fn skip_hero<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
-    println!("-hero-");
     skip_bytes(input, 1)?;
-    let name = read_string(input)?;
-    println!("name = {}", name);
+    skip_string(input)?;
     Ok(())
 }
 
 fn skip_player<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
     skip_bytes(input, 7)?;
 
-    println!("--------------------");
-
     let has_main_town = read_bool(input)?;
-    println!("has_main_town: {}", has_main_town);
-
     if has_main_town {
         skip_bytes(input, 5)?;
     }
