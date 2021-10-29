@@ -57,6 +57,9 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
     skip_string(input)?; // map name
     skip_string(input)?; // map description
 
+    skip_bytes(input, 1)?; // map difficulty
+    skip_bytes(input, 1)?; // level cap
+
     Ok(H3mHeaderInfo {
         map_size,
         has_underground,
