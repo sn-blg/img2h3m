@@ -57,7 +57,7 @@ pub fn skip_victory_condition<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> 
         VictoryCondition::FlagAllDwellings => 2,
         VictoryCondition::FlagAllMines => 2,
         VictoryCondition::TransportArtifact => 6,
-        VictoryCondition::DefeatAllMonsters=> 2,
+        VictoryCondition::DefeatAllMonsters => 2,
         VictoryCondition::SurviveCertainTime => 6,
     };
 

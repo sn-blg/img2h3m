@@ -4,12 +4,14 @@ use byteorder::{ReadBytesExt, LE};
 use common::*;
 use conditions::*;
 use header::*;
+use hero_settings::*;
 use players::*;
 use std::io::{Cursor, Read, Seek};
 
 mod common;
 mod conditions;
 mod header;
+mod hero_settings;
 mod players;
 
 fn skip_teams<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
@@ -22,7 +24,7 @@ fn skip_teams<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 }
 
 fn skip_available_heroes<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
-    skip_bytes(input, 31)?;
+    skip_bytes(input, 31)?; // todo: 31 - use count of all heroes: see B3 00 00-00
 
     let custom_heroes_count = input.read_u8()?;
     for _ in 0..custom_heroes_count {
@@ -48,6 +50,7 @@ fn skip_rumors<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 pub struct H3mInfo {
     pub map_size: Size,
     pub has_underground: bool,
+    pub land_offset: u64,
 }
 
 pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
@@ -68,8 +71,13 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
 
     skip_rumors(&mut raw_map)?;
 
+    skip_hero_settings(&mut raw_map)?;
+
+    let land_offset = raw_map.position();
+
     Ok(H3mInfo {
         map_size: header_info.map_size,
         has_underground: header_info.has_underground,
+        land_offset,
     })
 }

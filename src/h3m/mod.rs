@@ -35,4 +35,8 @@ impl H3m {
     pub fn size(&self) -> Size {
         self.info.map_size
     }
+
+    pub fn land_offset(&self) -> u64 {
+        self.info.land_offset
+    }
 }
