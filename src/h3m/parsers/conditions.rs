@@ -16,6 +16,8 @@ enum VictoryCondition {
     FlagAllDwellings,
     FlagAllMines,
     TransportArtifact,
+    DefeatAllMonsters,
+    SurviveCertainTime,
 }
 
 fn read_victory_condition<R: Read>(input: &mut R) -> H3mResult<VictoryCondition> {
@@ -33,6 +35,8 @@ fn read_victory_condition<R: Read>(input: &mut R) -> H3mResult<VictoryCondition>
         0x08 => Ok(VictoryCondition::FlagAllDwellings),
         0x09 => Ok(VictoryCondition::FlagAllMines),
         0x0A => Ok(VictoryCondition::TransportArtifact),
+        0x0B => Ok(VictoryCondition::DefeatAllMonsters),
+        0x0C => Ok(VictoryCondition::SurviveCertainTime),
         _ => Err(H3mError::ParseError),
     }
 }
@@ -53,6 +57,8 @@ pub fn skip_victory_condition<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> 
         VictoryCondition::FlagAllDwellings => 2,
         VictoryCondition::FlagAllMines => 2,
         VictoryCondition::TransportArtifact => 6,
+        VictoryCondition::DefeatAllMonsters=> 2,
+        VictoryCondition::SurviveCertainTime => 6,
     };
 
     skip_bytes(input, bytes_to_skip)?;
@@ -68,8 +74,8 @@ enum LossCondition {
 }
 
 fn read_loss_condition<R: Read>(input: &mut R) -> H3mResult<LossCondition> {
-    let victory_condition = input.read_u8()?;
-    match victory_condition {
+    let loss_condition = input.read_u8()?;
+    match loss_condition {
         0xFF => Ok(LossCondition::Default),
         0x00 => Ok(LossCondition::LoseTown),
         0x01 => Ok(LossCondition::LoseHero),
