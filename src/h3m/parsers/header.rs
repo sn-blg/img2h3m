@@ -31,12 +31,6 @@ fn read_size<R: Read>(input: &mut R) -> H3mResult<Size> {
     }
 }
 
-fn skip_hota_additional_header_data<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
-    let size = input.read_u32::<LE>()?;
-    skip_bytes(input, size * 2)?;
-    Ok(())
-}
-
 pub struct H3mHeaderInfo {
     pub map_size: Size,
     pub has_underground: bool,
@@ -48,7 +42,13 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
         return Err(H3mError::ParseError);
     }
 
-    skip_hota_additional_header_data(input)?;
+    let hota_additional_header_data_size = input.read_u32::<LE>()?;
+    if hota_additional_header_data_size != 3 {
+        return Err(H3mError::ParseError);
+    }
+
+    skip_bytes(input, hota_additional_header_data_size * 2)?;
+
     skip_bool(input)?; // players_existence
 
     let map_size = read_size(input)?;

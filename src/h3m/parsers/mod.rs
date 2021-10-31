@@ -24,7 +24,12 @@ fn skip_teams<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 }
 
 fn skip_available_heroes<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
-    skip_bytes(input, 31)?; // todo: 31 - use count of all heroes: see B3 00 00-00
+    let heroes_count = input.read_u32::<LE>()?;
+    let heroes_bitmask_size_in_bytes = (heroes_count as f64 / 8.0).ceil() as u32;
+
+    skip_bytes(input, heroes_bitmask_size_in_bytes)?;
+
+    skip_bytes(input, 4)?; // empty
 
     let custom_heroes_count = input.read_u8()?;
     for _ in 0..custom_heroes_count {
@@ -67,7 +72,8 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
 
     skip_available_heroes(&mut raw_map)?;
 
-    skip_bytes(&mut raw_map, 83)?; // banned artifacts, spells, skills (?)
+    skip_bytes(&mut raw_map, 31)?; // 31 bytes filled with 00
+    skip_bytes(&mut raw_map, 52)?; // banned artifacts, spells, skills (?)
 
     skip_rumors(&mut raw_map)?;
 
