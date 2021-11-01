@@ -10,6 +10,7 @@ license = "MIT"
 clap = "2.33.3"
 libflate = "1.1.1"
 byteorder = "1.4.3"
+rand = "0.8.4"
 
 [profile.release]
 opt-level = 'z'  # Optimize for size

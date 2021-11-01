@@ -55,7 +55,7 @@ fn skip_rumors<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 pub struct H3mInfo {
     pub map_size: Size,
     pub has_underground: bool,
-    pub land_offset: u64,
+    pub land_offset: usize,
 }
 
 pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
@@ -84,6 +84,6 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
     Ok(H3mInfo {
         map_size: header_info.map_size,
         has_underground: header_info.has_underground,
-        land_offset,
+        land_offset: usize::try_from(land_offset).or(Err(H3mError::ParseError))?,
     })
 }
