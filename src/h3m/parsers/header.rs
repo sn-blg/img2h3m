@@ -1,8 +1,27 @@
-use crate::h3m::enums::*;
 use crate::h3m::parsers::common::*;
 use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, LE};
 use std::io::{Read, Seek};
+
+pub enum Size {
+    S = 36,
+    M = 72,
+    L = 108,
+    XL = 144,
+    H = 180,
+    XH = 216,
+    G = 252,
+}
+
+#[derive(PartialEq)]
+enum Version {
+    RoE,
+    AB,
+    SoD,
+    Chr,
+    WoG,
+    HotA,
+}
 
 fn read_version<R: Read>(input: &mut R) -> H3mResult<Version> {
     let version = input.read_u32::<LE>()?;

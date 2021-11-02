@@ -1,4 +1,3 @@
-use crate::h3m::enums::*;
 use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, LE};
 use common::*;
@@ -53,7 +52,7 @@ fn skip_rumors<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 }
 
 pub struct H3mInfo {
-    pub map_size: Size,
+    pub map_size: usize,
     pub has_underground: bool,
     pub land_offset: usize,
 }
@@ -82,7 +81,7 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
     let land_offset = raw_map.position();
 
     Ok(H3mInfo {
-        map_size: header_info.map_size,
+        map_size: header_info.map_size as usize,
         has_underground: header_info.has_underground,
         land_offset: usize::try_from(land_offset).or(Err(H3mError::ParseError))?,
     })

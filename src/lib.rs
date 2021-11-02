@@ -50,13 +50,13 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut h3m = H3m::load(input_map_file)?;
 
     let img = ImageReader::open(&config.image_path)?.decode()?.into_rgb8();
-    let map_size = h3m.size() as usize;
+    let map_size = h3m.size();
     let palette = make_palette();
 
     for (row_id, row) in img.rows().take(map_size).enumerate() {
         for (column_id, pixel) in row.take(map_size).enumerate() {
             let surface = nearest_surface(pixel, &palette);
-            h3m.set_land(row_id, column_id, surface)?;
+            h3m.set_surface(row_id, column_id, config.underground, surface)?;
         }
     }
 

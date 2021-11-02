@@ -1,11 +1,9 @@
-pub use enums::Size;
 use libflate::gzip::{Decoder, Encoder};
 use parsers::*;
 use rand::Rng;
 use result::*;
 use std::io::{self, Read, Write};
 
-mod enums;
 mod parsers;
 pub mod result;
 
@@ -85,19 +83,31 @@ impl H3m {
         Ok(())
     }
 
-    pub fn size(&self) -> Size {
+    pub fn size(&self) -> usize {
         self.info.map_size
     }
 
-    pub fn set_land_by_index(&mut self, index: usize, surface: Surface) -> H3mResult<()> {
-        if index >= self.land_length() {
+    pub fn set_surface_by_index(
+        &mut self,
+        index: usize,
+        underground: bool,
+        surface: Surface,
+    ) -> H3mResult<()> {
+        const SURFACE_CELL_SIZE: usize = 7;
+
+        let land_length = self.size() * self.size();
+
+        if index >= land_length {
             return Err(H3mError::InvalidArgument);
         }
 
-        let surface_cell_offset = self.land_offset() + index * 7;
+        let surface_cell_offset = self.info.land_offset
+            + (if underground { land_length } else { 0 } + index) * SURFACE_CELL_SIZE;
+
         let surface_picture_type = self.surface_picture_type(surface);
 
-        let surface_cell = &mut self.raw_map[surface_cell_offset..surface_cell_offset + 7];
+        let surface_cell =
+            &mut self.raw_map[surface_cell_offset..surface_cell_offset + SURFACE_CELL_SIZE];
 
         surface_cell[0] = surface.code();
         surface_cell[1] = surface_picture_type;
@@ -105,18 +115,14 @@ impl H3m {
         Ok(())
     }
 
-    pub fn set_land(&mut self, row: usize, column: usize, surface: Surface) -> H3mResult<()> {
-        let map_size = self.info.map_size as usize;
-        self.set_land_by_index(row * map_size + column, surface)
-    }
-
-    fn land_length(&self) -> usize {
-        let map_size = self.info.map_size as usize;
-        map_size * map_size
-    }
-
-    fn land_offset(&self) -> usize {
-        self.info.land_offset
+    pub fn set_surface(
+        &mut self,
+        row: usize,
+        column: usize,
+        underground: bool,
+        surface: Surface,
+    ) -> H3mResult<()> {
+        self.set_surface_by_index(row * self.size() + column, underground, surface)
     }
 
     fn surface_picture_type(&self, surface: Surface) -> u8 {

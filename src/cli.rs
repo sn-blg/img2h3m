@@ -22,15 +22,15 @@ pub fn get_config() -> Config {
                 .required(true),
         )
         .arg(
-            Arg::with_name("subterranean")
-                .short("s")
-                .help("Update subterranean map if sets"),
+            Arg::with_name("underground")
+                .short("u")
+                .help("Update underground map if sets"),
         )
         .get_matches();
 
     Config {
         image_path: matches.value_of("image").unwrap().to_string(),
         map_path: matches.value_of("map").unwrap().to_string(),
-        subterranean: matches.is_present("subterranean"),
+        underground: matches.is_present("underground"),
     }
 }
