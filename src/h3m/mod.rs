@@ -26,7 +26,7 @@ pub enum Surface {
 }
 
 impl Surface {
-    fn to_code(&self) -> u8 {
+    fn code(&self) -> u8 {
         match self {
             Surface::Dirt => 0,
             Surface::Sand => 1,
@@ -40,6 +40,23 @@ impl Surface {
             Surface::Wasteland => 11,
             Surface::Water => 8,
             Surface::Rock => 9,
+        }
+    }
+
+    pub fn rgb_color(&self) -> (u8, u8, u8) {
+        match self {
+            Surface::Dirt => (0x52, 0x39, 0x08),
+            Surface::Sand => (0xDE, 0xCE, 0x8C),
+            Surface::Grass => (0x00, 0x42, 0x00),
+            Surface::Snow => (0xB5, 0xC6, 0xC6),
+            Surface::Swamp => (0x4A, 0x84, 0x6B),
+            Surface::Rough => (0x84, 0x73, 0x31),
+            Surface::Subterranean => (0x84, 0x31, 0x00),
+            Surface::Lava => (0x4A, 0x4A, 0x4A),
+            Surface::Highland => (0x29, 0x73, 0x18),
+            Surface::Wasteland => (0xBD, 0x5A, 0x08),
+            Surface::Water => (0x08, 0x52, 0x94),
+            Surface::Rock => (0x00, 0x00, 0x00),
         }
     }
 }
@@ -72,7 +89,7 @@ impl H3m {
         self.info.map_size
     }
 
-    pub fn set_land(&mut self, index: usize, surface: Surface) -> H3mResult<()> {
+    pub fn set_land_by_index(&mut self, index: usize, surface: Surface) -> H3mResult<()> {
         if index >= self.land_length() {
             return Err(H3mError::InvalidArgument);
         }
@@ -82,10 +99,15 @@ impl H3m {
 
         let surface_cell = &mut self.raw_map[surface_cell_offset..surface_cell_offset + 7];
 
-        surface_cell[0] = surface.to_code();
+        surface_cell[0] = surface.code();
         surface_cell[1] = surface_picture_type;
 
         Ok(())
+    }
+
+    pub fn set_land(&mut self, row: usize, column: usize, surface: Surface) -> H3mResult<()> {
+        let map_size = self.info.map_size as usize;
+        self.set_land_by_index(row * map_size + column, surface)
     }
 
     fn land_length(&self) -> usize {
