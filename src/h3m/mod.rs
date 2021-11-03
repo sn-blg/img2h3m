@@ -83,7 +83,7 @@ impl H3m {
         Ok(())
     }
 
-    pub fn size(&self) -> usize {
+    pub fn map_size(&self) -> usize {
         self.info.map_size
     }
 
@@ -95,7 +95,7 @@ impl H3m {
     ) -> H3mResult<()> {
         const SURFACE_CELL_SIZE: usize = 7;
 
-        let land_length = self.size() * self.size();
+        let land_length = self.map_size() * self.map_size();
 
         if index >= land_length {
             return Err(H3mError::InvalidArgument);
@@ -122,7 +122,7 @@ impl H3m {
         underground: bool,
         surface: Surface,
     ) -> H3mResult<()> {
-        self.set_surface_by_index(row * self.size() + column, underground, surface)
+        self.set_surface_by_index(row * self.map_size() + column, underground, surface)
     }
 
     fn surface_picture_type(&self, surface: Surface) -> u8 {

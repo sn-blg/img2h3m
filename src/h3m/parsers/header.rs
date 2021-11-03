@@ -3,16 +3,6 @@ use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, LE};
 use std::io::{Read, Seek};
 
-pub enum Size {
-    S = 36,
-    M = 72,
-    L = 108,
-    XL = 144,
-    H = 180,
-    XH = 216,
-    G = 252,
-}
-
 #[derive(PartialEq)]
 enum Version {
     RoE,
@@ -36,22 +26,13 @@ fn read_version<R: Read>(input: &mut R) -> H3mResult<Version> {
     }
 }
 
-fn read_size<R: Read>(input: &mut R) -> H3mResult<Size> {
+fn read_size<R: Read>(input: &mut R) -> H3mResult<usize> {
     let size = input.read_u32::<LE>()?;
-    match size {
-        36 => Ok(Size::S),
-        72 => Ok(Size::M),
-        108 => Ok(Size::L),
-        144 => Ok(Size::XL),
-        180 => Ok(Size::H),
-        216 => Ok(Size::XH),
-        252 => Ok(Size::G),
-        _ => Err(H3mError::ParseError),
-    }
+    usize::try_from(size).or(Err(H3mError::ParseError))
 }
 
 pub struct H3mHeaderInfo {
-    pub map_size: Size,
+    pub map_size: usize,
     pub has_underground: bool,
 }
 

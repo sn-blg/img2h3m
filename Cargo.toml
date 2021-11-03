@@ -1,9 +1,9 @@
 [package]
 name = "img2h3m"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["sn-blg"]
 edition = "2021"
-description = "CLI utility for converting image to homm3 mini map"
+description = "CLI utility for converting image to homm3 HotA minimap"
 license = "MIT"
 
 [dependencies]

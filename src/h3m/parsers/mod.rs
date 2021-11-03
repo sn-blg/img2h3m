@@ -81,7 +81,7 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
     let land_offset = raw_map.position();
 
     Ok(H3mInfo {
-        map_size: header_info.map_size as usize,
+        map_size: header_info.map_size,
         has_underground: header_info.has_underground,
         land_offset: usize::try_from(land_offset).or(Err(H3mError::ParseError))?,
     })

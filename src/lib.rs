@@ -50,7 +50,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut h3m = H3m::load(input_map_file)?;
 
     let img = ImageReader::open(&config.image_path)?.decode()?.into_rgb8();
-    let map_size = h3m.size();
+    let map_size = h3m.map_size();
     let palette = make_palette();
 
     for (row_id, row) in img.rows().take(map_size).enumerate() {
