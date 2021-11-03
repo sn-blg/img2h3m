@@ -101,6 +101,10 @@ impl H3m {
             return Err(H3mError::InvalidArgument);
         }
 
+        if underground && !self.info.has_underground {
+            return Err(H3mError::InvalidArgument);
+        }
+
         let surface_cell_offset = self.info.land_offset
             + (if underground { land_length } else { 0 } + index) * SURFACE_CELL_SIZE;
 
