@@ -55,7 +55,7 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
     if hota_additional_header_data_size != 3 {
         return Err(H3mError::Parsing(ParsingError::new(
             input.stream_position()?,
-            format!("Unsupported h3m map HotA sub-version."),
+            "Unsupported h3m map HotA sub-version.",
         )));
     }
 
