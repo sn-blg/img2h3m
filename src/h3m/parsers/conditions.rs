@@ -20,7 +20,7 @@ enum VictoryCondition {
     SurviveCertainTime,
 }
 
-fn read_victory_condition<R: Read>(input: &mut R) -> H3mResult<VictoryCondition> {
+fn read_victory_condition<RS: Read + Seek>(input: &mut RS) -> H3mResult<VictoryCondition> {
     let victory_condition = input.read_u8()?;
     match victory_condition {
         0xFF => Ok(VictoryCondition::Default),
@@ -37,7 +37,10 @@ fn read_victory_condition<R: Read>(input: &mut R) -> H3mResult<VictoryCondition>
         0x0A => Ok(VictoryCondition::TransportArtifact),
         0x0B => Ok(VictoryCondition::DefeatAllMonsters),
         0x0C => Ok(VictoryCondition::SurviveCertainTime),
-        _ => Err(H3mError::ParseError),
+        other => Err(H3mError::Parsing(ParsingError::new(
+            input.stream_position()?,
+            format!("Unexpected victory condition value 0x{:02x}.", other),
+        ))),
     }
 }
 
@@ -73,14 +76,17 @@ enum LossCondition {
     TimeExpires,
 }
 
-fn read_loss_condition<R: Read>(input: &mut R) -> H3mResult<LossCondition> {
+fn read_loss_condition<RS: Read + Seek>(input: &mut RS) -> H3mResult<LossCondition> {
     let loss_condition = input.read_u8()?;
     match loss_condition {
         0xFF => Ok(LossCondition::Default),
         0x00 => Ok(LossCondition::LoseTown),
         0x01 => Ok(LossCondition::LoseHero),
         0x02 => Ok(LossCondition::TimeExpires),
-        _ => Err(H3mError::ParseError),
+        other => Err(H3mError::Parsing(ParsingError::new(
+            input.stream_position()?,
+            format!("Unexpected loss condition value 0x{:02x}.", other),
+        ))),
     }
 }
 

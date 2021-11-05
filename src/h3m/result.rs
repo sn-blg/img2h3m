@@ -6,16 +6,22 @@ pub type H3mResult<T> = Result<T, H3mError>;
 
 #[derive(Debug)]
 pub enum H3mError {
-    ParseError,
-    InvalidArgument,
+    Parsing(ParsingError),
+    Parameter(ParameterError),
     IoError(io::Error),
 }
 
 impl fmt::Display for H3mError {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            H3mError::ParseError => write!(fmt, "parse error"),
-            H3mError::InvalidArgument => write!(fmt, "invalid argument"),
+            H3mError::Parsing(e) => write!(
+                fmt,
+                "H3m file parsing error. {} Position: {}.",
+                e.msg, e.position
+            ),
+
+            H3mError::Parameter(e) => write!(fmt, "Invalid parameter error. {}", e.msg),
+
             H3mError::IoError(e) => fmt::Display::fmt(e, fmt),
         }
     }
@@ -24,13 +30,29 @@ impl fmt::Display for H3mError {
 impl Error for H3mError {}
 
 #[derive(Debug)]
-pub struct DecodingError {
-    underlying: Option<Box<dyn Error + Send + Sync>>,
+pub struct ParsingError {
+    position: u64,
+    msg: String,
+}
+
+impl ParsingError {
+    pub fn new(position: u64, msg: impl Into<String>) -> ParsingError {
+        ParsingError {
+            position,
+            msg: msg.into(),
+        }
+    }
 }
 
 #[derive(Debug)]
-pub struct EncodingError {
-    underlying: Option<Box<dyn Error + Send + Sync>>,
+pub struct ParameterError {
+    msg: String,
+}
+
+impl ParameterError {
+    pub fn new(msg: impl Into<String>) -> ParameterError {
+        ParameterError { msg: msg.into() }
+    }
 }
 
 impl From<io::Error> for H3mError {

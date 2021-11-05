@@ -7,12 +7,15 @@ pub fn skip_bytes<S: Seek>(input: &mut S, count: u32) -> H3mResult<()> {
     Ok(())
 }
 
-pub fn read_bool<R: Read>(input: &mut R) -> H3mResult<bool> {
+pub fn read_bool<RS: Read + Seek>(input: &mut RS) -> H3mResult<bool> {
     let value = input.read_u8()?;
     match value {
         0x00 => Ok(false),
         0x01 => Ok(true),
-        _ => Err(H3mError::ParseError),
+        other => Err(H3mError::Parsing(ParsingError::new(
+            input.stream_position()?,
+            format!("Invalid bool value 0x{:02x}.", other),
+        ))),
     }
 }
 
