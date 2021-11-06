@@ -58,8 +58,8 @@ impl Surface {
         }
     }
 
-    pub fn is_special(&self) -> bool {
-        matches!(*self, Surface::Water | Surface::Rock)
+    pub fn is_ground(&self) -> bool {
+        !matches!(*self, Surface::Water | Surface::Rock)
     }
 }
 

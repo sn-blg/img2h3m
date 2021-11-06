@@ -17,5 +17,4 @@ delta_e = "0.2.1"
 [profile.release]
 opt-level = 'z'  # Optimize for size
 lto = true
-codegen-units = 1
 panic = 'abort'
