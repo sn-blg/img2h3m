@@ -17,11 +17,10 @@ impl Palettes {
         };
 
         let mut add_surface = |surface: Surface| {
-            let color = surface.rgb_color();
-            palettes.all.push((surface, [color.0, color.1, color.2]));
+            palettes.all.push((surface, surface.rgb_color()));
 
             if surface.is_ground() {
-                palettes.ground.push((surface, [color.0, color.1, color.2]));
+                palettes.ground.push((surface, surface.rgb_color()));
             }
         };
 

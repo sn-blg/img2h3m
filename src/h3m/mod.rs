@@ -41,20 +41,20 @@ impl Surface {
         }
     }
 
-    pub fn rgb_color(&self) -> (u8, u8, u8) {
+    pub fn rgb_color(&self) -> [u8; 3] {
         match *self {
-            Surface::Dirt => (0x52, 0x39, 0x08),
-            Surface::Sand => (0xDE, 0xCE, 0x8C),
-            Surface::Grass => (0x00, 0x42, 0x00),
-            Surface::Snow => (0xB5, 0xC6, 0xC6),
-            Surface::Swamp => (0x4A, 0x84, 0x6B),
-            Surface::Rough => (0x84, 0x73, 0x31),
-            Surface::Subterranean => (0x84, 0x31, 0x00),
-            Surface::Lava => (0x4A, 0x4A, 0x4A),
-            Surface::Highland => (0x29, 0x73, 0x18),
-            Surface::Wasteland => (0xBD, 0x5A, 0x08),
-            Surface::Water => (0x08, 0x52, 0x94),
-            Surface::Rock => (0x00, 0x00, 0x00),
+            Surface::Dirt => [0x52, 0x39, 0x08],
+            Surface::Sand => [0xDE, 0xCE, 0x8C],
+            Surface::Grass => [0x00, 0x42, 0x00],
+            Surface::Snow => [0xB5, 0xC6, 0xC6],
+            Surface::Swamp => [0x4A, 0x84, 0x6B],
+            Surface::Rough => [0x84, 0x73, 0x31],
+            Surface::Subterranean => [0x84, 0x31, 0x00],
+            Surface::Lava => [0x4A, 0x4A, 0x4A],
+            Surface::Highland => [0x29, 0x73, 0x18],
+            Surface::Wasteland => [0xBD, 0x5A, 0x08],
+            Surface::Water => [0x08, 0x52, 0x94],
+            Surface::Rock => [0x00, 0x00, 0x00],
         }
     }
 
@@ -128,14 +128,11 @@ impl H3m {
         Ok(())
     }
 
-    pub fn set_surface(
-        &mut self,
-        row: usize,
-        column: usize,
-        underground: bool,
-        surface: Surface,
-    ) -> H3mResult<()> {
-        self.set_surface_by_index(row * self.map_size() + column, underground, surface)
+    pub fn set_surfaces(&mut self, underground: bool, surfaces: &[Surface]) -> H3mResult<()> {
+        for (index, surface) in surfaces.iter().enumerate() {
+            self.set_surface_by_index(index, underground, *surface)?;
+        }
+        Ok(())
     }
 
     fn surface_picture_type(&self, surface: Surface) -> u8 {
