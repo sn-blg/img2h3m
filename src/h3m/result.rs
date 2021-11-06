@@ -12,7 +12,7 @@ pub enum H3mError {
 }
 
 impl fmt::Display for H3mError {
-    fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match self {
             H3mError::Parsing(e) => write!(
                 fmt,

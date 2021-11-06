@@ -25,7 +25,7 @@ pub enum Surface {
 
 impl Surface {
     fn code(&self) -> u8 {
-        match self {
+        match *self {
             Surface::Dirt => 0,
             Surface::Sand => 1,
             Surface::Grass => 2,
@@ -42,7 +42,7 @@ impl Surface {
     }
 
     pub fn rgb_color(&self) -> (u8, u8, u8) {
-        match self {
+        match *self {
             Surface::Dirt => (0x52, 0x39, 0x08),
             Surface::Sand => (0xDE, 0xCE, 0x8C),
             Surface::Grass => (0x00, 0x42, 0x00),
@@ -56,6 +56,10 @@ impl Surface {
             Surface::Water => (0x08, 0x52, 0x94),
             Surface::Rock => (0x00, 0x00, 0x00),
         }
+    }
+
+    pub fn is_special(&self) -> bool {
+        matches!(*self, Surface::Water | Surface::Rock)
     }
 }
 
