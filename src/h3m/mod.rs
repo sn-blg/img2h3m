@@ -128,13 +128,6 @@ impl H3m {
         Ok(())
     }
 
-    pub fn set_surfaces(&mut self, underground: bool, surfaces: &[Surface]) -> H3mResult<()> {
-        for (index, surface) in surfaces.iter().enumerate() {
-            self.set_surface_by_index(index, underground, *surface)?;
-        }
-        Ok(())
-    }
-
     fn surface_picture_type(&self, surface: Surface) -> u8 {
         let range = match surface {
             Surface::Dirt => 21..=44,

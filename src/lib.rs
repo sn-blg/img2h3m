@@ -24,18 +24,11 @@ impl MapPixel {
             original_color,
         }
     }
-
-    fn form_surface(surface: Surface) -> MapPixel {
-        MapPixel {
-            surface,
-            original_color: Rgb(surface.rgb_color()),
-        }
-    }
 }
 
 struct Map {
     size: usize,
-    pixels: Vec<MapPixel>,
+    pixels: Vec<Option<MapPixel>>,
     palettes: Palettes,
 }
 
@@ -43,7 +36,7 @@ impl Map {
     fn new(size: usize) -> Map {
         Map {
             size,
-            pixels: vec![MapPixel::form_surface(Surface::Rock); size * size],
+            pixels: vec![None; size * size],
             palettes: Palettes::new(),
         }
     }
@@ -53,12 +46,12 @@ impl Map {
         let surface = self.palettes.nearest_surface(&pixel, ground_only);
         let index = row * self.size + column;
 
-        self.pixels[index] = MapPixel::new(pixel, surface);
+        self.pixels[index] = Some(MapPixel::new(pixel, surface));
     }
 
     fn fix(&mut self) {
         let ground_only = true;
-        for pixel in self.pixels.iter_mut() {
+        for pixel in self.pixels.iter_mut().flatten() {
             if !pixel.surface.is_ground() {
                 pixel.surface = self
                     .palettes
@@ -67,8 +60,11 @@ impl Map {
         }
     }
 
-    fn into_surfaces(self) -> Vec<Surface> {
-        self.pixels.into_iter().map(|p| p.surface).collect()
+    fn into_surfaces(self) -> Vec<Option<Surface>> {
+        self.pixels
+            .into_iter()
+            .map(|p| p.map(|p| p.surface))
+            .collect()
     }
 }
 
@@ -90,7 +86,11 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
         map.fix();
     }
 
-    h3m.set_surfaces(config.underground, &map.into_surfaces())?;
+    for (index, surface) in map.into_surfaces().into_iter().enumerate() {
+        if let Some(surface) = surface {
+            h3m.set_surface_by_index(index, config.underground, surface)?;
+        }
+    }
 
     let output_map_file = File::create(&config.map_path)?;
     h3m.save(output_map_file)?;
