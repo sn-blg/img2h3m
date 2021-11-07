@@ -122,7 +122,6 @@ impl MapImage {
         if is_all_some_and_not_same(
             pixel,
             &[
-                self.try_get_pixel(row - 1, column - 1),
                 self.try_get_pixel(row - 1, column),
                 self.try_get_pixel(row, column - 1),
                 self.try_get_pixel(row + 1, column + 1),
@@ -137,7 +136,6 @@ impl MapImage {
                 self.try_get_pixel(row - 1, column - 1),
                 self.try_get_pixel(row + 1, column),
                 self.try_get_pixel(row, column + 1),
-                self.try_get_pixel(row + 1, column + 1),
             ],
         ) {
             return true;
@@ -146,7 +144,6 @@ impl MapImage {
         if is_all_some_and_not_same(
             pixel,
             &[
-                self.try_get_pixel(row + 1, column - 1),
                 self.try_get_pixel(row, column - 1),
                 self.try_get_pixel(row + 1, column),
                 self.try_get_pixel(row - 1, column + 1),
@@ -161,7 +158,6 @@ impl MapImage {
                 self.try_get_pixel(row + 1, column - 1),
                 self.try_get_pixel(row - 1, column),
                 self.try_get_pixel(row, column + 1),
-                self.try_get_pixel(row - 1, column + 1),
             ],
         ) {
             return true;
