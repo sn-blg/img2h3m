@@ -10,19 +10,26 @@ mod config;
 mod h3m;
 mod map_image;
 
-pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    let input_map_file = File::open(&config.map_path)?;
-    let mut h3m = H3m::load(input_map_file)?;
-
-    let img = ImageReader::open(&config.image_path)?.decode()?.into_rgb8();
-    let map_size = h3m.map_size();
+fn make_map_image(
+    map_size: usize,
+    image_path: impl Into<String>,
+) -> Result<MapImage, Box<dyn Error>> {
     let mut map_image = MapImage::new(map_size);
+    let img = ImageReader::open(image_path.into())?.decode()?.into_rgb8();
 
     for (row_id, row) in img.rows().take(map_size).enumerate() {
         for (column_id, pixel) in row.take(map_size).enumerate() {
             map_image.set_pixel(row_id, column_id, *pixel);
         }
     }
+    Ok(map_image)
+}
+
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let input_map_file = File::open(&config.map_path)?;
+    let mut h3m = H3m::load(input_map_file)?;
+
+    let mut map_image = make_map_image(h3m.map_size(), &config.image_path)?;
 
     if config.fix {
         map_image.fix();
