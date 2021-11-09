@@ -7,11 +7,11 @@ enum SurfaceRelation {
     Any,  // any neighborhood, including None
 }
 
-pub const PROBLEM_PATTERN_SIZE: usize = 9;
+const PROBLEM_PATTERN_SIZE: usize = 9;
 const TEST_SURFACE_INDEX: usize = 4;
 
 type ProblemPattern = [SurfaceRelation; PROBLEM_PATTERN_SIZE];
-pub type Neighborhood = [Option<Surface>; PROBLEM_PATTERN_SIZE];
+type Neighborhood = [Option<Surface>; PROBLEM_PATTERN_SIZE];
 
 fn is_surface_relation_matched(
     test_surface: Surface,

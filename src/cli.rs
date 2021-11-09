@@ -9,7 +9,7 @@ pub fn get_config() -> Config {
             Arg::with_name("image")
                 .short("i")
                 .long("img")
-                .help("Sets the path of input image file")
+                .help("Path of input image file")
                 .takes_value(true)
                 .required(true),
         )
@@ -17,19 +17,19 @@ pub fn get_config() -> Config {
             Arg::with_name("map")
                 .short("m")
                 .long("map")
-                .help("Sets the path of existing h3m file for update it's mini map")
+                .help("Path of existing h3m file for update it's minimap")
                 .takes_value(true)
                 .required(true),
         )
         .arg(
             Arg::with_name("underground")
                 .short("u")
-                .help("Update underground map if sets"),
+                .help("Update underground map"),
         )
         .arg(
             Arg::with_name("fix")
                 .short("f")
-                .help("fix errors in result map"),
+                .help("Fix errors in result map"),
         )
         .get_matches();
 
