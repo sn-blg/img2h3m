@@ -35,7 +35,10 @@ fn is_surface_relation_matched(
     }
 }
 
-fn is_pattern_matched(neighborhood: &Neighborhood, problem_pattern: &ProblemPattern) -> bool {
+fn is_problem_pattern_matched(
+    neighborhood: &Neighborhood,
+    problem_pattern: &ProblemPattern,
+) -> bool {
     let test_surface = neighborhood[TEST_SURFACE_INDEX].unwrap();
     for (neighbour, &relation) in neighborhood.iter().zip(problem_pattern) {
         if !is_surface_relation_matched(test_surface, neighbour, relation) {
@@ -46,52 +49,51 @@ fn is_pattern_matched(neighborhood: &Neighborhood, problem_pattern: &ProblemPatt
 }
 
 #[rustfmt::skip]
-fn surface_problem_patterns() -> Vec<ProblemPattern> {
-    use SurfaceRelation::*;
-    vec![
-        [
-            Any,  Any,  Any,
-            Diff, Same, Diff,
-            Any,  Any,  Any,
-        ],
-        [
-            Diff, Same, Any,
-            Same, Same, Same,
-            Any,  Same, Diff,
-        ],
-        [
-            Diff, Any,  Any,
-            Any,  Same, Diff,
-            Any,  Diff, Any,
-        ],
-/////////////////////////////////////////////////////////
-        [
-            Any,  Diff, Any,
-            Any,  Same, Any,
-            Any,  Diff, Any,
-        ],
-        [
-            Any,  Same, Diff,
-            Same, Same, Same,
-            Diff, Same, Any,
-        ],
-        [
-            Any,  Any,  Diff,
-            Diff, Same, Any,
-            Any,  Diff, Any,
-        ],
-        [
-            Any,  Diff, Any,
-            Any,  Same, Diff,
-            Diff, Any,  Any,
-        ],
-        [
-            Any,  Diff, Any,
-            Diff, Same, Any,
-            Any,  Any,  Diff,
-        ],
-/////////////////////////////////////////////////////////
+fn rotate_problem_pattern(problem_pattern: &ProblemPattern) -> ProblemPattern {
+    [
+        problem_pattern[6], problem_pattern[3],  problem_pattern[0],
+        problem_pattern[7], problem_pattern[4],  problem_pattern[1],
+        problem_pattern[8], problem_pattern[5],  problem_pattern[2],
     ]
+}
+
+fn add_problem_pattern(
+    mut problem_pattern: ProblemPattern,
+    rotation_count: usize,
+    problem_patterns: &mut Vec<ProblemPattern>,
+) {
+    problem_patterns.push(problem_pattern);
+    for _ in 0..rotation_count {
+        problem_pattern = rotate_problem_pattern(&problem_pattern);
+        problem_patterns.push(problem_pattern);
+    }
+}
+
+#[rustfmt::skip]
+fn problem_patterns() -> Vec<ProblemPattern> {
+    use SurfaceRelation::*;
+
+    let mut problem_patterns = Vec::new();
+
+    add_problem_pattern([
+        Any,  Any,  Any,
+        Diff, Same, Diff,
+        Any,  Any,  Any,
+    ], 1, &mut problem_patterns);
+
+    add_problem_pattern([
+        Diff, Same, Any,
+        Same, Same, Same,
+        Any,  Same, Diff,
+    ], 1, &mut problem_patterns);
+
+    add_problem_pattern([
+        Diff, Any,  Any,
+        Any,  Same, Diff,
+        Any,  Diff, Any,
+    ], 3, &mut problem_patterns);
+
+    problem_patterns
 }
 
 pub struct SurfaceCheck {
@@ -101,7 +103,7 @@ pub struct SurfaceCheck {
 impl SurfaceCheck {
     pub fn new() -> SurfaceCheck {
         SurfaceCheck {
-            problem_patterns: surface_problem_patterns(),
+            problem_patterns: problem_patterns(),
         }
     }
 
@@ -135,7 +137,7 @@ impl SurfaceCheck {
     fn has_neighborhood_problem(&self, neighborhood: &Neighborhood) -> bool {
         self.problem_patterns
             .iter()
-            .any(|pattern| is_pattern_matched(neighborhood, pattern))
+            .any(|pattern| is_problem_pattern_matched(neighborhood, pattern))
     }
 
     fn checked_delta_add(val: usize, delta: i32) -> Option<usize> {

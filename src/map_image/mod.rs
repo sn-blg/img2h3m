@@ -41,7 +41,7 @@ impl MapImage {
     }
 
     pub fn fix(&mut self) {
-        while self.fix_impl() {}
+        while self.fix_iteration() {}
     }
 
     pub fn surfaces(&self) -> Vec<Option<Surface>> {
@@ -62,7 +62,7 @@ impl MapImage {
         }
     }
 
-    fn fix_impl(&mut self) -> bool {
+    fn fix_iteration(&mut self) -> bool {
         let surface_getter = |row: usize, column: usize| {
             if (row >= self.size) || (column >= self.size) {
                 None
