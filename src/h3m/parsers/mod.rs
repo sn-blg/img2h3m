@@ -4,6 +4,7 @@ use common::*;
 use conditions::*;
 use header::*;
 use hero_settings::*;
+use objects::*;
 use players::*;
 use std::io::{Cursor, Read, Seek};
 
@@ -11,6 +12,7 @@ mod common;
 mod conditions;
 mod header;
 mod hero_settings;
+mod objects;
 mod players;
 
 fn skip_teams<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
@@ -51,16 +53,32 @@ fn skip_rumors<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
     Ok(())
 }
 
+fn skip_land<RS: Read + Seek>(input: &mut RS, map_size: usize) -> H3mResult<()> {
+    let count = map_size * map_size * SURFACE_CELL_SIZE;
+    let count = u32::try_from(count).map_err(|_| {
+        H3mError::Internal(InternalError::new(format!(
+            "Can't convert land bytes count {} to u32.",
+            count
+        )))
+    })?;
+    skip_bytes(input, count)
+}
+
+pub const SURFACE_CELL_SIZE: usize = 7;
+
 pub struct H3mInfo {
     pub map_size: usize,
-    pub has_underground: bool,
     pub land_offset: usize,
+    pub underground_offset: Option<usize>,
 }
 
 pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
     let mut raw_map = Cursor::new(raw_map);
 
-    let header_info = read_header(&mut raw_map)?;
+    let H3mHeaderInfo {
+        map_size,
+        has_underground,
+    } = read_header(&mut raw_map)?;
 
     skip_players(&mut raw_map)?;
 
@@ -78,16 +96,23 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
 
     skip_hero_settings(&mut raw_map)?;
 
-    let land_offset = raw_map.position();
+    let land_offset = position(&raw_map)?;
+    skip_land(&mut raw_map, map_size)?; // land
+
+    let underground_offset = if has_underground {
+        Some(position(&raw_map)?)
+    } else {
+        None
+    };
+    if has_underground {
+        skip_land(&mut raw_map, map_size)?; // underground
+    }
+
+    print_object_templates(&mut raw_map)?;
 
     Ok(H3mInfo {
-        map_size: header_info.map_size,
-        has_underground: header_info.has_underground,
-        land_offset: usize::try_from(land_offset).map_err(|_| {
-            H3mError::Parsing(ParsingError::new(
-                land_offset,
-                format!("Can't convert land offset value {} to usize.", land_offset),
-            ))
-        })?,
+        map_size,
+        land_offset,
+        underground_offset,
     })
 }

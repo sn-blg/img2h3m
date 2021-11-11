@@ -56,25 +56,24 @@ impl H3m {
         underground: bool,
         surface: Surface,
     ) -> H3mResult<()> {
-        const SURFACE_CELL_SIZE: usize = 7;
-
         let land_length = self.map_size() * self.map_size();
 
         if index >= land_length {
-            return Err(H3mError::Parameter(ParameterError::new(format!(
+            return Err(H3mError::Internal(InternalError::new(format!(
                 "Invalid surface index: {}, land length: {}.",
                 index, land_length
             ))));
         }
 
-        if underground && !self.info.has_underground {
-            return Err(H3mError::Parameter(ParameterError::new(
-                "Can't set underground surface, input map has not underground.",
-            )));
-        }
-
-        let surface_cell_offset = self.info.land_offset
-            + (if underground { land_length } else { 0 } + index) * SURFACE_CELL_SIZE;
+        let surface_cell_offset = if underground {
+            self.info.underground_offset.ok_or_else(|| {
+                H3mError::Parameter(ParameterError::new(
+                    "Can't set underground surface, input map has not underground.",
+                ))
+            })?
+        } else {
+            self.info.land_offset
+        } + index * SURFACE_CELL_SIZE;
 
         let surface_picture_type = self.surface_picture_type(surface);
 

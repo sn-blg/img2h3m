@@ -8,6 +8,7 @@ pub type H3mResult<T> = Result<T, H3mError>;
 pub enum H3mError {
     Parsing(ParsingError),
     Parameter(ParameterError),
+    Internal(InternalError),
     IoError(io::Error),
 }
 
@@ -21,6 +22,8 @@ impl fmt::Display for H3mError {
             ),
 
             H3mError::Parameter(e) => write!(fmt, "Invalid parameter error. {}", e.msg),
+
+            H3mError::Internal(e) => write!(fmt, "Internal error. {}", e.msg),
 
             H3mError::IoError(e) => fmt::Display::fmt(e, fmt),
         }
@@ -52,6 +55,17 @@ pub struct ParameterError {
 impl ParameterError {
     pub fn new(msg: impl Into<String>) -> ParameterError {
         ParameterError { msg: msg.into() }
+    }
+}
+
+#[derive(Debug)]
+pub struct InternalError {
+    msg: String,
+}
+
+impl InternalError {
+    pub fn new(msg: impl Into<String>) -> InternalError {
+        InternalError { msg: msg.into() }
     }
 }
 
