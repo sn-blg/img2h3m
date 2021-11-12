@@ -12,7 +12,7 @@ mod surface;
 pub struct H3m {
     info: H3mInfo,
     raw_map: Vec<u8>,
-    objects: Vec<H3MObject>,
+    objects: Option<Vec<H3MObject>>,
 }
 
 impl H3m {
@@ -24,19 +24,19 @@ impl H3m {
         Ok(H3m {
             info: parse(&raw_map)?,
             raw_map,
-            objects: Vec::new(),
+            objects: None,
         })
     }
 
     pub fn save<W: io::Write>(&self, output: W) -> H3mResult<()> {
         let mut encoder = Encoder::new(output)?;
 
-        if self.objects.is_empty() {
-            encoder.write_all(&self.raw_map)?;
-        } else {
+        if let Some(objects) = &self.objects {
             encoder.write_all(&self.raw_map[..self.info.objects_offset])?;
-            write_objects(&self.objects, &mut encoder)?;
+            write_objects(objects, &mut encoder)?;
             encoder.write_all(&self.raw_map[self.info.events_offset..])?;
+        } else {
+            encoder.write_all(&self.raw_map)?;
         }
 
         encoder.finish().into_result()?;
@@ -70,14 +70,18 @@ impl H3m {
             })
         }
 
+        let mut objects = Vec::new();
+
         for (index, &obstacle) in obstacles.iter().enumerate() {
             if obstacle {
                 let column = to_u8(index % self.map_size())?;
                 let row = to_u8(index / self.map_size())?;
-                self.objects
-                    .push(H3MObject::without_properties(column, row, underground, 2));
+                objects.push(H3MObject::without_properties(column, row, underground, 2));
             }
         }
+
+        self.objects = Some(objects);
+
         Ok(())
     }
 
