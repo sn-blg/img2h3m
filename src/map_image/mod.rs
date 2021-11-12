@@ -57,6 +57,19 @@ impl MapImage {
             .collect()
     }
 
+    pub fn obstacles(&self) -> Vec<bool> {
+        self.pixels
+            .iter()
+            .map(|p| {
+                if let Some(p) = p {
+                    p.surface_info.obstacle
+                } else {
+                    false
+                }
+            })
+            .collect()
+    }
+
     fn calc_index(&self, row: usize, column: usize) -> usize {
         row * self.size + column
     }

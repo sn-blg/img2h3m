@@ -39,6 +39,11 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let surfaces = map_image.surfaces();
     h3m.set_surfaces(config.underground, &surfaces)?;
 
+    if config.obstacles {
+        let obstacles = map_image.obstacles();
+        h3m.set_obstacles(config.underground, &obstacles)?;
+    }
+
     let output_map_file = File::create(&config.map_path)?;
     h3m.save(output_map_file)?;
     Ok(())

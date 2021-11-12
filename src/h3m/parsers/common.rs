@@ -1,6 +1,6 @@
 use crate::h3m::result::*;
-use byteorder::{ReadBytesExt, LE};
-use std::io::{Cursor, Read, Seek, SeekFrom};
+use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use std::io::{Cursor, Read, Seek, SeekFrom, Write};
 
 pub fn skip_bytes<S: Seek>(input: &mut S, count: u32) -> H3mResult<()> {
     let count = i64::try_from(count).map_err(|_| {
@@ -11,6 +11,17 @@ pub fn skip_bytes<S: Seek>(input: &mut S, count: u32) -> H3mResult<()> {
     })?;
 
     input.seek(SeekFrom::Current(count))?;
+    Ok(())
+}
+
+pub fn write_bool<W: Write>(value: bool, output: &mut W) -> H3mResult<()> {
+    let value = match value {
+        false => 0x00,
+        true => 0x01,
+    };
+
+    output.write_u8(value)?;
+
     Ok(())
 }
 

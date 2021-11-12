@@ -4,7 +4,7 @@ use common::*;
 use conditions::*;
 use header::*;
 use hero_settings::*;
-use objects::*;
+pub use objects::*;
 use players::*;
 use std::io::{Cursor, Read, Seek};
 
