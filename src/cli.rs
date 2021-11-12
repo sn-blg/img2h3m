@@ -31,6 +31,11 @@ pub fn get_config() -> Config {
                 .short("f")
                 .help("Fix errors in result map"),
         )
+        .arg(
+            Arg::with_name("obstacles")
+                .short("o")
+                .help("Сreate obstacles on the map. Attention, this option will delete all the original objects on the input map."),
+        )
         .get_matches();
 
     Config {
@@ -38,5 +43,6 @@ pub fn get_config() -> Config {
         map_path: matches.value_of("map").unwrap().to_string(),
         underground: matches.is_present("underground"),
         fix: matches.is_present("fix"),
+        obstacles: matches.is_present("obstacles"),
     }
 }

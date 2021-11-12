@@ -7,9 +7,15 @@ mod palettes;
 mod surface_check;
 
 #[derive(Clone, Copy)]
+pub struct SurfaceInfo {
+    pub surface: Surface,
+    pub obstacle: bool,
+}
+
+#[derive(Clone, Copy)]
 struct MapPixel {
     original_color: Rgb<u8>,
-    surface: Surface,
+    surface_info: SurfaceInfo,
 }
 
 pub struct MapImage {
@@ -20,22 +26,22 @@ pub struct MapImage {
 }
 
 impl MapImage {
-    pub fn new(size: usize) -> MapImage {
+    pub fn new(size: usize, obstacles: bool) -> MapImage {
         MapImage {
             size,
             pixels: vec![None; size * size],
-            palettes: Palettes::new(),
+            palettes: Palettes::new(obstacles),
             surface_check: SurfaceCheck::new(),
         }
     }
 
     pub fn set_pixel(&mut self, row: usize, column: usize, pixel: Rgb<u8>) {
         let ground_only = false;
-        let surface = self.palettes.nearest_surface(&pixel, ground_only);
+        let surface_info = self.palettes.nearest_surface(&pixel, ground_only);
         let index = self.calc_index(row, column);
 
         self.pixels[index] = Some(MapPixel {
-            surface,
+            surface_info,
             original_color: pixel,
         });
     }
@@ -45,7 +51,10 @@ impl MapImage {
     }
 
     pub fn surfaces(&self) -> Vec<Option<Surface>> {
-        self.pixels.iter().map(|p| p.map(|p| p.surface)).collect()
+        self.pixels
+            .iter()
+            .map(|p| p.map(|p| p.surface_info.surface))
+            .collect()
     }
 
     fn calc_index(&self, row: usize, column: usize) -> usize {
@@ -56,7 +65,7 @@ impl MapImage {
         let ground_only = true;
         let pixel = &mut self.pixels[index];
         if let Some(pixel) = pixel {
-            pixel.surface = self
+            pixel.surface_info = self
                 .palettes
                 .nearest_surface(&pixel.original_color, ground_only);
         }
@@ -68,7 +77,7 @@ impl MapImage {
                 None
             } else {
                 let index = self.calc_index(row, column);
-                self.pixels[index].map(|p| p.surface)
+                self.pixels[index].map(|p| p.surface_info.surface)
             }
         };
 

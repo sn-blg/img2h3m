@@ -32,9 +32,9 @@ impl H3m {
 
         //encoder.write_all(&self.raw_map)?;
 
-        encoder.write(&self.raw_map[..self.info.objects_offset])?;
+        encoder.write_all(&self.raw_map[..self.info.objects_offset])?;
         encoder.write_u32::<LE>(0u32)?;
-        encoder.write(&self.raw_map[self.info.events_offset..])?;
+        encoder.write_all(&self.raw_map[self.info.events_offset..])?;
 
         encoder.finish().into_result()?;
         Ok(())

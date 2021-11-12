@@ -1,8 +1,23 @@
+use super::SurfaceInfo;
 use crate::h3m::Surface;
 use delta_e::DE2000;
 use image::Rgb;
 
-type Palette = Vec<(Surface, [u8; 3])>;
+struct Color {
+    surface_info: SurfaceInfo,
+    rgb_color: [u8; 3],
+}
+
+impl Color {
+    fn new(surface: Surface, obstacle: bool, rgb_color: [u8; 3]) -> Color {
+        Color {
+            surface_info: SurfaceInfo { surface, obstacle },
+            rgb_color,
+        }
+    }
+}
+
+type Palette = Vec<Color>;
 
 pub struct Palettes {
     ground: Palette,
@@ -10,17 +25,21 @@ pub struct Palettes {
 }
 
 impl Palettes {
-    pub fn new() -> Palettes {
+    pub fn new(_obstacles: bool) -> Palettes {
         let mut palettes = Palettes {
             ground: Vec::new(),
             all: Vec::new(),
         };
 
         let mut add_surface = |surface: Surface| {
-            palettes.all.push((surface, surface.rgb_color()));
+            palettes
+                .all
+                .push(Color::new(surface, false, surface.rgb_color()));
 
             if surface.is_ground() {
-                palettes.ground.push((surface, surface.rgb_color()));
+                palettes
+                    .ground
+                    .push(Color::new(surface, false, surface.rgb_color()));
             }
         };
 
@@ -40,14 +59,19 @@ impl Palettes {
         palettes
     }
 
-    pub fn nearest_surface(&self, pixel: &Rgb<u8>, ground_only: bool) -> Surface {
+    pub fn nearest_surface(&self, pixel: &Rgb<u8>, ground_only: bool) -> SurfaceInfo {
         let input_color = &pixel.0;
 
         let palette = if ground_only { &self.ground } else { &self.all };
 
         *palette
             .iter()
-            .map(|(surface, color)| (surface, DE2000::from_rgb(color, input_color)))
+            .map(|color| {
+                (
+                    &color.surface_info,
+                    DE2000::from_rgb(&color.rgb_color, input_color),
+                )
+            })
             .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
             .unwrap()
             .0
