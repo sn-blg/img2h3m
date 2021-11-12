@@ -70,6 +70,8 @@ pub struct H3mInfo {
     pub map_size: usize,
     pub land_offset: usize,
     pub underground_offset: Option<usize>,
+    pub objects_offset: usize,
+    pub events_offset: usize,
 }
 
 pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
@@ -110,9 +112,17 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
 
     print_object_templates(&mut raw_map)?;
 
+    let objects_offset = position(&raw_map)?;
+
+    print_objects(&mut raw_map)?;
+
+    let events_offset = position(&raw_map)?;
+
     Ok(H3mInfo {
         map_size,
         land_offset,
         underground_offset,
+        objects_offset,
+        events_offset,
     })
 }

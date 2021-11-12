@@ -1,3 +1,4 @@
+use byteorder::{WriteBytesExt, LE};
 use libflate::gzip::{Decoder, Encoder};
 use parsers::*;
 use rand::Rng;
@@ -28,7 +29,13 @@ impl H3m {
 
     pub fn save<W: io::Write>(&self, output: W) -> H3mResult<()> {
         let mut encoder = Encoder::new(output)?;
-        encoder.write_all(&self.raw_map)?;
+
+        //encoder.write_all(&self.raw_map)?;
+
+        encoder.write(&self.raw_map[..self.info.objects_offset])?;
+        encoder.write_u32::<LE>(0u32)?;
+        encoder.write(&self.raw_map[self.info.events_offset..])?;
+
         encoder.finish().into_result()?;
         Ok(())
     }
@@ -59,7 +66,7 @@ impl H3m {
         let land_length = self.map_size() * self.map_size();
 
         if index >= land_length {
-            return Err(H3mError::Internal(InternalError::new(format!(
+            return Err(H3mError::Parameter(ParameterError::new(format!(
                 "Invalid surface index: {}, land length: {}.",
                 index, land_length
             ))));

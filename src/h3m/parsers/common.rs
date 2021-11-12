@@ -37,6 +37,16 @@ pub fn skip_string<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
     Ok(())
 }
 
+pub fn read_string<R: Read>(input: &mut R) -> H3mResult<String> {
+    let size = input.read_u32::<LE>()?;
+
+    let mut buffer = vec![0; size as usize];
+
+    input.read_exact(&mut buffer)?;
+
+    Ok(String::from_utf8_lossy(&buffer).to_string())
+}
+
 pub fn position(cursor: &Cursor<&[u8]>) -> H3mResult<usize> {
     let position = cursor.position();
     usize::try_from(position).map_err(|_| {
