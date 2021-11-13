@@ -61,27 +61,15 @@ impl H3m {
     }
 
     pub fn set_obstacles(&mut self, underground: bool, obstacles: &[bool]) -> H3mResult<()> {
-        fn to_u8(idx: usize) -> H3mResult<u8> {
-            u8::try_from(idx).map_err(|_| {
-                H3mError::Internal(InternalError::new(format!(
-                    "Can't convert idx {} to u8.",
-                    idx
-                )))
-            })
-        }
-
         let mut objects = Vec::new();
-
         for (index, &obstacle) in obstacles.iter().enumerate() {
             if obstacle {
-                let column = to_u8(index % self.map_size())?;
-                let row = to_u8(index / self.map_size())?;
+                let column = (index % self.map_size()).try_into()?;
+                let row = (index / self.map_size()).try_into()?;
                 objects.push(H3MObject::without_properties(column, row, underground, 2));
             }
         }
-
         self.objects = Some(objects);
-
         Ok(())
     }
 

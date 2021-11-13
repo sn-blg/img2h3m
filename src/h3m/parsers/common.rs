@@ -3,13 +3,7 @@ use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 use std::io::{Cursor, Read, Seek, SeekFrom, Write};
 
 pub fn skip_bytes<S: Seek>(input: &mut S, count: u32) -> H3mResult<()> {
-    let count = i64::try_from(count).map_err(|_| {
-        H3mError::Internal(InternalError::new(format!(
-            "Can't convert bytes count {} to i64.",
-            count
-        )))
-    })?;
-
+    let count = i64::try_from(count)?;
     input.seek(SeekFrom::Current(count))?;
     Ok(())
 }

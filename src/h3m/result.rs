@@ -1,7 +1,8 @@
+use std::convert::Infallible;
 use std::error::Error;
 use std::fmt;
 use std::io;
-
+use std::num::TryFromIntError;
 pub type H3mResult<T> = Result<T, H3mError>;
 
 #[derive(Debug)]
@@ -72,5 +73,17 @@ impl InternalError {
 impl From<io::Error> for H3mError {
     fn from(err: io::Error) -> H3mError {
         H3mError::IoError(err)
+    }
+}
+
+impl From<TryFromIntError> for H3mError {
+    fn from(err: TryFromIntError) -> H3mError {
+        H3mError::Internal(InternalError::new(format!("Сonversion error: {}.", err)))
+    }
+}
+
+impl From<Infallible> for H3mError {
+    fn from(err: Infallible) -> H3mError {
+        H3mError::Internal(InternalError::new(format!("Сonversion error: {}.", err)))
     }
 }

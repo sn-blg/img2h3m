@@ -4,6 +4,7 @@ use common::*;
 use conditions::*;
 use header::*;
 use hero_settings::*;
+use object_templates::*;
 pub use objects::*;
 use players::*;
 use std::io::{Cursor, Read, Seek};
@@ -12,6 +13,7 @@ mod common;
 mod conditions;
 mod header;
 mod hero_settings;
+mod object_templates;
 mod objects;
 mod players;
 
@@ -55,12 +57,7 @@ fn skip_rumors<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 
 fn skip_land<RS: Read + Seek>(input: &mut RS, map_size: usize) -> H3mResult<()> {
     let count = map_size * map_size * SURFACE_CELL_SIZE;
-    let count = u32::try_from(count).map_err(|_| {
-        H3mError::Internal(InternalError::new(format!(
-            "Can't convert land bytes count {} to u32.",
-            count
-        )))
-    })?;
+    let count = u32::try_from(count)?;
     skip_bytes(input, count)
 }
 
@@ -110,11 +107,11 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
         skip_land(&mut raw_map, map_size)?; // underground
     }
 
-    print_object_templates(&mut raw_map)?;
+    let object_templates = read_object_templates(&mut raw_map)?;
 
     let objects_offset = position(&raw_map)?;
 
-    print_objects(&mut raw_map)?;
+    skip_objects(&mut raw_map, &object_templates)?;
 
     let events_offset = position(&raw_map)?;
 
