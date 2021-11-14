@@ -9,44 +9,48 @@ mod config;
 mod h3m;
 mod map_image;
 
-fn make_map_image(
-    map_size: usize,
-    obstacles: bool,
-    image_path: impl Into<String>,
-) -> Result<MapImage, Box<dyn Error>> {
-    let mut map_image = MapImage::new(map_size, obstacles);
-    let img = ImageReader::open(image_path.into())?.decode()?.into_rgb8();
+impl MapImage {
+    fn from_image(
+        image_path: impl Into<String>,
+        map_size: usize,
+        obstacles: bool,
+    ) -> Result<MapImage, Box<dyn Error>> {
+        let mut map_image = MapImage::new(map_size, obstacles);
+        let img = ImageReader::open(image_path.into())?.decode()?.into_rgb8();
 
-    for (row_id, row) in img.rows().take(map_size).enumerate() {
-        for (column_id, pixel) in row.take(map_size).enumerate() {
-            map_image.set_pixel(row_id, column_id, *pixel);
+        for (row_id, row) in img.rows().take(map_size).enumerate() {
+            for (column_id, pixel) in row.take(map_size).enumerate() {
+                map_image.set_pixel(row_id, column_id, *pixel);
+            }
         }
+        Ok(map_image)
     }
-    Ok(map_image)
 }
 
-fn set_image(
-    h3m: &mut H3m,
-    image_path: impl Into<String>,
-    underground: bool,
-    fix: bool,
-    obstacles: bool,
-) -> Result<(), Box<dyn Error>> {
-    let mut map_image = make_map_image(h3m.map_size(), obstacles, image_path)?;
+impl H3m {
+    fn set_image(
+        &mut self,
+        image_path: impl Into<String>,
+        underground: bool,
+        fix: bool,
+        obstacles: bool,
+    ) -> Result<(), Box<dyn Error>> {
+        let mut map_image = MapImage::from_image(image_path, self.map_size(), obstacles)?;
 
-    if fix {
-        map_image.fix();
+        if fix {
+            map_image.fix();
+        }
+
+        let surfaces = map_image.surfaces();
+        self.set_surfaces(underground, &surfaces)?;
+
+        if obstacles {
+            let obstacles = map_image.obstacles();
+            self.set_obstacles(underground, &obstacles)?;
+        }
+
+        Ok(())
     }
-
-    let surfaces = map_image.surfaces();
-    h3m.set_surfaces(underground, &surfaces)?;
-
-    if obstacles {
-        let obstacles = map_image.obstacles();
-        h3m.set_obstacles(underground, &obstacles)?;
-    }
-
-    Ok(())
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
@@ -54,23 +58,11 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let mut h3m = H3m::load(input_map_file)?;
 
     if let Some(land_image_path) = config.land_image_path {
-        set_image(
-            &mut h3m,
-            land_image_path,
-            false,
-            config.fix,
-            config.obstacles,
-        )?;
+        h3m.set_image(land_image_path, false, config.fix, config.obstacles)?;
     }
 
     if let Some(underground_image_path) = config.underground_image_path {
-        set_image(
-            &mut h3m,
-            underground_image_path,
-            true,
-            config.fix,
-            config.obstacles,
-        )?;
+        h3m.set_image(underground_image_path, true, config.fix, config.obstacles)?;
     }
 
     let output_map_file = File::create(&config.map_path)?;
