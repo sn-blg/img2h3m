@@ -34,7 +34,7 @@ impl H3m {
         if let Some(objects) = &self.objects {
             encoder.write_all(&self.raw_map[..self.info.objects_offset])?;
             write_objects(objects, &mut encoder)?;
-            encoder.write_all(&self.raw_map[self.info.events_offset..])?;
+            encoder.write_all(&[0u8; 124])?;
         } else {
             encoder.write_all(&self.raw_map)?;
         }

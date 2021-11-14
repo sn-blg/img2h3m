@@ -1,5 +1,4 @@
 use crate::h3m::parsers::common::*;
-use crate::h3m::parsers::object_templates::H3mObjectTemplate;
 use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 use std::io::{Read, Seek, Write};
@@ -90,10 +89,8 @@ pub fn write_objects<W: Write>(objects: &[H3MObject], output: &mut W) -> H3mResu
     Ok(())
 }
 
-pub fn skip_objects<RS: Read + Seek>(
-    input: &mut RS,
-    _object_templates: &[H3mObjectTemplate],
-) -> H3mResult<()> {
+/*
+pub fn skip_objects<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
     let objects_count = input.read_u32::<LE>()?;
 
     println!("objects_count = {}", objects_count);
@@ -105,3 +102,4 @@ pub fn skip_objects<RS: Read + Seek>(
 
     Ok(())
 }
+*/

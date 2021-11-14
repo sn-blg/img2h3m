@@ -68,7 +68,7 @@ pub struct H3mInfo {
     pub land_offset: usize,
     pub underground_offset: Option<usize>,
     pub objects_offset: usize,
-    pub events_offset: usize,
+    pub default_object_templates: [H3mObjectTemplate; 2],
 }
 
 pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
@@ -107,19 +107,15 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
         skip_land(&mut raw_map, map_size)?; // underground
     }
 
-    let object_templates = read_object_templates(&mut raw_map)?;
+    let default_object_templates = read_default_and_skip_other_object_templates(&mut raw_map)?;
 
     let objects_offset = position(&raw_map)?;
-
-    skip_objects(&mut raw_map, &object_templates)?;
-
-    let events_offset = position(&raw_map)?;
 
     Ok(H3mInfo {
         map_size,
         land_offset,
         underground_offset,
         objects_offset,
-        events_offset,
+        default_object_templates,
     })
 }

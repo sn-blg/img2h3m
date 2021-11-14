@@ -18,12 +18,6 @@ pub struct H3mObjectTemplate {
     is_overlay: bool,
 }
 
-impl H3mObjectTemplate {
-    pub fn _class(&self) -> u32 {
-        self.class
-    }
-}
-
 fn read_mask<RS: Read + Seek>(input: &mut RS) -> H3mResult<Mask> {
     let mut mask = Mask::default();
     input.read_exact(&mut mask)?;
@@ -48,19 +42,34 @@ fn read_object_template<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mObjectT
     Ok(object_template)
 }
 
-pub fn read_object_templates<RS: Read + Seek>(input: &mut RS) -> H3mResult<Vec<H3mObjectTemplate>> {
+const DEFAULT_OBJECT_TEMPLATES_COUNT: usize = 2;
+pub type DefaultObjectTemplates = [H3mObjectTemplate; DEFAULT_OBJECT_TEMPLATES_COUNT];
+
+pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
+    input: &mut RS,
+) -> H3mResult<DefaultObjectTemplates> {
     let templates_count = input.read_u32::<LE>()?;
 
     println!("templates_count = {}", templates_count);
 
-    let mut object_templates = Vec::with_capacity(templates_count.try_into()?);
+    let templates_count: usize = templates_count.try_into()?;
 
-    for _ in 0..templates_count {
-        let object_template = read_object_template(input)?;
-        object_templates.push(object_template);
+    if templates_count < DEFAULT_OBJECT_TEMPLATES_COUNT {
+        return Err(H3mError::Parsing(ParsingError::new(
+            input.stream_position()?,
+            format!(
+                "Templates count is {} (less than {}).",
+                templates_count, DEFAULT_OBJECT_TEMPLATES_COUNT
+            ),
+        )));
     }
 
-    println!("object_templates = {:#?}", object_templates);
+    let default_object_templates = [read_object_template(input)?, read_object_template(input)?];
 
-    Ok(object_templates)
+    for _ in 0..(templates_count - DEFAULT_OBJECT_TEMPLATES_COUNT) {
+        let object_template = read_object_template(input)?;
+        println!("object_template = {:?}", object_template);
+    }
+
+    Ok(default_object_templates)
 }
