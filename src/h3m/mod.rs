@@ -69,7 +69,13 @@ impl H3m {
                 objects.push(H3MObject::without_properties(column, row, underground, 2));
             }
         }
-        self.objects = Some(objects);
+
+        if let Some(existing_objects) = &mut self.objects {
+            existing_objects.extend(objects.into_iter());
+        } else {
+            self.objects = Some(objects);
+        }
+
         Ok(())
     }
 
