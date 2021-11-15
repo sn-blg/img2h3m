@@ -1,27 +1,47 @@
 use crate::h3m::parsers::common::*;
 use crate::h3m::result::*;
-use byteorder::{ReadBytesExt, LE};
-use std::io::{Read, Seek};
+use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use std::io::{Read, Seek, Write};
 
 type Mask = [u8; 6];
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct H3mObjectTemplate {
-    filename: String,
-    shape_mask: Mask,
-    visit_mask: Mask,
-    surface_type_mask: u16,
-    surface_editor_group_mask: u16,
-    class: u32,
-    subclass: u32,
-    group: u8,
-    is_overlay: bool,
+    pub filename: String,
+    pub shape_mask: Mask,
+    pub visit_mask: Mask,
+    pub surface_type_mask: u16,
+    pub surface_editor_group_mask: u16,
+    pub class: u32,
+    pub subclass: u32,
+    pub group: u8,
+    pub is_overlay: bool,
 }
 
 fn read_mask<RS: Read + Seek>(input: &mut RS) -> H3mResult<Mask> {
     let mut mask = Mask::default();
     input.read_exact(&mut mask)?;
     Ok(mask)
+}
+
+fn write_object_template<W: Write>(
+    object_template: &H3mObjectTemplate,
+    output: &mut W,
+) -> H3mResult<()> {
+    write_string(&object_template.filename, output)?;
+    output.write_all(&object_template.shape_mask)?;
+    output.write_all(&object_template.visit_mask)?;
+    output.write_u16::<LE>(object_template.surface_type_mask)?;
+    output.write_u16::<LE>(object_template.surface_editor_group_mask)?;
+    output.write_u32::<LE>(object_template.class)?;
+    output.write_u32::<LE>(object_template.subclass)?;
+    output.write_u8(object_template.group)?;
+    write_bool(object_template.is_overlay, output)?;
+
+    let zero = [0u8; 16];
+    output.write_all(&zero)?;
+
+    Ok(())
 }
 
 fn read_object_template<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mObjectTemplate> {
@@ -40,6 +60,20 @@ fn read_object_template<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mObjectT
     skip_bytes(input, 16)?; // unknown (so far seen zeroes here)
 
     Ok(object_template)
+}
+
+pub fn write_object_templates<W: Write>(
+    object_templates: &[H3mObjectTemplate],
+    output: &mut W,
+) -> H3mResult<()> {
+    let templates_count = u32::try_from(object_templates.len())?;
+    output.write_u32::<LE>(templates_count)?;
+
+    for object_template in object_templates {
+        write_object_template(object_template, output)?
+    }
+
+    Ok(())
 }
 
 const DEFAULT_OBJECT_TEMPLATES_COUNT: usize = 2;

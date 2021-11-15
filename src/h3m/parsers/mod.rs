@@ -4,7 +4,7 @@ use common::*;
 use conditions::*;
 use header::*;
 use hero_settings::*;
-use object_templates::*;
+pub use object_templates::*;
 pub use objects::*;
 use players::*;
 use std::io::{Cursor, Read, Seek};
@@ -67,7 +67,7 @@ pub struct H3mInfo {
     pub map_size: usize,
     pub land_offset: usize,
     pub underground_offset: Option<usize>,
-    pub objects_offset: usize,
+    pub objects_templates_offset: usize,
     pub default_object_templates: [H3mObjectTemplate; 2],
 }
 
@@ -107,15 +107,15 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
         skip_land(&mut raw_map, map_size)?; // underground
     }
 
-    let default_object_templates = read_default_and_skip_other_object_templates(&mut raw_map)?;
+    let objects_templates_offset = position(&raw_map)?;
 
-    let objects_offset = position(&raw_map)?;
+    let default_object_templates = read_default_and_skip_other_object_templates(&mut raw_map)?;
 
     Ok(H3mInfo {
         map_size,
         land_offset,
         underground_offset,
-        objects_offset,
+        objects_templates_offset,
         default_object_templates,
     })
 }

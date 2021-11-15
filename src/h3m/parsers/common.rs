@@ -42,10 +42,17 @@ pub fn skip_string<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
     Ok(())
 }
 
+pub fn write_string<W: Write>(value: &str, output: &mut W) -> H3mResult<()> {
+    let size = u32::try_from(value.len())?;
+    output.write_u32::<LE>(size)?;
+    output.write_all(value.as_bytes())?;
+    Ok(())
+}
+
 pub fn read_string<R: Read>(input: &mut R) -> H3mResult<String> {
     let size = input.read_u32::<LE>()?;
 
-    let mut buffer = vec![0; size as usize];
+    let mut buffer = vec![0; usize::try_from(size)?];
 
     input.read_exact(&mut buffer)?;
 
