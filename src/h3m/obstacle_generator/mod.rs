@@ -33,20 +33,11 @@ impl ObstacleGenerator {
         map_size: usize,
         default_object_templates: &DefaultObjectTemplates,
     ) -> ObstacleGenerator {
-        let mut obstacle_generator = ObstacleGenerator {
+        ObstacleGenerator {
             obstacle_templates: ObstacleTemplates::new(),
             map_size,
             objects_data: ObjectsData::new(default_object_templates),
-        };
-
-        obstacle_generator.objects_data.templates.push(
-            obstacle_generator
-                .obstacle_templates
-                .object_template()
-                .clone(),
-        );
-
-        obstacle_generator
+        }
     }
 
     pub fn generate(&mut self, underground: bool, surfaces: &[Option<Surface>]) -> H3mResult<()> {
@@ -56,9 +47,23 @@ impl ObstacleGenerator {
                     let column = (index % self.map_size).try_into()?;
                     let row = (index / self.map_size).try_into()?;
 
+                    let template_data = self.obstacle_templates.object_template(surface.terrain);
+                    if template_data.index() == 0 {
+                        let index = self.objects_data.templates.len();
+                        template_data.set_index(index);
+                        self.objects_data
+                            .templates
+                            .push(template_data.h3m_template().clone());
+                    }
+
                     self.objects_data
                         .objects
-                        .push(H3mObject::without_properties(column, row, underground, 2));
+                        .push(H3mObject::without_properties(
+                            column,
+                            row,
+                            underground,
+                            template_data.index().try_into()?,
+                        ));
                 }
             }
         }
