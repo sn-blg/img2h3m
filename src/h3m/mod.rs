@@ -1,50 +1,20 @@
 use libflate::gzip::{Decoder, Encoder};
-use object_templates_set::ObjectTemplatesSet;
+use obstacle_generator::ObstacleGenerator;
 use parsers::*;
 use rand::Rng;
 use result::*;
 use std::io::{self, Read, Write};
 pub use surface::Surface;
 
-mod object_templates_set;
+mod obstacle_generator;
 mod parsers;
 pub mod result;
 mod surface;
 
-struct ObjectsData {
-    object_templates_set: ObjectTemplatesSet,
-    object_templates: Vec<H3mObjectTemplate>,
-    objects: Vec<H3MObject>,
-}
-
-impl ObjectsData {
-    fn new(default_object_templates: &DefaultObjectTemplates) -> ObjectsData {
-        let mut objects_data = ObjectsData {
-            object_templates_set: ObjectTemplatesSet::new(),
-            object_templates: vec![
-                default_object_templates[0].clone(),
-                default_object_templates[1].clone(),
-            ],
-            objects: Vec::new(),
-        };
-
-        objects_data
-            .object_templates
-            .push(objects_data.object_templates_set.object_template().clone());
-
-        objects_data
-    }
-
-    fn put_some_object(&mut self, column: u8, row: u8, underground: bool) {
-        self.objects
-            .push(H3MObject::without_properties(column, row, underground, 2));
-    }
-}
-
 pub struct H3m {
     info: H3mInfo,
     raw_map: Vec<u8>,
-    objects_data: Option<ObjectsData>,
+    obstacle_generator: Option<ObstacleGenerator>,
 }
 
 impl H3m {
@@ -56,17 +26,17 @@ impl H3m {
         Ok(H3m {
             info: parse(&raw_map)?,
             raw_map,
-            objects_data: None,
+            obstacle_generator: None,
         })
     }
 
     pub fn save<W: io::Write>(&self, output: W) -> H3mResult<()> {
         let mut encoder = Encoder::new(output)?;
 
-        if let Some(objects_data) = &self.objects_data {
+        if let Some(obstacle_generator) = &self.obstacle_generator {
             encoder.write_all(&self.raw_map[..self.info.objects_templates_offset])?;
-            write_object_templates(&objects_data.object_templates, &mut encoder)?;
-            write_objects(&objects_data.objects, &mut encoder)?;
+            write_object_templates(obstacle_generator.object_templates(), &mut encoder)?;
+            write_objects(obstacle_generator.objects(), &mut encoder)?;
             encoder.write_all(&[0u8; 124])?;
         } else {
             encoder.write_all(&self.raw_map)?;
@@ -94,18 +64,19 @@ impl H3m {
     }
 
     pub fn set_obstacles(&mut self, underground: bool, obstacles: &[bool]) -> H3mResult<()> {
-        if self.objects_data.is_none() {
-            self.objects_data = Some(ObjectsData::new(&self.info.default_object_templates));
+        if self.obstacle_generator.is_none() {
+            self.obstacle_generator =
+                Some(ObstacleGenerator::new(&self.info.default_object_templates));
         }
 
         for (index, &obstacle) in obstacles.iter().enumerate() {
             if obstacle {
                 let column = (index % self.map_size()).try_into()?;
                 let row = (index / self.map_size()).try_into()?;
-                self.objects_data
+                self.obstacle_generator
                     .as_mut()
                     .unwrap()
-                    .put_some_object(column, row, underground);
+                    .generate(column, row, underground);
             }
         }
 
