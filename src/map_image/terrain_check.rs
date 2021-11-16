@@ -1,31 +1,31 @@
-use crate::h3m::Surface;
+use crate::h3m::Terrain;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-enum SurfaceRelation {
-    Same, // Some neighborhood == test surface
-    Diff, // Some neighborhood != test surface
+#[derive(Clone, Copy, PartialEq)]
+enum TerrainRelation {
+    Same, // Some neighborhood == test terrain
+    Diff, // Some neighborhood != test terrain
     Any,  // any neighborhood, including None
 }
 
 const PROBLEM_PATTERN_SIZE: usize = 9;
-const TEST_SURFACE_INDEX: usize = 4;
+const TEST_TERRAIN_INDEX: usize = 4;
 
-type ProblemPattern = [SurfaceRelation; PROBLEM_PATTERN_SIZE];
-type Neighborhood = [Option<Surface>; PROBLEM_PATTERN_SIZE];
+type ProblemPattern = [TerrainRelation; PROBLEM_PATTERN_SIZE];
+type Neighborhood = [Option<Terrain>; PROBLEM_PATTERN_SIZE];
 
-fn is_surface_relation_matched(
-    test_surface: Surface,
-    neighbour: &Option<Surface>,
-    relation: SurfaceRelation,
+fn is_terrain_relation_matched(
+    test_terrain: Terrain,
+    neighbour: &Option<Terrain>,
+    relation: TerrainRelation,
 ) -> bool {
-    use SurfaceRelation::*;
+    use TerrainRelation::*;
 
     if relation == Any {
         return true;
     }
 
     if let Some(neighbour) = neighbour {
-        if *neighbour == test_surface {
+        if *neighbour == test_terrain {
             relation == Same
         } else {
             relation == Diff
@@ -39,9 +39,9 @@ fn is_problem_pattern_matched(
     neighborhood: &Neighborhood,
     problem_pattern: &ProblemPattern,
 ) -> bool {
-    let test_surface = neighborhood[TEST_SURFACE_INDEX].unwrap();
+    let test_terrain = neighborhood[TEST_TERRAIN_INDEX].unwrap();
     for (neighbour, &relation) in neighborhood.iter().zip(problem_pattern) {
-        if !is_surface_relation_matched(test_surface, neighbour, relation) {
+        if !is_terrain_relation_matched(test_terrain, neighbour, relation) {
             return false;
         }
     }
@@ -71,7 +71,7 @@ fn add_problem_pattern(
 
 #[rustfmt::skip]
 fn problem_patterns() -> Vec<ProblemPattern> {
-    use SurfaceRelation::*;
+    use TerrainRelation::*;
 
     let mut problem_patterns = Vec::new();
 
@@ -96,37 +96,37 @@ fn problem_patterns() -> Vec<ProblemPattern> {
     problem_patterns
 }
 
-pub struct SurfaceCheck {
+pub struct TerrainCheck {
     problem_patterns: Vec<ProblemPattern>,
 }
 
-impl SurfaceCheck {
-    pub fn new() -> SurfaceCheck {
-        SurfaceCheck {
+impl TerrainCheck {
+    pub fn new() -> TerrainCheck {
+        TerrainCheck {
             problem_patterns: problem_patterns(),
         }
     }
 
     #[rustfmt::skip]
-    pub fn has_problem<F>(&self, row: usize, column: usize, surface_getter: F) -> bool
+    pub fn has_problem<F>(&self, row: usize, column: usize, terrain_getter: F) -> bool
     where
-        F: Fn(usize, usize) -> Option<Surface>,
+        F: Fn(usize, usize) -> Option<Terrain>,
     {
         let neighbour_getter = |delta_row: i32, delta_column: i32| {
-            let row = SurfaceCheck::checked_delta_add(row, delta_row)?;
-            let column = SurfaceCheck::checked_delta_add(column, delta_column)?;
-            surface_getter(row, column)
+            let row = TerrainCheck::checked_delta_add(row, delta_row)?;
+            let column = TerrainCheck::checked_delta_add(column, delta_column)?;
+            terrain_getter(row, column)
         };
 
-        let test_surface = surface_getter(row, column);
+        let test_terrain = terrain_getter(row, column);
 
-        if let Some(test_surface) = test_surface {
-            if test_surface.is_ground() {
+        if let Some(test_terrain) = test_terrain {
+            if test_terrain.is_ground() {
                 return false;
             }
             self.has_neighborhood_problem(&[
                 neighbour_getter(-1, -1), neighbour_getter(-1, 0), neighbour_getter(-1, 1),
-                neighbour_getter( 0, -1), Some(test_surface),      neighbour_getter( 0, 1),
+                neighbour_getter( 0, -1), Some(test_terrain),      neighbour_getter( 0, 1),
                 neighbour_getter( 1, -1), neighbour_getter( 1, 0), neighbour_getter( 1, 1),
             ])
         } else {

@@ -56,12 +56,12 @@ fn skip_rumors<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 }
 
 fn skip_land<RS: Read + Seek>(input: &mut RS, map_size: usize) -> H3mResult<()> {
-    let count = map_size * map_size * SURFACE_CELL_SIZE;
+    let count = map_size * map_size * MAP_CELL_SIZE;
     let count = u32::try_from(count)?;
     skip_bytes(input, count)
 }
 
-pub const SURFACE_CELL_SIZE: usize = 7;
+pub const MAP_CELL_SIZE: usize = 7;
 
 pub struct H3mInfo {
     pub map_size: usize,

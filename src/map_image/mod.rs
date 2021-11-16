@@ -1,28 +1,22 @@
 use crate::h3m::Surface;
 use image::Rgb;
 use palettes::Palettes;
-use surface_check::SurfaceCheck;
+use terrain_check::TerrainCheck;
 
 mod palettes;
-mod surface_check;
-
-#[derive(Clone, Copy)]
-pub struct SurfaceInfo {
-    pub surface: Surface,
-    pub obstacle: bool,
-}
+mod terrain_check;
 
 #[derive(Clone, Copy)]
 struct MapPixel {
     original_color: Rgb<u8>,
-    surface_info: SurfaceInfo,
+    surface: Surface,
 }
 
 pub struct MapImage {
     size: usize,
     pixels: Vec<Option<MapPixel>>,
     palettes: Palettes,
-    surface_check: SurfaceCheck,
+    terrain_check: TerrainCheck,
 }
 
 impl MapImage {
@@ -31,17 +25,17 @@ impl MapImage {
             size,
             pixels: vec![None; size * size],
             palettes: Palettes::new(obstacles),
-            surface_check: SurfaceCheck::new(),
+            terrain_check: TerrainCheck::new(),
         }
     }
 
     pub fn set_pixel(&mut self, row: usize, column: usize, pixel: Rgb<u8>) {
         let ground_only = false;
-        let surface_info = self.palettes.nearest_surface(&pixel, ground_only);
+        let surface = self.palettes.nearest_surface(&pixel, ground_only);
         let index = self.calc_index(row, column);
 
         self.pixels[index] = Some(MapPixel {
-            surface_info,
+            surface,
             original_color: pixel,
         });
     }
@@ -51,23 +45,7 @@ impl MapImage {
     }
 
     pub fn surfaces(&self) -> Vec<Option<Surface>> {
-        self.pixels
-            .iter()
-            .map(|p| p.map(|p| p.surface_info.surface))
-            .collect()
-    }
-
-    pub fn obstacles(&self) -> Vec<bool> {
-        self.pixels
-            .iter()
-            .map(|p| {
-                if let Some(p) = p {
-                    p.surface_info.obstacle
-                } else {
-                    false
-                }
-            })
-            .collect()
+        self.pixels.iter().map(|p| p.map(|p| p.surface)).collect()
     }
 
     fn calc_index(&self, row: usize, column: usize) -> usize {
@@ -78,19 +56,19 @@ impl MapImage {
         let ground_only = true;
         let pixel = &mut self.pixels[index];
         if let Some(pixel) = pixel {
-            pixel.surface_info = self
+            pixel.surface = self
                 .palettes
                 .nearest_surface(&pixel.original_color, ground_only);
         }
     }
 
     fn fix_iteration(&mut self) -> bool {
-        let surface_getter = |row: usize, column: usize| {
+        let terrain_getter = |row: usize, column: usize| {
             if (row >= self.size) || (column >= self.size) {
                 None
             } else {
                 let index = self.calc_index(row, column);
-                self.pixels[index].map(|p| p.surface_info.surface)
+                self.pixels[index].map(|p| p.surface.terrain)
             }
         };
 
@@ -99,7 +77,7 @@ impl MapImage {
         for row in 0..self.size {
             for column in 0..self.size {
                 let is_problem_surface =
-                    self.surface_check.has_problem(row, column, surface_getter);
+                    self.terrain_check.has_problem(row, column, terrain_getter);
 
                 if is_problem_surface {
                     let index = self.calc_index(row, column);

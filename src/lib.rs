@@ -44,11 +44,6 @@ impl H3m {
         let surfaces = map_image.surfaces();
         self.set_surfaces(underground, &surfaces)?;
 
-        if obstacles {
-            let obstacles = map_image.obstacles();
-            self.set_obstacles(underground, &obstacles)?;
-        }
-
         Ok(())
     }
 }

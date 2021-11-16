@@ -1,53 +1,52 @@
-use super::SurfaceInfo;
-use crate::h3m::Surface;
+use crate::h3m::{Surface, Terrain};
 use delta_e::DE2000;
 use image::Rgb;
 
 type RgbColor = [u8; 3];
 
-fn surface_rgb_color(surface: Surface) -> RgbColor {
-    match surface {
-        Surface::Dirt => [0x52, 0x39, 0x08],
-        Surface::Sand => [0xDE, 0xCE, 0x8C],
-        Surface::Grass => [0x00, 0x42, 0x00],
-        Surface::Snow => [0xB5, 0xC6, 0xC6],
-        Surface::Swamp => [0x4A, 0x84, 0x6B],
-        Surface::Rough => [0x84, 0x73, 0x31],
-        Surface::Subterranean => [0x84, 0x31, 0x00],
-        Surface::Lava => [0x4A, 0x4A, 0x4A],
-        Surface::Highland => [0x29, 0x73, 0x18],
-        Surface::Wasteland => [0xBD, 0x5A, 0x08],
-        Surface::Water => [0x08, 0x52, 0x94],
-        Surface::Rock => [0x00, 0x00, 0x00],
+fn terrain_rgb_color(terrain: Terrain) -> RgbColor {
+    match terrain {
+        Terrain::Dirt => [0x52, 0x39, 0x08],
+        Terrain::Sand => [0xDE, 0xCE, 0x8C],
+        Terrain::Grass => [0x00, 0x42, 0x00],
+        Terrain::Snow => [0xB5, 0xC6, 0xC6],
+        Terrain::Swamp => [0x4A, 0x84, 0x6B],
+        Terrain::Rough => [0x84, 0x73, 0x31],
+        Terrain::Subterranean => [0x84, 0x31, 0x00],
+        Terrain::Lava => [0x4A, 0x4A, 0x4A],
+        Terrain::Highland => [0x29, 0x73, 0x18],
+        Terrain::Wasteland => [0xBD, 0x5A, 0x08],
+        Terrain::Water => [0x08, 0x52, 0x94],
+        Terrain::Rock => [0x00, 0x00, 0x00],
     }
 }
 
-fn surface_obstacle_rgb_color(surface: Surface) -> Option<RgbColor> {
-    match surface {
-        Surface::Dirt => Some([0x39, 0x29, 0x08]),
-        Surface::Sand => Some([0xA5, 0x9C, 0x6B]),
-        Surface::Grass => Some([0x00, 0x31, 0x00]),
-        Surface::Snow => Some([0x8C, 0x9C, 0x9C]),
-        Surface::Swamp => Some([0x21, 0x5A, 0x42]),
-        Surface::Rough => Some([0x63, 0x52, 0x21]),
-        Surface::Subterranean => Some([0x5A, 0x08, 0x00]),
-        Surface::Lava => Some([0x29, 0x29, 0x29]),
-        Surface::Highland => Some([0x21, 0x52, 0x10]),
-        Surface::Wasteland => Some([0x9C, 0x42, 0x08]),
-        Surface::Water => Some([0x00, 0x29, 0x6B]),
-        Surface::Rock => None,
+fn obstacle_rgb_color(terrain: Terrain) -> Option<RgbColor> {
+    match terrain {
+        Terrain::Dirt => Some([0x39, 0x29, 0x08]),
+        Terrain::Sand => Some([0xA5, 0x9C, 0x6B]),
+        Terrain::Grass => Some([0x00, 0x31, 0x00]),
+        Terrain::Snow => Some([0x8C, 0x9C, 0x9C]),
+        Terrain::Swamp => Some([0x21, 0x5A, 0x42]),
+        Terrain::Rough => Some([0x63, 0x52, 0x21]),
+        Terrain::Subterranean => Some([0x5A, 0x08, 0x00]),
+        Terrain::Lava => Some([0x29, 0x29, 0x29]),
+        Terrain::Highland => Some([0x21, 0x52, 0x10]),
+        Terrain::Wasteland => Some([0x9C, 0x42, 0x08]),
+        Terrain::Water => Some([0x00, 0x29, 0x6B]),
+        Terrain::Rock => None,
     }
 }
 
 struct Color {
-    surface_info: SurfaceInfo,
+    surface: Surface,
     rgb_color: RgbColor,
 }
 
 impl Color {
-    fn new(surface: Surface, obstacle: bool, rgb_color: RgbColor) -> Color {
+    fn new(terrain: Terrain, obstacle: bool, rgb_color: RgbColor) -> Color {
         Color {
-            surface_info: SurfaceInfo { surface, obstacle },
+            surface: Surface { terrain, obstacle },
             rgb_color,
         }
     }
@@ -67,49 +66,49 @@ impl Palettes {
             all: Vec::new(),
         };
 
-        let mut add_surface = |surface: Surface| {
-            let color = surface_rgb_color(surface);
+        let mut add_terrain = |terrain: Terrain| {
+            let color = terrain_rgb_color(terrain);
 
-            palettes.all.push(Color::new(surface, false, color));
+            palettes.all.push(Color::new(terrain, false, color));
 
-            if surface.is_ground() {
-                palettes.ground.push(Color::new(surface, false, color));
+            if terrain.is_ground() {
+                palettes.ground.push(Color::new(terrain, false, color));
             }
 
             let obstacle_color = if obstacles {
-                surface_obstacle_rgb_color(surface)
+                obstacle_rgb_color(terrain)
             } else {
                 None
             };
 
             if let Some(obstacle_color) = obstacle_color {
-                palettes.all.push(Color::new(surface, true, obstacle_color));
+                palettes.all.push(Color::new(terrain, true, obstacle_color));
 
-                if surface.is_ground() {
+                if terrain.is_ground() {
                     palettes
                         .ground
-                        .push(Color::new(surface, true, obstacle_color));
+                        .push(Color::new(terrain, true, obstacle_color));
                 }
             }
         };
 
-        add_surface(Surface::Dirt);
-        add_surface(Surface::Sand);
-        add_surface(Surface::Grass);
-        add_surface(Surface::Snow);
-        add_surface(Surface::Swamp);
-        add_surface(Surface::Rough);
-        add_surface(Surface::Subterranean);
-        add_surface(Surface::Lava);
-        add_surface(Surface::Highland);
-        add_surface(Surface::Wasteland);
-        add_surface(Surface::Water);
-        add_surface(Surface::Rock);
+        add_terrain(Terrain::Dirt);
+        add_terrain(Terrain::Sand);
+        add_terrain(Terrain::Grass);
+        add_terrain(Terrain::Snow);
+        add_terrain(Terrain::Swamp);
+        add_terrain(Terrain::Rough);
+        add_terrain(Terrain::Subterranean);
+        add_terrain(Terrain::Lava);
+        add_terrain(Terrain::Highland);
+        add_terrain(Terrain::Wasteland);
+        add_terrain(Terrain::Water);
+        add_terrain(Terrain::Rock);
 
         palettes
     }
 
-    pub fn nearest_surface(&self, pixel: &Rgb<u8>, ground_only: bool) -> SurfaceInfo {
+    pub fn nearest_surface(&self, pixel: &Rgb<u8>, ground_only: bool) -> Surface {
         let input_color = &pixel.0;
 
         let palette = if ground_only { &self.ground } else { &self.all };
@@ -118,7 +117,7 @@ impl Palettes {
             .iter()
             .map(|color| {
                 (
-                    &color.surface_info,
+                    &color.surface,
                     DE2000::from_rgb(&color.rgb_color, input_color),
                 )
             })

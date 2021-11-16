@@ -4,7 +4,7 @@ use parsers::*;
 use rand::Rng;
 use result::*;
 use std::io::{self, Read, Write};
-pub use surface::Surface;
+pub use surface::{Surface, Terrain};
 
 mod obstacle_generator;
 mod parsers;
@@ -55,85 +55,95 @@ impl H3m {
         underground: bool,
         surfaces: &[Option<Surface>],
     ) -> H3mResult<()> {
+        let mut has_obstacles = false;
+
         for (index, surface) in surfaces.iter().enumerate() {
             if let Some(surface) = surface {
-                self.set_surface_by_index(index, underground, *surface)?;
+                self.set_terrain_by_index(index, underground, surface.terrain)?;
+                if surface.obstacle {
+                    has_obstacles = true;
+                }
             }
         }
-        Ok(())
-    }
 
-    pub fn set_obstacles(&mut self, underground: bool, obstacles: &[bool]) -> H3mResult<()> {
-        if self.obstacle_generator.is_none() {
-            self.obstacle_generator =
-                Some(ObstacleGenerator::new(&self.info.default_object_templates));
-        }
-
-        for (index, &obstacle) in obstacles.iter().enumerate() {
-            if obstacle {
-                let column = (index % self.map_size()).try_into()?;
-                let row = (index / self.map_size()).try_into()?;
-                self.obstacle_generator
-                    .as_mut()
-                    .unwrap()
-                    .generate(column, row, underground);
-            }
+        if has_obstacles {
+            let map_size = self.map_size();
+            self.obstacle_generator
+                .get_or_insert_with(|| {
+                    ObstacleGenerator::new(map_size, &self.info.default_object_templates)
+                })
+                .generate(underground, surfaces)?;
         }
 
         Ok(())
     }
 
-    fn set_surface_by_index(
+    fn set_terrain_by_index(
         &mut self,
         index: usize,
         underground: bool,
-        surface: Surface,
+        terrain: Terrain,
     ) -> H3mResult<()> {
-        let land_length = self.map_size() * self.map_size();
-
-        if index >= land_length {
+        let map_length = self.map_size() * self.map_size();
+        if index >= map_length {
             return Err(H3mError::Parameter(ParameterError::new(format!(
-                "Invalid surface index: {}, land length: {}.",
-                index, land_length
+                "Invalid map index: {}, map length: {}.",
+                index, map_length
             ))));
         }
 
-        let surface_cell_offset = if underground {
+        let map_cell_offset = if underground {
             self.info.underground_offset.ok_or_else(|| {
                 H3mError::Parameter(ParameterError::new(
-                    "Can't set underground surface, input map has not underground.",
+                    "Can't set underground map, input map has not underground.",
                 ))
             })?
         } else {
             self.info.land_offset
-        } + index * SURFACE_CELL_SIZE;
+        } + index * MAP_CELL_SIZE;
 
-        let surface_picture_type = self.surface_picture_type(surface);
+        let terrain_picture_type = self.terrain_picture_type(terrain);
 
-        let surface_cell =
-            &mut self.raw_map[surface_cell_offset..surface_cell_offset + SURFACE_CELL_SIZE];
+        let map_cell = &mut self.raw_map[map_cell_offset..map_cell_offset + MAP_CELL_SIZE];
 
-        surface_cell[0] = surface.code();
-        surface_cell[1] = surface_picture_type;
+        map_cell[0] = terrain_code(terrain);
+        map_cell[1] = terrain_picture_type;
 
         Ok(())
     }
 
-    fn surface_picture_type(&self, surface: Surface) -> u8 {
-        let range = match surface {
-            Surface::Dirt => 21..=44,
-            Surface::Sand => 0..=23,
-            Surface::Grass => 49..=72,
-            Surface::Snow => 49..=72,
-            Surface::Swamp => 49..=72,
-            Surface::Rough => 49..=72,
-            Surface::Subterranean => 49..=72,
-            Surface::Lava => 49..=72,
-            Surface::Highland => 77..=117,
-            Surface::Wasteland => 77..=117,
-            Surface::Water => 21..=32,
-            Surface::Rock => 0..=7,
+    fn terrain_picture_type(&self, terrain: Terrain) -> u8 {
+        let range = match terrain {
+            Terrain::Dirt => 21..=44,
+            Terrain::Sand => 0..=23,
+            Terrain::Grass => 49..=72,
+            Terrain::Snow => 49..=72,
+            Terrain::Swamp => 49..=72,
+            Terrain::Rough => 49..=72,
+            Terrain::Subterranean => 49..=72,
+            Terrain::Lava => 49..=72,
+            Terrain::Highland => 77..=117,
+            Terrain::Wasteland => 77..=117,
+            Terrain::Water => 21..=32,
+            Terrain::Rock => 0..=7,
         };
         rand::thread_rng().gen_range(range)
+    }
+}
+
+fn terrain_code(terrain: Terrain) -> u8 {
+    match terrain {
+        Terrain::Dirt => 0,
+        Terrain::Sand => 1,
+        Terrain::Grass => 2,
+        Terrain::Snow => 3,
+        Terrain::Swamp => 4,
+        Terrain::Rough => 5,
+        Terrain::Subterranean => 6,
+        Terrain::Lava => 7,
+        Terrain::Highland => 10,
+        Terrain::Wasteland => 11,
+        Terrain::Water => 8,
+        Terrain::Rock => 9,
     }
 }
