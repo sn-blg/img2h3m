@@ -106,7 +106,7 @@ impl H3m {
 
         let map_cell = &mut self.raw_map[map_cell_offset..map_cell_offset + MAP_CELL_SIZE];
 
-        map_cell[0] = terrain_code(terrain);
+        map_cell[0] = terrain.code();
         map_cell[1] = terrain_picture_type;
 
         Ok(())
@@ -128,22 +128,5 @@ impl H3m {
             Terrain::Rock => 0..=7,
         };
         rand::thread_rng().gen_range(range)
-    }
-}
-
-fn terrain_code(terrain: Terrain) -> u8 {
-    match terrain {
-        Terrain::Dirt => 0,
-        Terrain::Sand => 1,
-        Terrain::Grass => 2,
-        Terrain::Snow => 3,
-        Terrain::Swamp => 4,
-        Terrain::Rough => 5,
-        Terrain::Subterranean => 6,
-        Terrain::Lava => 7,
-        Terrain::Highland => 10,
-        Terrain::Wasteland => 11,
-        Terrain::Water => 8,
-        Terrain::Rock => 9,
     }
 }

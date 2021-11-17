@@ -1,7 +1,7 @@
 use crate::h3m::parsers::common::*;
 use crate::h3m::result::*;
-use byteorder::{WriteBytesExt, LE};
-use std::io::Write;
+use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+use std::io::{Read, Seek, Write};
 
 #[derive(Debug)]
 pub struct H3mLocation {
@@ -47,15 +47,13 @@ fn write_location<W: Write>(location: &H3mLocation, output: &mut W) -> H3mResult
     Ok(())
 }
 
-/*
-fn read_location<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3MLocation> {
-    Ok(H3MLocation {
+fn read_location<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mLocation> {
+    Ok(H3mLocation {
         column: input.read_u8()?,
         row: input.read_u8()?,
         underground: read_bool(input)?,
     })
 }
-*/
 
 fn write_object<W: Write>(object: &H3mObject, output: &mut W) -> H3mResult<()> {
     write_location(&object.location, output)?;
@@ -67,9 +65,8 @@ fn write_object<W: Write>(object: &H3mObject, output: &mut W) -> H3mResult<()> {
     Ok(())
 }
 
-/*
-fn read_object<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3MObject> {
-    let object = H3MObject {
+fn read_object<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mObject> {
+    let object = H3mObject {
         location: read_location(input)?,
         template_idx: input.read_u32::<LE>()?,
     };
@@ -78,7 +75,6 @@ fn read_object<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3MObject> {
 
     Ok(object)
 }
-*/
 
 pub fn write_objects<W: Write>(objects: &[H3mObject], output: &mut W) -> H3mResult<()> {
     let count = objects.len();
@@ -93,7 +89,6 @@ pub fn write_objects<W: Write>(objects: &[H3mObject], output: &mut W) -> H3mResu
     Ok(())
 }
 
-/*
 pub fn skip_objects<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
     let objects_count = input.read_u32::<LE>()?;
 
@@ -106,4 +101,3 @@ pub fn skip_objects<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
 
     Ok(())
 }
-*/
