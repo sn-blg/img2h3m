@@ -7,6 +7,7 @@ use rand::Rng;
 use std::collections::HashSet;
 
 mod obstacle_cell;
+mod obstacle_template;
 mod obstacle_template_list;
 
 #[derive(Debug)]
@@ -130,7 +131,7 @@ impl ObstacleGenerator {
         let obstacle = self.obstacle_template_list.template_mut(template_index);
 
         if obstacle.index() == 0 {
-            obstacle.set_index(self.objects_data.templates.len());
+            obstacle.set_index_usize(self.objects_data.templates.len())?;
             self.objects_data
                 .templates
                 .push(obstacle.h3m_template().clone());
@@ -142,7 +143,7 @@ impl ObstacleGenerator {
                 position.column(),
                 position.row(),
                 underground,
-                obstacle.index().try_into()?,
+                obstacle.index(),
             ));
 
         obstacle_cells[position.index()].reset_group();
