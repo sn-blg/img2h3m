@@ -1,72 +1,13 @@
 use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
+use obstacle_cell::{obstacle_cells, ObstacleCell};
 use obstacle_template_list::{ObstacleTemplate, ObstacleTemplateList};
 use rand::Rng;
 use std::collections::HashSet;
 
+mod obstacle_cell;
 mod obstacle_template_list;
-
-#[derive(Clone, Copy)]
-struct ObstacleCell {
-    index: usize,
-    row: u8,
-    column: u8,
-    editor_group: u16, // 0 means no obstacles to place
-}
-
-impl ObstacleCell {
-    fn try_new(index: usize, map_size: usize) -> H3mResult<ObstacleCell> {
-        Ok(ObstacleCell {
-            index,
-            row: (index / map_size).try_into()?,
-            column: (index % map_size).try_into()?,
-            editor_group: 0,
-        })
-    }
-
-    fn index(&self) -> usize {
-        self.index
-    }
-
-    fn row(&self) -> u8 {
-        self.row
-    }
-
-    fn column(&self) -> u8 {
-        self.column
-    }
-
-    fn editor_group(&self) -> u16 {
-        self.editor_group
-    }
-
-    fn set_editor_group(&mut self, editor_group: u16) {
-        self.editor_group = editor_group;
-    }
-
-    fn reset_editor_group(&mut self) {
-        self.editor_group = 0;
-    }
-}
-
-fn obstacle_cells(map_size: usize, surfaces: &[Option<Surface>]) -> H3mResult<Vec<ObstacleCell>> {
-    let mut obstacle_cells = Vec::with_capacity(surfaces.len());
-
-    for (index, surface) in surfaces.iter().enumerate() {
-        let mut cell = ObstacleCell::try_new(index, map_size)?;
-
-        if let Some(surface) = surface {
-            if surface.obstacle {
-                cell.set_editor_group(1 << (surface.terrain.code() as u16));
-            }
-        }
-
-        obstacle_cells.push(cell)
-    }
-
-    Ok(obstacle_cells)
-}
 
 struct ObjectsData {
     templates: Vec<H3mObjectTemplate>,
@@ -148,7 +89,7 @@ impl ObstacleGenerator {
                             underground,
                             obstacle.index().try_into()?,
                         ));
-                    obstacle_cells[position.index()].reset_editor_group();
+                    obstacle_cells[position.index()].reset_group();
                 }
                 None => {
                     assert!(template_index_set.remove(&template_index));
@@ -165,7 +106,7 @@ impl ObstacleGenerator {
     ) -> Option<ObstacleCell> {
         for cell in obstacle_cells {
             let is_valid_terrain =
-                cell.editor_group() & obstacle.h3m_template().surface_editor_group_mask != 0;
+                cell.group() & obstacle.h3m_template().surface_editor_group_mask != 0;
 
             if is_valid_terrain {
                 return Some(*cell);
