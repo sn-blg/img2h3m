@@ -38,7 +38,11 @@ impl ObstacleTemplateList {
         )
     }
 
-    pub fn template(&mut self, index: usize) -> &mut ObstacleTemplate {
+    pub fn template(&self, index: usize) -> &ObstacleTemplate {
+        &self.0[index]
+    }
+
+    pub fn template_mut(&mut self, index: usize) -> &mut ObstacleTemplate {
         &mut self.0[index]
     }
 

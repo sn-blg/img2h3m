@@ -2,12 +2,38 @@ use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
 use obstacle_cell::{obstacle_cells, ObstacleCell};
-use obstacle_template_list::{ObstacleTemplate, ObstacleTemplateList};
+use obstacle_template_list::ObstacleTemplateList;
 use rand::Rng;
 use std::collections::HashSet;
 
 mod obstacle_cell;
 mod obstacle_template_list;
+
+#[derive(Debug)]
+struct TemplateIndexSet(HashSet<usize>);
+
+impl TemplateIndexSet {
+    fn new(len: usize) -> TemplateIndexSet {
+        TemplateIndexSet((0..len).collect())
+    }
+
+    fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    fn random_index(&self) -> usize {
+        *self
+            .0
+            .iter()
+            .nth(rand::thread_rng().gen_range(0..self.0.len()))
+            .unwrap()
+    }
+
+    fn remove(&mut self, index: usize) {
+        assert!(self.0.remove(&index));
+        println!("template_index_set = {:?}", self);
+    }
+}
 
 struct ObjectsData {
     templates: Vec<H3mObjectTemplate>,
@@ -62,49 +88,28 @@ impl ObstacleGenerator {
         underground: bool,
         obstacle_cells: &mut [ObstacleCell],
     ) -> H3mResult<()> {
-        let mut template_index_set: HashSet<usize> =
-            (0..self.obstacle_template_list.len()).collect();
-
+        let mut template_index_set = TemplateIndexSet::new(self.obstacle_template_list.len());
         while !template_index_set.is_empty() {
-            let template_index = *template_index_set
-                .iter()
-                .nth(rand::thread_rng().gen_range(0..template_index_set.len()))
-                .unwrap();
-
-            let obstacle = self.obstacle_template_list.template(template_index);
-            let position = ObstacleGenerator::try_position_obstacle(obstacle, obstacle_cells);
+            let template_index = template_index_set.random_index();
+            let position = self.try_position_obstacle(template_index, obstacle_cells);
             match position {
                 Some(position) => {
-                    if obstacle.index() == 0 {
-                        obstacle.set_index(self.objects_data.templates.len());
-                        self.objects_data
-                            .templates
-                            .push(obstacle.h3m_template().clone());
-                    }
-                    self.objects_data
-                        .objects
-                        .push(H3mObject::without_properties(
-                            position.column(),
-                            position.row(),
-                            underground,
-                            obstacle.index().try_into()?,
-                        ));
-                    obstacle_cells[position.index()].reset_group();
+                    self.add_obstacle(template_index, position, underground, obstacle_cells)?
                 }
-                None => {
-                    assert!(template_index_set.remove(&template_index));
-                    println!("template_index_set = {:?}", template_index_set);
-                }
+                None => template_index_set.remove(template_index),
             }
         }
         Ok(())
     }
 
     fn try_position_obstacle(
-        obstacle: &ObstacleTemplate,
+        &self,
+        template_index: usize,
         obstacle_cells: &[ObstacleCell],
     ) -> Option<ObstacleCell> {
+        let obstacle = self.obstacle_template_list.template(template_index);
         for cell in obstacle_cells {
+            //fn is_obstacle_template_fit() -> bool {}
             let is_valid_terrain =
                 cell.group() & obstacle.h3m_template().surface_editor_group_mask != 0;
 
@@ -115,7 +120,35 @@ impl ObstacleGenerator {
         None
     }
 
-    //fn is_obstacle_template_fit() -> bool {}
+    fn add_obstacle(
+        &mut self,
+        template_index: usize,
+        position: ObstacleCell,
+        underground: bool,
+        obstacle_cells: &mut [ObstacleCell],
+    ) -> H3mResult<()> {
+        let obstacle = self.obstacle_template_list.template_mut(template_index);
+
+        if obstacle.index() == 0 {
+            obstacle.set_index(self.objects_data.templates.len());
+            self.objects_data
+                .templates
+                .push(obstacle.h3m_template().clone());
+        }
+
+        self.objects_data
+            .objects
+            .push(H3mObject::without_properties(
+                position.column(),
+                position.row(),
+                underground,
+                obstacle.index().try_into()?,
+            ));
+
+        obstacle_cells[position.index()].reset_group();
+
+        Ok(())
+    }
 
     pub fn object_templates(&self) -> &[H3mObjectTemplate] {
         &self.objects_data.templates
