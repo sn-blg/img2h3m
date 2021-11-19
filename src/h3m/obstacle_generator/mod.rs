@@ -33,7 +33,7 @@ impl TemplateIndexSet {
 
     fn remove(&mut self, index: usize) {
         assert!(self.0.remove(&index));
-        println!("template_index_set = {:?}", self);
+        //println!("template_index_set = {:?}", self);
     }
 }
 
@@ -122,13 +122,13 @@ impl ObstacleGenerator {
             }
         };
 
-        'cell_traversal: for cell in obstacle_cells {
+        'cell_traversal: for position in obstacle_cells {
             for delta in obstacle.shape() {
-                if !is_valid_neighbour(cell, delta) {
+                if !is_valid_neighbour(position, delta) {
                     continue 'cell_traversal;
                 }
             }
-            return Some(*cell);
+            return Some(*position);
         }
         None
     }

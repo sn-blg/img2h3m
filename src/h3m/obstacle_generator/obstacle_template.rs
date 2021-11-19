@@ -1,6 +1,7 @@
 use crate::h3m::parsers::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
 
+#[derive(Debug)]
 pub struct Delta {
     row: usize,
     column: usize,
@@ -21,12 +22,16 @@ impl Delta {
 }
 
 fn make_shape(mask: &Mask) -> Vec<Delta> {
-    match mask {
-        [255, 255, 255, 255, 255, 127] => vec![Delta::new(0, 0)],
-        [255, 255, 255, 255, 255, 63] => vec![Delta::new(0, 0), Delta::new(0, 1)],
-        [255, 255, 255, 255, 255, 31] => vec![Delta::new(0, 0), Delta::new(0, 1), Delta::new(0, 2)],
-        _ => panic!(),
+    let mut shape = Vec::new();
+    for (row, byte) in mask.iter().rev().enumerate() {
+        for column in 0..7usize {
+            let bit_mask = (1 << (7 - column)) as u8;
+            if byte & bit_mask == 0 {
+                shape.push(Delta::new(row, column));
+            }
+        }
     }
+    shape
 }
 
 pub struct ObstacleTemplate {
