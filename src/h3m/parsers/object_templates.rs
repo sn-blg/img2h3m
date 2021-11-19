@@ -3,7 +3,7 @@ use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 use std::io::{Read, Seek, Write};
 
-type Mask = [u8; 6];
+pub type Mask = [u8; 6];
 
 #[derive(Debug, Clone)]
 pub struct H3mObjectTemplate {

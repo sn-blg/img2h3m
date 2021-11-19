@@ -39,17 +39,30 @@ fn h3m_obstacle_templates() -> Vec<parsers::H3mObjectTemplate> {
         pub is_overlay: bool,
     }
 
-    [H3mObjectTemplate {
-        filename: "avlswt00.def",
-        shape_mask: [255, 255, 255, 255, 255, 127],
-        visit_mask: [0, 0, 0, 0, 0, 0],
-        surface_type_mask: 3583,
-        surface_editor_group_mask: 16,
-        class: 140,
-        subclass: 2,
-        group: 0,
-        is_overlay: false,
-    }]
+    [
+        H3mObjectTemplate {
+            filename: "avlswt00.def",
+            shape_mask: [255, 255, 255, 255, 255, 127],
+            visit_mask: [0, 0, 0, 0, 0, 0],
+            surface_type_mask: 3583,
+            surface_editor_group_mask: 16,
+            class: 140,
+            subclass: 2,
+            group: 0,
+            is_overlay: false,
+        },
+        H3mObjectTemplate {
+            filename: "AVLman20.def",
+            shape_mask: [255, 255, 255, 255, 255, 63],
+            visit_mask: [0, 0, 0, 0, 0, 0],
+            surface_type_mask: 3583,
+            surface_editor_group_mask: 16,
+            class: 131,
+            subclass: 0,
+            group: 0,
+            is_overlay: false,
+        },
+    ]
     .into_iter()
     .map(|t| parsers::H3mObjectTemplate {
         filename: String::from(t.filename),

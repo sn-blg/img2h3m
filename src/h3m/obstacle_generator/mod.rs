@@ -2,6 +2,7 @@ use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
 use obstacle_cell::{obstacle_cells, ObstacleCell};
+use obstacle_template::Delta;
 use obstacle_template_list::ObstacleTemplateList;
 use rand::Rng;
 use std::collections::HashSet;
@@ -109,14 +110,25 @@ impl ObstacleGenerator {
         obstacle_cells: &[ObstacleCell],
     ) -> Option<ObstacleCell> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        for cell in obstacle_cells {
-            //fn is_obstacle_template_fit() -> bool {}
-            let is_valid_terrain =
-                cell.group() & obstacle.h3m_template().surface_editor_group_mask != 0;
-
-            if is_valid_terrain {
-                return Some(*cell);
+        let is_valid_neighbour = |cell: &ObstacleCell, delta: &Delta| {
+            let row = (cell.row() as usize).checked_sub(delta.row());
+            let column = (cell.column() as usize).checked_sub(delta.column());
+            match (row, column) {
+                (Some(row), Some(column)) => {
+                    let neighbour = obstacle_cells[row * self.map_size + column];
+                    obstacle.is_valid_terrain(neighbour.terrain_group())
+                }
+                _ => false,
             }
+        };
+
+        'cell_traversal: for cell in obstacle_cells {
+            for delta in obstacle.shape() {
+                if !is_valid_neighbour(cell, delta) {
+                    continue 'cell_traversal;
+                }
+            }
+            return Some(*cell);
         }
         None
     }
@@ -146,7 +158,11 @@ impl ObstacleGenerator {
                 obstacle.index(),
             ));
 
-        obstacle_cells[position.index()].reset_group();
+        for delta in obstacle.shape() {
+            let row = (position.row() as usize) - delta.row();
+            let column = (position.column() as usize) - delta.column();
+            obstacle_cells[row * self.map_size + column].reset_terrain_group();
+        }
 
         Ok(())
     }

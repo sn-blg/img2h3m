@@ -3,24 +3,18 @@ use crate::h3m::Surface;
 
 #[derive(Clone, Copy)]
 pub struct ObstacleCell {
-    index: usize,
     row: u8,
     column: u8,
-    group: u16, // surface editor group, 0 means no obstacles to place
+    terrain_group: u16, // surface editor group, 0 means no obstacles to place
 }
 
 impl ObstacleCell {
     fn try_new(index: usize, map_size: usize) -> H3mResult<ObstacleCell> {
         Ok(ObstacleCell {
-            index,
             row: (index / map_size).try_into()?,
             column: (index % map_size).try_into()?,
-            group: 0,
+            terrain_group: 0,
         })
-    }
-
-    pub fn index(&self) -> usize {
-        self.index
     }
 
     pub fn row(&self) -> u8 {
@@ -31,12 +25,12 @@ impl ObstacleCell {
         self.column
     }
 
-    pub fn group(&self) -> u16 {
-        self.group
+    pub fn terrain_group(&self) -> u16 {
+        self.terrain_group
     }
 
-    pub fn reset_group(&mut self) {
-        self.group = 0;
+    pub fn reset_terrain_group(&mut self) {
+        self.terrain_group = 0;
     }
 }
 
@@ -51,7 +45,7 @@ pub fn obstacle_cells(
 
         if let Some(surface) = surface {
             if surface.obstacle {
-                cell.group = 1 << (surface.terrain.code() as u16);
+                cell.terrain_group = 1 << (surface.terrain.code() as u16);
             }
         }
 
