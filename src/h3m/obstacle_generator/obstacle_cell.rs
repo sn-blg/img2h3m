@@ -45,7 +45,7 @@ pub fn obstacle_cells(
 
         if let Some(surface) = surface {
             if surface.obstacle {
-                cell.terrain_group = 1 << (surface.terrain.code() as u16);
+                cell.terrain_group = surface.terrain.group();
             }
         }
 

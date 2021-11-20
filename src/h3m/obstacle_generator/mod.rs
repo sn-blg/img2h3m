@@ -7,6 +7,7 @@ use obstacle_template_list::ObstacleTemplateList;
 use rand::Rng;
 use std::collections::HashSet;
 
+mod common;
 mod obstacle_cell;
 mod obstacle_template;
 mod obstacle_template_list;

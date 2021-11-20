@@ -1,5 +1,6 @@
 use crate::h3m::parsers::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
+use crate::h3m::Terrain;
 
 #[derive(Debug)]
 pub struct Delta {
@@ -38,16 +39,29 @@ pub struct ObstacleTemplate {
     h3m_template: H3mObjectTemplate,
     shape: Vec<Delta>,
     index: u32,
+    terrain_group_mask: u16,
 }
 
 impl ObstacleTemplate {
     pub fn new(h3m_template: H3mObjectTemplate) -> ObstacleTemplate {
         let mask = h3m_template.shape_mask;
+        let terrain_group_mask = ObstacleTemplate::terrain_group_mask(&h3m_template);
         ObstacleTemplate {
             h3m_template,
             shape: make_shape(&mask),
             index: 0,
+            terrain_group_mask
         }
+    }
+
+    fn terrain_group_mask(h3m_template: &H3mObjectTemplate) -> u16 {
+        let mut terrain_group_mask = h3m_template.surface_editor_group_mask;
+
+        if is_palm_tree(h3m_template) {
+            terrain_group_mask &= !Terrain::Grass.group();
+        }
+
+        terrain_group_mask
     }
 
     pub fn h3m_template(&self) -> &H3mObjectTemplate {
@@ -64,10 +78,14 @@ impl ObstacleTemplate {
     }
 
     pub fn is_valid_terrain(&self, terrain_group: u16) -> bool {
-        (terrain_group & self.h3m_template.surface_editor_group_mask) != 0
+        (terrain_group & self.terrain_group_mask) != 0
     }
 
     pub fn shape(&self) -> &[Delta] {
         &self.shape
     }
+}
+
+fn is_palm_tree(h3m_template: &H3mObjectTemplate) -> bool {
+    h3m_template.class == 140 && h3m_template.subclass == 2
 }
