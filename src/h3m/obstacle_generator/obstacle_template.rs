@@ -50,7 +50,7 @@ impl ObstacleTemplate {
             h3m_template,
             shape: make_shape(&mask),
             index: 0,
-            terrain_group_mask
+            terrain_group_mask,
         }
     }
 
