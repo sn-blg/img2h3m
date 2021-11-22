@@ -72,8 +72,10 @@ impl ObstacleTemplate {
             10
         } else if is_ice_block(h3m_template) {
             5
-        } else if is_crater(h3m_template)  {
+        } else if is_crater(h3m_template) {
             10
+        } else if is_uniq(h3m_template) {
+            1
         } else {
             100
         }
@@ -129,4 +131,8 @@ fn is_ice_block(h3m_template: &H3mObjectTemplate) -> bool {
 
 fn is_crater(h3m_template: &H3mObjectTemplate) -> bool {
     h3m_template.class == 118 && h3m_template.subclass == 0
+}
+
+fn is_uniq(h3m_template: &H3mObjectTemplate) -> bool {
+    h3m_template.filename == "AVLMTWL7.def" || h3m_template.filename == "AVLrws02.def"
 }
