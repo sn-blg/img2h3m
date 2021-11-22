@@ -1,11 +1,11 @@
 use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
+use hashbag::HashBag;
 use obstacle_cell::{obstacle_cells, ObstacleCell};
 use obstacle_template::Delta;
 use obstacle_template_list::ObstacleTemplateList;
 use rand::Rng;
-use std::collections::HashSet;
 
 mod common;
 mod obstacle_cell;
@@ -13,11 +13,15 @@ mod obstacle_template;
 mod obstacle_template_list;
 
 #[derive(Debug)]
-struct TemplateIndexSet(HashSet<usize>);
+struct TemplateIndexSet(HashBag<usize>);
 
 impl TemplateIndexSet {
-    fn new(len: usize) -> TemplateIndexSet {
-        TemplateIndexSet((0..len).collect())
+    fn new(obstacle_template_list: &ObstacleTemplateList) -> TemplateIndexSet {
+        let mut index_set = HashBag::new();
+        for (index, obstacle) in obstacle_template_list.iter().enumerate() {
+            index_set.insert_many(index, obstacle.frequency());
+        }
+        TemplateIndexSet(index_set)
     }
 
     fn is_empty(&self) -> bool {
@@ -33,7 +37,7 @@ impl TemplateIndexSet {
     }
 
     fn remove(&mut self, index: usize) {
-        assert!(self.0.remove(&index));
+        self.0.take_all(&index).unwrap();
         //println!("template_index_set = {:?}", self);
     }
 }
@@ -91,7 +95,7 @@ impl ObstacleGenerator {
         underground: bool,
         obstacle_cells: &mut [ObstacleCell],
     ) -> H3mResult<()> {
-        let mut template_index_set = TemplateIndexSet::new(self.obstacle_template_list.len());
+        let mut template_index_set = TemplateIndexSet::new(&self.obstacle_template_list);
         while !template_index_set.is_empty() {
             let template_index = template_index_set.random_index();
             let position = self.try_position_obstacle(template_index, obstacle_cells);

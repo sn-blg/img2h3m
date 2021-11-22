@@ -40,21 +40,24 @@ pub struct ObstacleTemplate {
     shape: Vec<Delta>,
     index: u32,
     terrain_group_mask: u16,
+    frequency: usize,
 }
 
 impl ObstacleTemplate {
     pub fn new(h3m_template: H3mObjectTemplate) -> ObstacleTemplate {
         let mask = h3m_template.shape_mask;
-        let terrain_group_mask = ObstacleTemplate::terrain_group_mask(&h3m_template);
+        let terrain_group_mask = ObstacleTemplate::calc_terrain_group_mask(&h3m_template);
+        let frequency = ObstacleTemplate::calc_frequency(&h3m_template);
         ObstacleTemplate {
             h3m_template,
             shape: make_shape(&mask),
             index: 0,
             terrain_group_mask,
+            frequency,
         }
     }
 
-    fn terrain_group_mask(h3m_template: &H3mObjectTemplate) -> u16 {
+    fn calc_terrain_group_mask(h3m_template: &H3mObjectTemplate) -> u16 {
         let mut terrain_group_mask = h3m_template.surface_editor_group_mask;
 
         if is_palm_tree(h3m_template) {
@@ -62,6 +65,14 @@ impl ObstacleTemplate {
         }
 
         terrain_group_mask
+    }
+
+    fn calc_frequency(h3m_template: &H3mObjectTemplate) -> usize {
+        if is_lake(h3m_template) {
+            10
+        } else {
+            100
+        }
     }
 
     pub fn h3m_template(&self) -> &H3mObjectTemplate {
@@ -84,8 +95,26 @@ impl ObstacleTemplate {
     pub fn shape(&self) -> &[Delta] {
         &self.shape
     }
+
+    pub fn frequency(&self) -> usize {
+        self.frequency
+    }
 }
 
 fn is_palm_tree(h3m_template: &H3mObjectTemplate) -> bool {
     h3m_template.class == 140 && h3m_template.subclass == 2
+}
+
+fn is_lake(h3m_template: &H3mObjectTemplate) -> bool {
+    if h3m_template.subclass == 0 {
+        h3m_template.class == 177
+            || h3m_template.class == 128
+            || h3m_template.class == 154
+            || h3m_template.class == 126
+            || h3m_template.class == 121
+    } else if h3m_template.subclass == 8 {
+        h3m_template.class == 140
+    } else {
+        false
+    }
 }

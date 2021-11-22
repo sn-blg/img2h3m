@@ -1,5 +1,6 @@
 use crate::h3m::obstacle_generator::obstacle_template::ObstacleTemplate;
 use crate::h3m::parsers;
+use std::slice::Iter;
 
 pub struct ObstacleTemplateList(Vec<ObstacleTemplate>);
 
@@ -21,8 +22,8 @@ impl ObstacleTemplateList {
         &mut self.0[index]
     }
 
-    pub fn len(&self) -> usize {
-        self.0.len()
+    pub fn iter(&self) -> Iter<ObstacleTemplate> {
+        self.0.iter()
     }
 }
 
