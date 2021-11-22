@@ -1,46 +1,16 @@
 use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
-use hashbag::HashBag;
 use obstacle_cell::{obstacle_cells, ObstacleCell};
 use obstacle_template::Delta;
 use obstacle_template_list::ObstacleTemplateList;
-use rand::Rng;
+use template_index_set::TemplateIndexSet;
 
 mod common;
 mod obstacle_cell;
 mod obstacle_template;
 mod obstacle_template_list;
-
-#[derive(Debug)]
-struct TemplateIndexSet(HashBag<usize>);
-
-impl TemplateIndexSet {
-    fn new(obstacle_template_list: &ObstacleTemplateList) -> TemplateIndexSet {
-        let mut index_set = HashBag::new();
-        for (index, obstacle) in obstacle_template_list.iter().enumerate() {
-            index_set.insert_many(index, obstacle.frequency());
-        }
-        TemplateIndexSet(index_set)
-    }
-
-    fn is_empty(&self) -> bool {
-        self.0.is_empty()
-    }
-
-    fn random_index(&self) -> usize {
-        *self
-            .0
-            .iter()
-            .nth(rand::thread_rng().gen_range(0..self.0.len()))
-            .unwrap()
-    }
-
-    fn remove(&mut self, index: usize) {
-        self.0.take_all(&index).unwrap();
-        //println!("template_index_set = {:?}", self);
-    }
-}
+mod template_index_set;
 
 struct ObjectsData {
     templates: Vec<H3mObjectTemplate>,
@@ -115,9 +85,9 @@ impl ObstacleGenerator {
         obstacle_cells: &[ObstacleCell],
     ) -> Option<ObstacleCell> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        let is_valid_neighbour = |cell: &ObstacleCell, delta: &Delta| {
-            let row = (cell.row() as usize).checked_sub(delta.row());
-            let column = (cell.column() as usize).checked_sub(delta.column());
+        let is_valid_neighbour = |position: &ObstacleCell, delta: &Delta| {
+            let row = (position.row() as usize).checked_sub(delta.row());
+            let column = (position.column() as usize).checked_sub(delta.column());
             match (row, column) {
                 (Some(row), Some(column)) => {
                     let neighbour = obstacle_cells[row * self.map_size + column];

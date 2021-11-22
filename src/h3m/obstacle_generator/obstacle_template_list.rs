@@ -1,4 +1,4 @@
-use crate::h3m::obstacle_generator::obstacle_template::ObstacleTemplate;
+use super::obstacle_template::ObstacleTemplate;
 use crate::h3m::parsers;
 use std::slice::Iter;
 
