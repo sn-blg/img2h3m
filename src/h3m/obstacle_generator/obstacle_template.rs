@@ -70,6 +70,10 @@ impl ObstacleTemplate {
     fn calc_frequency(h3m_template: &H3mObjectTemplate) -> usize {
         if is_lake(h3m_template) {
             10
+        } else if is_ice_block(h3m_template) {
+            5
+        } else if is_crater(h3m_template)  {
+            10
         } else {
             100
         }
@@ -117,4 +121,12 @@ fn is_lake(h3m_template: &H3mObjectTemplate) -> bool {
     } else {
         false
     }
+}
+
+fn is_ice_block(h3m_template: &H3mObjectTemplate) -> bool {
+    h3m_template.class == 140 && h3m_template.subclass == 3
+}
+
+fn is_crater(h3m_template: &H3mObjectTemplate) -> bool {
+    h3m_template.class == 118 && h3m_template.subclass == 0
 }
