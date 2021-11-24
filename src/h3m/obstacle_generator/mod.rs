@@ -1,13 +1,13 @@
 use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
-use obstacle_cell::{obstacle_cells, ObstacleCell};
-use obstacle_template::Delta;
+use map_area::{make_map_areas, MapArea};
+
 use obstacle_template_list::ObstacleTemplateList;
 use template_index_set::TemplateIndexSet;
 
 mod common;
-mod obstacle_cell;
+mod map_area;
 mod obstacle_template;
 mod obstacle_template_list;
 mod template_index_set;
@@ -56,22 +56,21 @@ impl ObstacleGenerator {
                 map_len
             ))));
         }
-        let mut obstacle_cells = obstacle_cells(self.map_size, surfaces)?;
-        self.generate_impl(underground, &mut obstacle_cells)
+        let map_areas = make_map_areas(self.map_size, surfaces, self.map_size, self.map_size)?;
+        for area in map_areas {
+            self.generate_in_area(underground, area)?;
+        }
+        Ok(())
     }
 
-    fn generate_impl(
-        &mut self,
-        underground: bool,
-        obstacle_cells: &mut [ObstacleCell],
-    ) -> H3mResult<()> {
+    fn generate_in_area(&mut self, underground: bool, mut map_area: MapArea) -> H3mResult<()> {
         let mut template_index_set = TemplateIndexSet::new(&self.obstacle_template_list);
         while !template_index_set.is_empty() {
             let template_index = template_index_set.random_index();
-            let position = self.try_position_obstacle(template_index, obstacle_cells);
-            match position {
-                Some(position) => {
-                    self.add_obstacle(template_index, position, underground, obstacle_cells)?
+            let position_index = self.try_position_obstacle(template_index, &map_area);
+            match position_index {
+                Some(position_index) => {
+                    self.add_obstacle(template_index, position_index, underground, &mut map_area)?
                 }
                 None => template_index_set.remove(template_index),
             }
@@ -79,41 +78,17 @@ impl ObstacleGenerator {
         Ok(())
     }
 
-    fn try_position_obstacle(
-        &self,
-        template_index: usize,
-        obstacle_cells: &[ObstacleCell],
-    ) -> Option<ObstacleCell> {
+    fn try_position_obstacle(&self, template_index: usize, map_area: &MapArea) -> Option<usize> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        let is_valid_neighbour = |position: &ObstacleCell, delta: &Delta| {
-            let row = (position.row() as usize).checked_sub(delta.row());
-            let column = (position.column() as usize).checked_sub(delta.column());
-            match (row, column) {
-                (Some(row), Some(column)) => {
-                    let neighbour = obstacle_cells[row * self.map_size + column];
-                    obstacle.is_valid_terrain(neighbour.terrain_group())
-                }
-                _ => false,
-            }
-        };
-
-        'cell_traversal: for position in obstacle_cells {
-            for delta in obstacle.shape() {
-                if !is_valid_neighbour(position, delta) {
-                    continue 'cell_traversal;
-                }
-            }
-            return Some(*position);
-        }
-        None
+        map_area.try_position_obstacle(obstacle)
     }
 
     fn add_obstacle(
         &mut self,
         template_index: usize,
-        position: ObstacleCell,
+        position_index: usize,
         underground: bool,
-        obstacle_cells: &mut [ObstacleCell],
+        map_area: &mut MapArea,
     ) -> H3mResult<()> {
         let obstacle = self.obstacle_template_list.template_mut(template_index);
 
@@ -124,6 +99,7 @@ impl ObstacleGenerator {
                 .push(obstacle.h3m_template().clone());
         }
 
+        let position = map_area.position(position_index);
         self.objects_data
             .objects
             .push(H3mObject::without_properties(
@@ -133,11 +109,7 @@ impl ObstacleGenerator {
                 obstacle.index(),
             ));
 
-        for delta in obstacle.shape() {
-            let row = (position.row() as usize) - delta.row();
-            let column = (position.column() as usize) - delta.column();
-            obstacle_cells[row * self.map_size + column].reset_terrain_group();
-        }
+        map_area.add_obstacle(position_index, obstacle);
 
         Ok(())
     }
