@@ -1,6 +1,7 @@
 use super::obstacle_template::{Delta, ObstacleTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
+use std::cmp::min;
 
 #[derive(Clone, Copy)]
 pub struct Position<T: Clone + Copy> {
@@ -22,6 +23,7 @@ impl<T: Clone + Copy> Position<T> {
     }
 }
 
+#[derive(Clone, Copy)]
 struct MapCell {
     position: Position<u8>,
     terrain_group: u16, // surface editor group, 0 means no obstacles to place
@@ -102,23 +104,46 @@ pub fn make_map_areas(
     map_size: usize,
     surfaces: &[Option<Surface>],
     width: usize,
-    _height: usize,
+    height: usize,
 ) -> H3mResult<Vec<MapArea>> {
-    let mut cells = Vec::with_capacity(surfaces.len());
+    assert!(surfaces.len() == map_size * map_size);
+
+    let ceil = |a: usize, b: usize| (a as f64 / b as f64).ceil() as usize;
+
+    let areas_at_row = ceil(map_size, width);
+
+    let area_width = |area_index: usize| {
+        let local_row_index = area_index % areas_at_row;
+        let area_row_offset = width * local_row_index;
+        assert!(map_size > area_row_offset);
+        let w = min(width, map_size - area_row_offset);
+        println!("w = {}", w);
+        w
+    };
+
+    let areas_count = areas_at_row * ceil(map_size, height);
+
+    let mut areas_cells = vec![Vec::new(); areas_count];
 
     for (index, surface) in surfaces.iter().enumerate() {
-        let row = (index / map_size).try_into()?;
-        let column = (index % map_size).try_into()?;
-        let mut cell = MapCell::new(row, column);
+        let row = index / map_size;
+        let column = index % map_size;
 
+        let mut cell = MapCell::new(row.try_into()?, column.try_into()?);
         if let Some(surface) = surface {
             if surface.obstacle {
                 cell.terrain_group = surface.terrain.group();
             }
         }
 
-        cells.push(cell)
+        let area_index = (row / height) * areas_at_row + (column / width);
+
+        areas_cells[area_index].push(cell);
     }
 
-    Ok(vec![MapArea::new(width, cells)])
+    Ok(areas_cells
+        .into_iter()
+        .enumerate()
+        .map(|(area_index, cells)| MapArea::new(area_width(area_index), cells))
+        .collect())
 }
