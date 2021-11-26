@@ -111,8 +111,6 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
 
     let default_object_templates = read_default_and_skip_other_object_templates(&mut raw_map)?;
 
-    //skip_objects(&mut raw_map)?;
-
     Ok(H3mInfo {
         map_size,
         land_offset,

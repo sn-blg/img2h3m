@@ -83,9 +83,6 @@ pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
     input: &mut RS,
 ) -> H3mResult<DefaultObjectTemplates> {
     let templates_count = input.read_u32::<LE>()?;
-
-    println!("templates_count = {}", templates_count);
-
     let templates_count: usize = templates_count.try_into()?;
 
     if templates_count < DEFAULT_OBJECT_TEMPLATES_COUNT {
@@ -100,15 +97,9 @@ pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
 
     let default_object_templates = [read_object_template(input)?, read_object_template(input)?];
 
-    let mut v = Vec::new();
-
     for _ in 0..(templates_count - DEFAULT_OBJECT_TEMPLATES_COUNT) {
-        let object_template = read_object_template(input)?;
-
-        v.push(object_template)
+        read_object_template(input)?;
     }
-
-    println!("{:?}", v);
 
     Ok(default_object_templates)
 }
