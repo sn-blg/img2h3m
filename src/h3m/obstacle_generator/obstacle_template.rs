@@ -68,13 +68,11 @@ impl ObstacleTemplate {
     }
 
     fn calc_frequency(h3m_template: &H3mObjectTemplate) -> usize {
-        if is_lake(h3m_template) {
+        if is_lake(h3m_template) || is_crater(h3m_template) || is_uniq_volcano(h3m_template) {
             10
         } else if is_ice_block(h3m_template) {
             5
-        } else if is_crater(h3m_template) {
-            10
-        } else if is_uniq(h3m_template) {
+        } else if is_uniq_mountain(h3m_template) {
             1
         } else {
             100
@@ -133,6 +131,10 @@ fn is_crater(h3m_template: &H3mObjectTemplate) -> bool {
     h3m_template.class == 118 && h3m_template.subclass == 0
 }
 
-fn is_uniq(h3m_template: &H3mObjectTemplate) -> bool {
+fn is_uniq_mountain(h3m_template: &H3mObjectTemplate) -> bool {
     h3m_template.filename == "AVLMTWL7.def" || h3m_template.filename == "AVLrws02.def"
+}
+
+fn is_uniq_volcano(h3m_template: &H3mObjectTemplate) -> bool {
+    h3m_template.filename == "AVLvol20.def" || h3m_template.filename == "AVLvol40.def"
 }

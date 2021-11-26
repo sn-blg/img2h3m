@@ -111,16 +111,6 @@ pub fn make_map_areas(
     let ceil = |a: usize, b: usize| (a as f64 / b as f64).ceil() as usize;
 
     let areas_at_row = ceil(map_size, width);
-
-    let area_width = |area_index: usize| {
-        let local_row_index = area_index % areas_at_row;
-        let area_row_offset = width * local_row_index;
-        assert!(map_size > area_row_offset);
-        let w = min(width, map_size - area_row_offset);
-        println!("w = {}", w);
-        w
-    };
-
     let areas_count = areas_at_row * ceil(map_size, height);
 
     let mut areas_cells = vec![Vec::new(); areas_count];
@@ -140,6 +130,13 @@ pub fn make_map_areas(
 
         areas_cells[area_index].push(cell);
     }
+
+    let area_width = |area_index: usize| {
+        let local_row_index = area_index % areas_at_row;
+        let area_row_offset = width * local_row_index;
+        assert!(map_size > area_row_offset);
+        min(width, map_size - area_row_offset)
+    };
 
     Ok(areas_cells
         .into_iter()

@@ -56,7 +56,7 @@ impl ObstacleGenerator {
                 map_len
             ))));
         }
-        let map_areas = make_map_areas(self.map_size, surfaces, 36, 36)?;
+        let map_areas = make_map_areas(self.map_size, surfaces, self.map_size, 36)?;
         for area in map_areas {
             self.generate_in_area(underground, area)?;
         }
