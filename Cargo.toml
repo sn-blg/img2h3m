@@ -3,7 +3,7 @@ name = "img2h3m"
 version = "0.4.0"
 authors = ["sn-blg"]
 edition = "2021"
-description = "CLI utility for converting image to homm3 HotA minimap"
+description = "CLI utility for converting an image to a HoMM3 HotA map"
 license = "MIT"
 
 [dependencies]
