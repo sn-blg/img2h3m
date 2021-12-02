@@ -1,4 +1,4 @@
-use crate::h3m::parsers::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
+use crate::h3m::parser::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::Surface;
 use map_area::{make_map_areas, MapArea};

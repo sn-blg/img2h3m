@@ -1,13 +1,13 @@
 use libflate::gzip::{Decoder, Encoder};
 use obstacle_generator::ObstacleGenerator;
-use parsers::*;
+use parser::{H3mInfo, MAP_CELL_SIZE};
 use rand::Rng;
 use result::*;
 use std::io::{self, Read, Write};
 pub use surface::{Surface, Terrain};
 
 mod obstacle_generator;
-mod parsers;
+mod parser;
 pub mod result;
 mod surface;
 
@@ -24,7 +24,7 @@ impl H3m {
         decoder.read_to_end(&mut raw_map)?;
 
         Ok(H3m {
-            info: parse(&raw_map)?,
+            info: parser::parse(&raw_map)?,
             raw_map,
             obstacle_generator: None,
         })
@@ -35,8 +35,8 @@ impl H3m {
 
         if let Some(obstacle_generator) = &self.obstacle_generator {
             encoder.write_all(&self.raw_map[..self.info.objects_templates_offset])?;
-            write_object_templates(obstacle_generator.object_templates(), &mut encoder)?;
-            write_objects(obstacle_generator.objects(), &mut encoder)?;
+            parser::write_object_templates(obstacle_generator.object_templates(), &mut encoder)?;
+            parser::write_objects(obstacle_generator.objects(), &mut encoder)?;
             encoder.write_all(&[0u8; 124])?;
         } else {
             encoder.write_all(&self.raw_map)?;

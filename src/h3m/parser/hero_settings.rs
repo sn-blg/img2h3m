@@ -1,4 +1,4 @@
-use crate::h3m::parsers::common::*;
+use crate::h3m::parser::common::*;
 use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, LE};
 use std::io::{Read, Seek};

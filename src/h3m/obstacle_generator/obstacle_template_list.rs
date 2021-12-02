@@ -1,5 +1,5 @@
 use super::obstacle_template::ObstacleTemplate;
-use crate::h3m::parsers;
+use crate::h3m::parser;
 use std::slice::Iter;
 
 pub struct ObstacleTemplateList(Vec<ObstacleTemplate>);
@@ -27,7 +27,7 @@ impl ObstacleTemplateList {
     }
 }
 
-fn h3m_obstacle_templates() -> Vec<parsers::H3mObjectTemplate> {
+fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
     struct H3mObjectTemplate {
         pub filename: &'static str,
         pub shape_mask: [u8; 6],
@@ -6137,7 +6137,7 @@ fn h3m_obstacle_templates() -> Vec<parsers::H3mObjectTemplate> {
         },
     ]
     .into_iter()
-    .map(|t| parsers::H3mObjectTemplate {
+    .map(|t| parser::H3mObjectTemplate {
         filename: String::from(t.filename),
         shape_mask: t.shape_mask,
         visit_mask: t.visit_mask,

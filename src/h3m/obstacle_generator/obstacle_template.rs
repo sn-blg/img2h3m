@@ -1,4 +1,4 @@
-use crate::h3m::parsers::{H3mObjectTemplate, Mask};
+use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
 use crate::h3m::Terrain;
 
