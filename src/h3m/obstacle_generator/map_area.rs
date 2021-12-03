@@ -26,7 +26,7 @@ impl<T: Clone + Copy> Position<T> {
 #[derive(Clone, Copy)]
 struct MapCell {
     position: Position<u8>,
-    terrain_group: u16, // surface editor group, 0 means no obstacles to place
+    terrain_group: u16, // terrain editor group, 0 means no obstacles to place
 }
 
 impl MapCell {
