@@ -56,7 +56,7 @@ impl H3m {
         underground: bool,
         surfaces: &[Option<Surface>],
     ) -> H3mResult<()> {
-        let terrain_map = TerrainMap::generate(self.map_size(), underground, surfaces);
+        let terrain_map = TerrainMap::generate(self.map_size(), underground, surfaces)?;
 
         for (index, map_cell) in terrain_map.cells().iter().enumerate() {
             if let Some(map_cell) = map_cell {
@@ -65,12 +65,9 @@ impl H3m {
         }
 
         if terrain_map.has_obstacles() {
-            let map_size = self.map_size();
             self.obstacle_generator
-                .get_or_insert_with(|| {
-                    ObstacleGenerator::new(map_size, &self.info.default_object_templates)
-                })
-                .generate(underground, surfaces)?;
+                .get_or_insert_with(|| ObstacleGenerator::new(&self.info.default_object_templates))
+                .generate(&terrain_map)?;
         }
 
         Ok(())

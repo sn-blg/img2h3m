@@ -1,6 +1,6 @@
 use crate::h3m::parser::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
-use crate::h3m::Surface;
+use crate::h3m::terrain_map::TerrainMap;
 use map_area::{make_map_areas, MapArea};
 
 use obstacle_template_list::ObstacleTemplateList;
@@ -31,34 +31,21 @@ impl ObjectsData {
 
 pub struct ObstacleGenerator {
     obstacle_template_list: ObstacleTemplateList,
-    map_size: usize,
     objects_data: ObjectsData,
 }
 
 impl ObstacleGenerator {
-    pub fn new(
-        map_size: usize,
-        default_object_templates: &DefaultObjectTemplates,
-    ) -> ObstacleGenerator {
+    pub fn new(default_object_templates: &DefaultObjectTemplates) -> ObstacleGenerator {
         ObstacleGenerator {
             obstacle_template_list: ObstacleTemplateList::new(),
-            map_size,
             objects_data: ObjectsData::new(default_object_templates),
         }
     }
 
-    pub fn generate(&mut self, underground: bool, surfaces: &[Option<Surface>]) -> H3mResult<()> {
-        let map_len = self.map_size * self.map_size;
-        if surfaces.len() > map_len {
-            return Err(H3mError::Parameter(ParameterError::new(format!(
-                "Error surfaces length ({}) greater than map length ({}).",
-                surfaces.len(),
-                map_len
-            ))));
-        }
-        let map_areas = make_map_areas(self.map_size, surfaces, self.map_size, 36)?;
+    pub fn generate(&mut self, terrain_map: &TerrainMap) -> H3mResult<()> {
+        let map_areas = make_map_areas(terrain_map, terrain_map.size(), 36)?;
         for area in map_areas {
-            self.generate_in_area(underground, area)?;
+            self.generate_in_area(terrain_map.underground(), area)?;
         }
         Ok(())
     }

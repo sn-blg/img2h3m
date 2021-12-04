@@ -1,3 +1,4 @@
+use crate::h3m::result::*;
 use crate::h3m::Surface;
 pub use map_cell::MapCell;
 
@@ -12,8 +13,21 @@ pub struct TerrainMap {
 }
 
 impl TerrainMap {
-    pub fn generate(size: usize, underground: bool, surfaces: &[Option<Surface>]) -> TerrainMap {
-        TerrainMap {
+    pub fn generate(
+        size: usize,
+        underground: bool,
+        surfaces: &[Option<Surface>],
+    ) -> H3mResult<TerrainMap> {
+        let map_len = size * size;
+        if surfaces.len() != map_len {
+            return Err(H3mError::Parameter(ParameterError::new(format!(
+                "surfaces length ({}) not equal map length ({}).",
+                surfaces.len(),
+                map_len
+            ))));
+        }
+
+        Ok(TerrainMap {
             size,
             underground,
             has_obstacles: surfaces
@@ -21,7 +35,7 @@ impl TerrainMap {
                 .map(|s| if let Some(s) = s { s.obstacle } else { false })
                 .any(|obstacle| obstacle),
             cells: tiles_generator::generate(surfaces),
-        }
+        })
     }
 
     pub fn size(&self) -> usize {

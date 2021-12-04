@@ -1,6 +1,6 @@
 use super::obstacle_template::{Delta, ObstacleTemplate};
 use crate::h3m::result::*;
-use crate::h3m::Surface;
+use crate::h3m::terrain_map::TerrainMap;
 use std::cmp::min;
 
 #[derive(Clone, Copy)]
@@ -24,14 +24,14 @@ impl<T: Clone + Copy> Position<T> {
 }
 
 #[derive(Clone, Copy)]
-struct MapCell {
+struct AreaCell {
     position: Position<u8>,
     terrain_group: u16, // terrain editor group, 0 means no obstacles to place
 }
 
-impl MapCell {
-    fn new(row: u8, column: u8) -> MapCell {
-        MapCell {
+impl AreaCell {
+    fn new(row: u8, column: u8) -> AreaCell {
+        AreaCell {
             position: Position::new(row, column),
             terrain_group: 0,
         }
@@ -44,11 +44,11 @@ impl MapCell {
 
 pub struct MapArea {
     width: usize,
-    cells: Vec<MapCell>,
+    cells: Vec<AreaCell>,
 }
 
 impl MapArea {
-    fn new(width: usize, cells: Vec<MapCell>) -> MapArea {
+    fn new(width: usize, cells: Vec<AreaCell>) -> MapArea {
         MapArea { width, cells }
     }
 
@@ -101,12 +101,11 @@ impl MapArea {
 }
 
 pub fn make_map_areas(
-    map_size: usize,
-    surfaces: &[Option<Surface>],
+    terrain_map: &TerrainMap,
     width: usize,
     height: usize,
 ) -> H3mResult<Vec<MapArea>> {
-    assert!(surfaces.len() == map_size * map_size);
+    let map_size = terrain_map.size();
 
     let ceil = |a: usize, b: usize| (a as f64 / b as f64).ceil() as usize;
 
@@ -115,20 +114,20 @@ pub fn make_map_areas(
 
     let mut areas_cells = vec![Vec::new(); areas_count];
 
-    for (index, surface) in surfaces.iter().enumerate() {
+    for (index, map_cell) in terrain_map.cells().iter().enumerate() {
         let row = index / map_size;
         let column = index % map_size;
 
-        let mut cell = MapCell::new(row.try_into()?, column.try_into()?);
-        if let Some(surface) = surface {
-            if surface.obstacle {
-                cell.terrain_group = surface.terrain.group();
+        let mut area_cell = AreaCell::new(row.try_into()?, column.try_into()?);
+        if let Some(map_cell) = map_cell {
+            if map_cell.surface().obstacle {
+                area_cell.terrain_group = map_cell.surface().terrain.group();
             }
         }
 
         let area_index = (row / height) * areas_at_row + (column / width);
 
-        areas_cells[area_index].push(cell);
+        areas_cells[area_index].push(area_cell);
     }
 
     let area_width = |area_index: usize| {
