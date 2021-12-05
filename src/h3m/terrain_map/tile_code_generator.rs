@@ -1,15 +1,18 @@
-use super::map_cell::{MapCell, Tile};
-use crate::h3m::{Surface, Terrain};
+use super::tile_type::TileType;
+use crate::h3m::Terrain;
 use rand::Rng;
 
-pub fn generate(surfaces: &[Option<Surface>]) -> Vec<Option<MapCell>> {
-    surfaces
-        .iter()
-        .map(|surface| {
-            surface
-                .map(|surface| MapCell::new(surface, Tile::new(random_tile_code(surface.terrain))))
-        })
-        .collect()
+pub struct TileCodeGenerator {}
+
+impl TileCodeGenerator {
+    pub fn new() -> TileCodeGenerator {
+        TileCodeGenerator {}
+    }
+
+    pub fn generate(&self, terrain: Terrain, tile_type: TileType) -> u8 {
+        assert_eq!(tile_type, TileType::Common);
+        random_tile_code(terrain)
+    }
 }
 
 fn random_tile_code(terrain: Terrain) -> u8 {
