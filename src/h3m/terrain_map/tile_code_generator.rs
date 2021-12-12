@@ -12,51 +12,81 @@ impl TileCodeGenerator {
         let tile_indexes = HashMap::from([
             (
                 Terrain::Dirt,
-                HashMap::from([(TileType::Common, TileIndexSet::new(21..=44, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(21..=28, 7).with_tiles(29..=44, 1),
+                )]),
             ),
             (
                 Terrain::Sand,
-                HashMap::from([(TileType::Common, TileIndexSet::new(0..=23, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(0..=7, 7).with_tiles(8..=23, 1),
+                )]),
             ),
             (
                 Terrain::Grass,
-                HashMap::from([(TileType::Common, TileIndexSet::new(49..=72, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(49..=56, 7).with_tiles(57..=72, 1),
+                )]),
             ),
             (
                 Terrain::Snow,
-                HashMap::from([(TileType::Common, TileIndexSet::new(49..=72, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(49..=56, 7).with_tiles(57..=72, 1),
+                )]),
             ),
             (
                 Terrain::Swamp,
-                HashMap::from([(TileType::Common, TileIndexSet::new(49..=72, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(49..=56, 7).with_tiles(57..=72, 1),
+                )]),
             ),
             (
                 Terrain::Rough,
-                HashMap::from([(TileType::Common, TileIndexSet::new(49..=72, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(49..=56, 7).with_tiles(57..=72, 1),
+                )]),
             ),
             (
                 Terrain::Subterranean,
-                HashMap::from([(TileType::Common, TileIndexSet::new(49..=72, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(49..=56, 7).with_tiles(57..=72, 1),
+                )]),
             ),
             (
                 Terrain::Lava,
-                HashMap::from([(TileType::Common, TileIndexSet::new(49..=72, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(49..=56, 7).with_tiles(57..=72, 1),
+                )]),
             ),
             (
                 Terrain::Highland,
-                HashMap::from([(TileType::Common, TileIndexSet::new(77..=117, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(77..=101, 5).with_tiles(102..=117, 2),
+                )]),
             ),
             (
                 Terrain::Wasteland,
-                HashMap::from([(TileType::Common, TileIndexSet::new(77..=117, 100))]),
+                HashMap::from([(
+                    TileType::Common,
+                    TileIndexSet::new(77..=101, 5).with_tiles(102..=117, 2),
+                )]),
             ),
             (
                 Terrain::Water,
-                HashMap::from([(TileType::Common, TileIndexSet::new(21..=32, 100))]),
+                HashMap::from([(TileType::Common, TileIndexSet::new(21..=32, 1))]),
             ),
             (
                 Terrain::Rock,
-                HashMap::from([(TileType::Common, TileIndexSet::new(0..=7, 100))]),
+                HashMap::from([(TileType::Common, TileIndexSet::new(0..=7, 1))]),
             ),
         ]);
 
