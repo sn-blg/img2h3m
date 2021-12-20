@@ -8,7 +8,7 @@ use tile_type::TileType;
 mod draft_map_cell;
 mod map_cell;
 mod tile_code_generator;
-mod tile_index_set;
+mod tile_codes_set;
 mod tile_type;
 
 pub struct TerrainMap {
@@ -82,6 +82,6 @@ fn set_tile_codes(draft_map_cells: &mut [Option<DraftMapCell>]) {
     let generator = TileCodeGenerator::new();
     for cell in draft_map_cells.iter_mut().flatten() {
         cell.tile.code =
-            Some(generator.generate(cell.surface.terrain, cell.tile.tile_type.unwrap()));
+            Some(generator.generate(cell.surface.terrain, cell.tile.tile_type.unwrap(), &[]));
     }
 }
