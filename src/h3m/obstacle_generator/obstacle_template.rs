@@ -1,26 +1,9 @@
+use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
 use crate::h3m::Terrain;
 
-#[derive(Debug)]
-pub struct Delta {
-    row: usize,
-    column: usize,
-}
-
-impl Delta {
-    fn new(row: usize, column: usize) -> Delta {
-        Delta { row, column }
-    }
-
-    pub fn row(&self) -> usize {
-        self.row
-    }
-
-    pub fn column(&self) -> usize {
-        self.column
-    }
-}
+pub type Delta = DeltaPos<usize>;
 
 fn make_shape(mask: &Mask) -> Vec<Delta> {
     let mut shape = Vec::new();

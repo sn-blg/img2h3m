@@ -1,27 +1,8 @@
 use super::obstacle_template::{Delta, ObstacleTemplate};
+use crate::common::position::Position;
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
 use std::cmp::min;
-
-#[derive(Clone, Copy)]
-pub struct Position<T: Clone + Copy> {
-    row: T,
-    column: T,
-}
-
-impl<T: Clone + Copy> Position<T> {
-    fn new(row: T, column: T) -> Position<T> {
-        Position { row, column }
-    }
-
-    pub fn row(&self) -> T {
-        self.row
-    }
-
-    pub fn column(&self) -> T {
-        self.column
-    }
-}
 
 #[derive(Clone, Copy)]
 struct AreaCell {
@@ -54,14 +35,13 @@ impl MapArea {
 
     pub fn try_position_obstacle(&self, obstacle: &ObstacleTemplate) -> Option<usize> {
         let is_valid_neighbour = |position: Position<usize>, delta: &Delta| {
-            let row = position.row().checked_sub(delta.row());
-            let column = position.column().checked_sub(delta.column());
-            match (row, column) {
-                (Some(row), Some(column)) => {
-                    let neighbour = &self.cells[self.calc_index(row, column)];
-                    obstacle.is_valid_terrain(neighbour.terrain_group)
-                }
-                _ => false,
+            let neighbour_position = position.checked_sub(&delta);
+            if let Some(neighbour_position) = neighbour_position {
+                let neighbour_index = neighbour_position.to_index(self.width);
+                let neighbour = &self.cells[neighbour_index];
+                obstacle.is_valid_terrain(neighbour.terrain_group)
+            } else {
+                false
             }
         };
 
@@ -80,9 +60,7 @@ impl MapArea {
     pub fn add_obstacle(&mut self, index: usize, obstacle: &ObstacleTemplate) {
         let position = self.local_position(index);
         for delta in obstacle.shape() {
-            let row = position.row() - delta.row();
-            let column = position.column() - delta.column();
-            let index = self.calc_index(row, column);
+            let index = position.sub(delta).to_index(self.width);
             self.cells[index].reset_terrain_group();
         }
     }
@@ -92,11 +70,7 @@ impl MapArea {
     }
 
     fn local_position(&self, index: usize) -> Position<usize> {
-        Position::new(index / self.width, index % self.width)
-    }
-
-    fn calc_index(&self, row: usize, column: usize) -> usize {
-        row * self.width + column
+        Position::from_index(self.width, index)
     }
 }
 

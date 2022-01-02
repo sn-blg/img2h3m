@@ -5,6 +5,7 @@ use map_image::MapImage;
 use std::error::Error;
 use std::fs::File;
 
+mod common;
 mod config;
 mod h3m;
 mod map_image;
