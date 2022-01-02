@@ -1,4 +1,6 @@
-use num::{Unsigned, CheckedSub};
+use num::{CheckedAdd, CheckedSub, Signed, Unsigned};
+use std::cmp::PartialOrd;
+use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Rem, Sub};
 
 #[derive(Clone, Copy)]
@@ -78,5 +80,55 @@ where
         let row = self.row() - delta.row();
         let column = self.column() - delta.column();
         Position::new(row, column)
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct SignedDeltaPos<T: Clone + Copy + Signed> {
+    row: T,
+    column: T,
+}
+
+impl<T: Clone + Copy + Signed> SignedDeltaPos<T> {
+    pub fn new(row: T, column: T) -> Self {
+        SignedDeltaPos { row, column }
+    }
+
+    pub fn row(&self) -> T {
+        self.row
+    }
+
+    pub fn column(&self) -> T {
+        self.column
+    }
+}
+
+impl<T> Position<T>
+where
+    T: Clone + Copy + Unsigned + CheckedSub + CheckedAdd + PartialOrd,
+{
+    pub fn checked_apply<S>(&self, width: T, height: T, delta: &SignedDeltaPos<S>) -> Option<Self>
+    where
+        S: Clone + Copy + Signed,
+        T: TryFrom<S>,
+        <T as TryFrom<S>>::Error: Debug,
+    {
+        let checked_delta_add = |val: T, delta: S| -> Option<T> {
+            let delta_abs = T::try_from(delta.abs()).unwrap();
+            if delta.is_negative() {
+                val.checked_sub(&delta_abs)
+            } else {
+                Some(val.checked_add(&delta_abs).unwrap())
+            }
+        };
+
+        let row = checked_delta_add(self.row(), delta.row())?;
+        let column = checked_delta_add(self.column(), delta.column())?;
+
+        if (row >= height) || (column >= width) {
+            None
+        } else {
+            Some(Position::new(row, column))
+        }
     }
 }

@@ -1,3 +1,4 @@
+use crate::common::position::Position;
 use crate::h3m::Surface;
 use image::Rgb;
 use palettes::Palettes;
@@ -25,7 +26,7 @@ impl MapImage {
             size,
             pixels: vec![None; size * size],
             palettes: Palettes::new(obstacles),
-            terrain_check: TerrainCheck::new(),
+            terrain_check: TerrainCheck::new(size),
         }
     }
 
@@ -63,13 +64,9 @@ impl MapImage {
     }
 
     fn fix_iteration(&mut self) -> bool {
-        let terrain_getter = |row: usize, column: usize| {
-            if (row >= self.size) || (column >= self.size) {
-                None
-            } else {
-                let index = self.calc_index(row, column);
-                self.pixels[index].map(|p| p.surface.terrain)
-            }
+        let terrain_getter = |position: Position<usize>| {
+            let index = position.to_index(self.size);
+            self.pixels[index].map(|p| p.surface.terrain)
         };
 
         let mut problem_surface_indexes = Vec::new();

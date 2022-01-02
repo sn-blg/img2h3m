@@ -1,3 +1,4 @@
+use crate::common::position::{Position, SignedDeltaPos};
 use crate::h3m::Terrain;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -97,12 +98,14 @@ fn problem_patterns() -> Vec<ProblemPattern> {
 }
 
 pub struct TerrainCheck {
+    size: usize,
     problem_patterns: Vec<ProblemPattern>,
 }
 
 impl TerrainCheck {
-    pub fn new() -> TerrainCheck {
+    pub fn new(size: usize) -> TerrainCheck {
         TerrainCheck {
+            size,
             problem_patterns: problem_patterns(),
         }
     }
@@ -110,15 +113,18 @@ impl TerrainCheck {
     #[rustfmt::skip]
     pub fn has_problem<F>(&self, row: usize, column: usize, terrain_getter: F) -> bool
     where
-        F: Fn(usize, usize) -> Option<Terrain>,
+        F: Fn(Position<usize>) -> Option<Terrain>,
     {
+        let position = Position::new(row, column);
         let neighbour_getter = |delta_row: i32, delta_column: i32| {
-            let row = TerrainCheck::checked_delta_add(row, delta_row)?;
-            let column = TerrainCheck::checked_delta_add(column, delta_column)?;
-            terrain_getter(row, column)
+            terrain_getter(position.checked_apply(
+                self.size,
+                self.size,
+                &SignedDeltaPos::new(delta_row, delta_column),
+            )?)
         };
 
-        let test_terrain = terrain_getter(row, column);
+        let test_terrain = terrain_getter(position);
 
         if let Some(test_terrain) = test_terrain {
             if test_terrain.is_ground() {
@@ -138,14 +144,5 @@ impl TerrainCheck {
         self.problem_patterns
             .iter()
             .any(|pattern| is_problem_pattern_matched(neighborhood, pattern))
-    }
-
-    fn checked_delta_add(val: usize, delta: i32) -> Option<usize> {
-        let delta_abs = usize::try_from(delta.abs()).unwrap();
-        if delta.is_negative() {
-            val.checked_sub(delta_abs)
-        } else {
-            Some(val.checked_add(delta_abs).unwrap())
-        }
     }
 }
