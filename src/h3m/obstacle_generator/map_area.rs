@@ -35,9 +35,9 @@ impl MapArea {
 
     pub fn try_position_obstacle(&self, obstacle: &ObstacleTemplate) -> Option<usize> {
         let is_valid_neighbour = |position: Position<usize>, delta: &Delta| {
-            let neighbour_position = position.checked_sub(&delta);
+            let neighbour_position = position.checked_sub(delta);
             if let Some(neighbour_position) = neighbour_position {
-                let neighbour_index = neighbour_position.to_index(self.width);
+                let neighbour_index = neighbour_position.index(self.width);
                 let neighbour = &self.cells[neighbour_index];
                 obstacle.is_valid_terrain(neighbour.terrain_group)
             } else {
@@ -60,7 +60,7 @@ impl MapArea {
     pub fn add_obstacle(&mut self, index: usize, obstacle: &ObstacleTemplate) {
         let position = self.local_position(index);
         for delta in obstacle.shape() {
-            let index = position.sub(delta).to_index(self.width);
+            let index = position.sub(delta).index(self.width);
             self.cells[index].reset_terrain_group();
         }
     }

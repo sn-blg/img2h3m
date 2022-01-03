@@ -33,7 +33,7 @@ impl MapImage {
     pub fn set_pixel(&mut self, row: usize, column: usize, pixel: Rgb<u8>) {
         let ground_only = false;
         let surface = self.palettes.nearest_surface(&pixel, ground_only);
-        let index = self.calc_index(row, column);
+        let index = Position::new(row, column).index(self.size);
 
         self.pixels[index] = Some(MapPixel {
             surface,
@@ -49,10 +49,6 @@ impl MapImage {
         self.pixels.iter().map(|p| p.map(|p| p.surface)).collect()
     }
 
-    fn calc_index(&self, row: usize, column: usize) -> usize {
-        row * self.size + column
-    }
-
     fn fix_problem_surface(&mut self, index: usize) {
         let ground_only = true;
         let pixel = &mut self.pixels[index];
@@ -65,7 +61,7 @@ impl MapImage {
 
     fn fix_iteration(&mut self) -> bool {
         let terrain_getter = |position: Position<usize>| {
-            let index = position.to_index(self.size);
+            let index = position.index(self.size);
             self.pixels[index].map(|p| p.surface.terrain)
         };
 
@@ -77,7 +73,7 @@ impl MapImage {
                     self.terrain_check.has_problem(row, column, terrain_getter);
 
                 if is_problem_surface {
-                    let index = self.calc_index(row, column);
+                    let index = Position::new(row, column).index(self.size);
                     problem_surface_indexes.push(index);
                 }
             }

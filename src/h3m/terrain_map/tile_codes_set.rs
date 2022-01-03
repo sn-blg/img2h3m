@@ -30,6 +30,6 @@ impl TileCodesSet {
     }
 
     pub fn remove(&mut self, code: u8) {
-        self.0.take_all(&code).unwrap();
+        self.0.take_all(&code);
     }
 }

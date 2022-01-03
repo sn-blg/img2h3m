@@ -36,7 +36,7 @@ impl<T> Position<T>
 where
     T: Clone + Copy + Unsigned + Mul<Output = T> + Add<Output = T>,
 {
-    pub fn to_index(&self, width: T) -> T {
+    pub fn index(&self, width: T) -> T {
         self.row * width + self.column
     }
 }

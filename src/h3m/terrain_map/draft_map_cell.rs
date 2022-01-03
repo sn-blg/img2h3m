@@ -1,5 +1,6 @@
 use super::map_cell::{MapCell, Tile};
 use super::tile_type::TileType;
+use crate::common::position::Position;
 use crate::h3m::Surface;
 
 pub struct DraftTile {
@@ -19,13 +20,15 @@ impl DraftTile {
 pub struct DraftMapCell {
     pub surface: Surface,
     pub tile: DraftTile,
+    pub position: Position<usize>,
 }
 
 impl DraftMapCell {
-    pub fn new(surface: Surface) -> DraftMapCell {
+    pub fn new(surface: Surface, position: Position<usize>) -> DraftMapCell {
         DraftMapCell {
             surface,
             tile: DraftTile::new(),
+            position,
         }
     }
 
