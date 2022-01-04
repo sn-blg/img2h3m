@@ -4,6 +4,16 @@ use super::tile_code_generator::TileCodeGenerator;
 use super::tile_type::TileType;
 use crate::common::position::{Position, SignedDeltaPos};
 use crate::h3m::Surface;
+use rand::Rng;
+
+fn gen_common_tile_type() -> TileType {
+    let number = rand::thread_rng().gen_range(0..5);
+    if number == 0 {
+        TileType::Pothole
+    } else {
+        TileType::Common
+    }
+}
 
 pub struct DraftTerrainMap {
     size: usize,
@@ -28,7 +38,7 @@ impl DraftTerrainMap {
 
     pub fn set_tile_types(&mut self) {
         for cell in self.cells.iter_mut().flatten() {
-            cell.tile.tile_type = Some(TileType::Common);
+            cell.tile.tile_type = Some(gen_common_tile_type());
         }
     }
 

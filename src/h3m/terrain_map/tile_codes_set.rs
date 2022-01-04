@@ -6,19 +6,12 @@ use std::ops::RangeInclusive;
 pub struct TileCodesSet(HashBag<u8>);
 
 impl TileCodesSet {
-    pub fn new(range: RangeInclusive<u8>, frequency: usize) -> TileCodesSet {
+    pub fn new(range: RangeInclusive<u8>) -> TileCodesSet {
         let mut codes_set = HashBag::new();
         for code in range {
-            codes_set.insert_many(code, frequency);
+            codes_set.insert(code);
         }
         TileCodesSet(codes_set)
-    }
-
-    pub fn with_tiles(mut self, range: RangeInclusive<u8>, frequency: usize) -> TileCodesSet {
-        for code in range {
-            self.0.insert_many(code, frequency);
-        }
-        self
     }
 
     pub fn random_code(&self) -> u8 {

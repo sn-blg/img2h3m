@@ -12,84 +12,89 @@ impl TileCodeGenerator {
         let tile_codes = HashMap::from([
             (
                 Terrain::Dirt,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(21..=28, 7).with_tiles(29..=44, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(21..=28)),
+                    (TileType::Pothole, TileCodesSet::new(29..=44)),
+                ]),
             ),
             (
                 Terrain::Sand,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(0..=7, 7).with_tiles(8..=23, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(0..=7)),
+                    (TileType::Pothole, TileCodesSet::new(8..=23)),
+                ]),
             ),
             (
                 Terrain::Grass,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(49..=56, 7).with_tiles(57..=72, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(49..=56)),
+                    (TileType::Pothole, TileCodesSet::new(57..=72)),
+                ]),
             ),
             (
                 Terrain::Snow,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(49..=56, 7).with_tiles(57..=72, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(49..=56)),
+                    (TileType::Pothole, TileCodesSet::new(57..=72)),
+                ]),
             ),
             (
                 Terrain::Swamp,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(49..=56, 7).with_tiles(57..=72, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(49..=56)),
+                    (TileType::Pothole, TileCodesSet::new(57..=72)),
+                ]),
             ),
             (
                 Terrain::Rough,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(49..=56, 7).with_tiles(57..=72, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(49..=56)),
+                    (TileType::Pothole, TileCodesSet::new(57..=72)),
+                ]),
             ),
             (
                 Terrain::Subterranean,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(49..=56, 7).with_tiles(57..=72, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(49..=56)),
+                    (TileType::Pothole, TileCodesSet::new(57..=72)),
+                ]),
             ),
             (
                 Terrain::Lava,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(49..=56, 7).with_tiles(57..=72, 1),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(49..=56)),
+                    (TileType::Pothole, TileCodesSet::new(57..=72)),
+                ]),
             ),
             (
                 Terrain::Highland,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(77..=101, 5).with_tiles(102..=117, 2),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(77..=101)),
+                    (TileType::Pothole, TileCodesSet::new(102..=117)),
+                ]),
             ),
             (
                 Terrain::Wasteland,
-                HashMap::from([(
-                    TileType::Common,
-                    TileCodesSet::new(77..=101, 5).with_tiles(102..=117, 2),
-                )]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(77..=101)),
+                    (TileType::Pothole, TileCodesSet::new(102..=117)),
+                ]),
             ),
             (
                 Terrain::Water,
-                HashMap::from([(TileType::Common, TileCodesSet::new(21..=32, 1))]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(21..=32)),
+                    (TileType::Pothole, TileCodesSet::new(21..=32)),
+                ]),
             ),
             (
                 Terrain::Rock,
-                HashMap::from([(TileType::Common, TileCodesSet::new(0..=7, 1))]),
+                HashMap::from([
+                    (TileType::Common, TileCodesSet::new(0..=7)),
+                    (TileType::Pothole, TileCodesSet::new(0..=7)),
+                ]),
             ),
         ]);
-
         TileCodeGenerator { tile_codes }
     }
 
