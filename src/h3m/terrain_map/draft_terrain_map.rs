@@ -3,10 +3,13 @@ use super::map_cell::MapCell;
 use super::tile_code_generator::TileCodeGenerator;
 use super::tile_type::TileType;
 use crate::common::position::{Position, SignedDeltaPos};
-use crate::h3m::Surface;
+use crate::h3m::{Surface, Terrain};
 use rand::Rng;
 
-fn gen_common_tile_type() -> TileType {
+fn gen_common_tile_type(terrain: Terrain) -> TileType {
+    if matches!(terrain, Terrain::Water | Terrain::Rock) {
+        return TileType::Common;
+    }
     let number = rand::thread_rng().gen_range(0..5);
     if number == 0 {
         TileType::Pothole
@@ -15,9 +18,23 @@ fn gen_common_tile_type() -> TileType {
     }
 }
 
+fn neighborhood_area() -> [SignedDeltaPos<i32>; 8] {
+    [
+        SignedDeltaPos::new(-1, -1),
+        SignedDeltaPos::new(-1, 0),
+        SignedDeltaPos::new(-1, 1),
+        SignedDeltaPos::new(0, -1),
+        SignedDeltaPos::new(0, 1),
+        SignedDeltaPos::new(1, -1),
+        SignedDeltaPos::new(1, 0),
+        SignedDeltaPos::new(1, 1),
+    ]
+}
+
 pub struct DraftTerrainMap {
     size: usize,
     cells: Vec<Option<DraftMapCell>>,
+    neighborhood_area: [SignedDeltaPos<i32>; 8],
 }
 
 impl DraftTerrainMap {
@@ -33,12 +50,13 @@ impl DraftTerrainMap {
                     })
                 })
                 .collect(),
+            neighborhood_area: neighborhood_area(),
         }
     }
 
     pub fn set_tile_types(&mut self) {
         for cell in self.cells.iter_mut().flatten() {
-            cell.tile.tile_type = Some(gen_common_tile_type());
+            cell.tile.tile_type = Some(gen_common_tile_type(cell.surface.terrain));
         }
     }
 
@@ -50,17 +68,10 @@ impl DraftTerrainMap {
             None => return neighbour_tiles,
         };
 
-        let deltas = [
-            SignedDeltaPos::new(-1, -1),
-            SignedDeltaPos::new(-1, 0),
-            SignedDeltaPos::new(-1, 1),
-            SignedDeltaPos::new(0, -1),
-        ];
-
         let terrain = cell.surface.terrain;
         let tile_type = cell.tile.tile_type.unwrap();
 
-        for delta in &deltas {
+        for delta in &self.neighborhood_area {
             let neighbour_position = match cell.position.checked_apply(self.size, self.size, delta)
             {
                 Some(neighbour_position) => neighbour_position,

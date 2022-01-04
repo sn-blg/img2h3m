@@ -82,17 +82,11 @@ impl TileCodeGenerator {
             ),
             (
                 Terrain::Water,
-                HashMap::from([
-                    (TileType::Common, TileCodesSet::new(21..=32)),
-                    (TileType::Pothole, TileCodesSet::new(21..=32)),
-                ]),
+                HashMap::from([(TileType::Common, TileCodesSet::new(21..=32))]),
             ),
             (
                 Terrain::Rock,
-                HashMap::from([
-                    (TileType::Common, TileCodesSet::new(0..=7)),
-                    (TileType::Pothole, TileCodesSet::new(0..=7)),
-                ]),
+                HashMap::from([(TileType::Common, TileCodesSet::new(0..=7))]),
             ),
         ]);
         TileCodeGenerator { tile_codes }
