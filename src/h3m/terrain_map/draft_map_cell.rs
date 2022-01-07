@@ -20,11 +20,11 @@ impl DraftTile {
 pub struct DraftMapCell {
     pub surface: Surface,
     pub tile: DraftTile,
-    pub position: Position<usize>,
+    pub position: Position,
 }
 
 impl DraftMapCell {
-    pub fn new(surface: Surface, position: Position<usize>) -> DraftMapCell {
+    pub fn new(surface: Surface, position: Position) -> DraftMapCell {
         DraftMapCell {
             surface,
             tile: DraftTile::new(),

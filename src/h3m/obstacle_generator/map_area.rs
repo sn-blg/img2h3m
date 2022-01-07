@@ -1,5 +1,6 @@
-use super::obstacle_template::{Delta, ObstacleTemplate};
-use crate::common::position::Position;
+use super::obstacle_template::ObstacleTemplate;
+use crate::common::generic::position::Position;
+use crate::common::position::DeltaPos;
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
 use std::cmp::min;
@@ -34,7 +35,7 @@ impl MapArea {
     }
 
     pub fn try_position_obstacle(&self, obstacle: &ObstacleTemplate) -> Option<usize> {
-        let is_valid_neighbour = |position: Position<usize>, delta: &Delta| {
+        let is_valid_neighbour = |position: Position<usize>, delta: &DeltaPos| {
             let neighbour_position = position.checked_sub(delta);
             if let Some(neighbour_position) = neighbour_position {
                 let neighbour_index = neighbour_position.index(self.width);

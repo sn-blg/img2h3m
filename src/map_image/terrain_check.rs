@@ -113,7 +113,7 @@ impl TerrainCheck {
     #[rustfmt::skip]
     pub fn has_problem<F>(&self, row: usize, column: usize, terrain_getter: F) -> bool
     where
-        F: Fn(Position<usize>) -> Option<Terrain>,
+        F: Fn(Position) -> Option<Terrain>,
     {
         let position = Position::new(row, column);
         let neighbour_getter = |delta_row: i32, delta_column: i32| {

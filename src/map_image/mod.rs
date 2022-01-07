@@ -60,7 +60,7 @@ impl MapImage {
     }
 
     fn fix_iteration(&mut self) -> bool {
-        let terrain_getter = |position: Position<usize>| {
+        let terrain_getter = |position: Position| {
             let index = position.index(self.size);
             self.pixels[index].map(|p| p.surface.terrain)
         };

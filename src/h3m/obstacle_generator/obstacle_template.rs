@@ -3,15 +3,13 @@ use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
 use crate::h3m::Terrain;
 
-pub type Delta = DeltaPos<usize>;
-
-fn make_shape(mask: &Mask) -> Vec<Delta> {
+fn make_shape(mask: &Mask) -> Vec<DeltaPos> {
     let mut shape = Vec::new();
     for (row, byte) in mask.iter().rev().enumerate() {
         for column in 0..7usize {
             let bit_mask = (1 << (7 - column)) as u8;
             if byte & bit_mask == 0 {
-                shape.push(Delta::new(row, column));
+                shape.push(DeltaPos::new(row, column));
             }
         }
     }
@@ -20,7 +18,7 @@ fn make_shape(mask: &Mask) -> Vec<Delta> {
 
 pub struct ObstacleTemplate {
     h3m_template: H3mObjectTemplate,
-    shape: Vec<Delta>,
+    shape: Vec<DeltaPos>,
     index: u32,
     terrain_group_mask: u16,
     frequency: usize,
@@ -79,7 +77,7 @@ impl ObstacleTemplate {
         (terrain_group & self.terrain_group_mask) != 0
     }
 
-    pub fn shape(&self) -> &[Delta] {
+    pub fn shape(&self) -> &[DeltaPos] {
         &self.shape
     }
 

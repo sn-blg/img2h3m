@@ -18,7 +18,7 @@ fn gen_common_tile_type(terrain: Terrain) -> TileType {
     }
 }
 
-fn neighborhood_area() -> [SignedDeltaPos<i32>; 8] {
+fn neighborhood_area() -> [SignedDeltaPos; 8] {
     [
         SignedDeltaPos::new(-1, -1),
         SignedDeltaPos::new(-1, 0),
@@ -34,7 +34,7 @@ fn neighborhood_area() -> [SignedDeltaPos<i32>; 8] {
 pub struct DraftTerrainMap {
     size: usize,
     cells: Vec<Option<DraftMapCell>>,
-    neighborhood_area: [SignedDeltaPos<i32>; 8],
+    neighborhood_area: [SignedDeltaPos; 8],
 }
 
 impl DraftTerrainMap {
