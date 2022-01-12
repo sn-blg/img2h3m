@@ -6,9 +6,9 @@ pub use map_cell::MapCell;
 mod draft_map_cell;
 mod draft_terrain_map;
 mod map_cell;
+mod tile;
 mod tile_code_generator;
 mod tile_codes_set;
-mod tile_type;
 
 pub struct TerrainMap {
     size: usize,
@@ -49,7 +49,6 @@ impl TerrainMap {
         }
 
         let mut draft_terrain_map = DraftTerrainMap::new(size, surfaces);
-        draft_terrain_map.set_tile_types();
         draft_terrain_map.set_tile_codes();
 
         Ok(TerrainMap {

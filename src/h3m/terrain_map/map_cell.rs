@@ -1,18 +1,5 @@
+use super::tile::Tile;
 use crate::h3m::Surface;
-
-pub struct Tile {
-    code: u8,
-}
-
-impl Tile {
-    pub fn new(code: u8) -> Tile {
-        Tile { code }
-    }
-
-    pub fn code(&self) -> u8 {
-        self.code
-    }
-}
 
 pub struct MapCell {
     surface: Surface,

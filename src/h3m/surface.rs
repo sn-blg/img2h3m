@@ -15,8 +15,8 @@ pub enum Terrain {
 }
 
 impl Terrain {
-    pub fn is_ground(&self) -> bool {
-        !matches!(*self, Terrain::Water | Terrain::Rock)
+    pub fn is_ground(self) -> bool {
+        !matches!(self, Terrain::Water | Terrain::Rock)
     }
 
     pub fn code(self) -> u8 {
