@@ -24,6 +24,9 @@ impl<T: Clone + Copy + Unsigned + Eq + Hash> IndexMultiset<T> {
     }
 
     pub fn random_index(&self) -> Option<T> {
+        if self.inner.is_empty() {
+            return None;
+        }
         self.inner
             .iter()
             .nth(rand::thread_rng().gen_range(0..self.inner.len()))
