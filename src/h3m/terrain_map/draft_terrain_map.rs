@@ -1,6 +1,6 @@
 use super::draft_map_cell::DraftMapCell;
 use super::map_cell::MapCell;
-use super::tile_code_generator::TileCodeGenerator;
+use super::tile_generator::TileGenerator;
 use crate::common::position::{Position, SignedDeltaPos};
 use crate::h3m::Surface;
 
@@ -53,7 +53,7 @@ impl DraftTerrainMap {
     }
 
     pub fn set_tile_codes(&mut self) {
-        let generator = TileCodeGenerator::new();
+        let generator = TileGenerator::new();
         for index in 0..self.size * self.size {
             let neighbors = self.neighbours(index);
             if let Some(cell) = &mut self.cells[index] {

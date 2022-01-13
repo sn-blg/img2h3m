@@ -1,10 +1,9 @@
-use hashbag::HashBag;
-use rand::Rng;
+use crate::common::index_multiset::IndexMultiset;
 use std::ops::RangeInclusive;
 
 pub struct TileCodesSet {
-    subsets: Vec<HashBag<u8>>,
-    subset_indexes: HashBag<usize>,
+    subsets: Vec<IndexMultiset<u8>>,
+    subset_indexes: IndexMultiset<usize>,
 }
 
 impl TileCodesSet {
@@ -15,7 +14,7 @@ impl TileCodesSet {
     pub fn with_frequency(codes: RangeInclusive<u8>, frequency: usize) -> TileCodesSet {
         TileCodesSet {
             subsets: Vec::new(),
-            subset_indexes: HashBag::new(),
+            subset_indexes: IndexMultiset::new(),
         }
         .add_codes(codes, frequency)
     }
@@ -23,43 +22,31 @@ impl TileCodesSet {
     pub fn add_codes(mut self, codes: RangeInclusive<u8>, frequency: usize) -> TileCodesSet {
         let new_subset_index = self.subsets.len();
 
-        self.subsets.push(HashBag::from_iter(codes.into_iter()));
-        self.subset_indexes.insert_many(new_subset_index, frequency);
+        self.subsets.push({
+            let mut subset = IndexMultiset::new();
+            for code in codes {
+                subset.add_index(code, 1);
+            }
+            subset
+        });
 
+        self.subset_indexes.add_index(new_subset_index, frequency);
         self
     }
 
     pub fn random_not_excluded_code(&self, excluded_codes: &[u8]) -> Option<u8> {
-        let subset_index = *self
-            .subset_indexes
-            .iter()
-            .nth(rand::thread_rng().gen_range(0..self.subset_indexes.len()))
-            .unwrap();
-
+        let subset_index = self.subset_indexes.random_index().unwrap();
         let mut subset = self.subsets[subset_index].clone();
 
-        for code in excluded_codes {
-            subset.take_all(&code);
+        for &code in excluded_codes {
+            subset.remove_index(code);
         }
-
-        subset
-            .iter()
-            .nth(rand::thread_rng().gen_range(0..subset.len()))
-            .cloned()
+        subset.random_index()
     }
 
     pub fn random_code(&self) -> u8 {
-        let subset_index = *self
-            .subset_indexes
-            .iter()
-            .nth(rand::thread_rng().gen_range(0..self.subset_indexes.len()))
-            .unwrap();
-
+        let subset_index = self.subset_indexes.random_index().unwrap();
         let subset = &self.subsets[subset_index];
-
-        *subset
-            .iter()
-            .nth(rand::thread_rng().gen_range(0..subset.len()))
-            .unwrap()
+        subset.random_index().unwrap()
     }
 }

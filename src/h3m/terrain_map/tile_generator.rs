@@ -96,13 +96,12 @@ fn mirroring_neighborhood(
     }
 }
 
-pub struct TileCodeGenerator {
-    // todo: TileGenerator
+pub struct TileGenerator {
     tile_codes: HashMap<Terrain, Vec<(NeighborhoodPattern, TileCodesSet)>>,
 }
 
-impl TileCodeGenerator {
-    pub fn new() -> TileCodeGenerator {
+impl TileGenerator {
+    pub fn new() -> TileGenerator {
         use TerrainRelation::*;
         use TerrainСategory::*;
 
@@ -180,7 +179,7 @@ impl TileCodeGenerator {
             (Terrain::Water, vec![([Eq; 8], TileCodesSet::new(21..=32))]),
             (Terrain::Rock, vec![([Eq; 8], TileCodesSet::new(0..=7))]),
         ]);
-        TileCodeGenerator { tile_codes }
+        TileGenerator { tile_codes }
     }
 
     fn try_generate_code(
@@ -216,7 +215,7 @@ impl TileCodeGenerator {
         neighbors: &[Option<DraftMapCell>; 8],
     ) -> Option<Tile> {
         let terrain = cell.surface.terrain;
-        let excluded_tile_codes = TileCodeGenerator::excluded_tile_codes(cell, neighbors);
+        let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighbors);
         let neighborhood = neighbors.map(|c| Some(c?.surface.terrain));
 
         for vertical_mirroring in [false, true] {

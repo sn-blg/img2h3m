@@ -1,14 +1,13 @@
 use super::obstacle_template_list::ObstacleTemplateList;
-use hashbag::HashBag;
-use rand::Rng;
+use crate::common::index_multiset::IndexMultiset;
 
-pub struct TemplateIndexSet(HashBag<usize>);
+pub struct TemplateIndexSet(IndexMultiset<usize>);
 
 impl TemplateIndexSet {
     pub fn new(obstacle_template_list: &ObstacleTemplateList) -> TemplateIndexSet {
-        let mut index_set = HashBag::new();
+        let mut index_set = IndexMultiset::new();
         for (index, obstacle) in obstacle_template_list.iter().enumerate() {
-            index_set.insert_many(index, obstacle.frequency());
+            index_set.add_index(index, obstacle.frequency());
         }
         TemplateIndexSet(index_set)
     }
@@ -18,14 +17,10 @@ impl TemplateIndexSet {
     }
 
     pub fn random_index(&self) -> usize {
-        *self
-            .0
-            .iter()
-            .nth(rand::thread_rng().gen_range(0..self.0.len()))
-            .unwrap()
+        self.0.random_index().unwrap()
     }
 
-    pub fn remove(&mut self, index: usize) {
-        self.0.take_all(&index).unwrap();
+    pub fn remove_index(&mut self, index: usize) {
+        self.0.remove_index(index).unwrap();
     }
 }

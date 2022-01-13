@@ -59,7 +59,7 @@ impl ObstacleGenerator {
                 Some(position_index) => {
                     self.add_obstacle(template_index, position_index, underground, &mut map_area)?
                 }
-                None => template_index_set.remove(template_index),
+                None => template_index_set.remove_index(template_index),
             }
         }
         Ok(())
