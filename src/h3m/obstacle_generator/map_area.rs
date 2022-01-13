@@ -1,5 +1,5 @@
 use super::obstacle_template::ObstacleTemplate;
-use crate::common::generic::position::Position;
+use crate::common::position::generic::Position;
 use crate::common::position::DeltaPos;
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
