@@ -1,13 +1,17 @@
+use crate::h3m::Terrain;
+
 #[derive(Clone, Copy)]
 pub struct Tile {
+    terrain: Terrain,
     code: u8,
     vertical_mirroring: bool,
     horizontal_mirroring: bool,
 }
 
 impl Tile {
-    pub fn new(code: u8, vertical_mirroring: bool, horizontal_mirroring: bool) -> Tile {
+    pub fn new(terrain: Terrain, code: u8, vertical_mirroring: bool, horizontal_mirroring: bool) -> Tile {
         Tile {
+            terrain,
             code,
             vertical_mirroring,
             horizontal_mirroring,

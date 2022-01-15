@@ -102,6 +102,18 @@ impl H3m {
         data[0] = map_cell.surface().terrain.code();
         data[1] = map_cell.tile().code();
 
+        if map_cell.tile().horizontal_mirroring() {
+            data[6] |= 0b0000_0001;
+        } else {
+            data[6] &= !(0b0000_0001);
+        }
+
+        if map_cell.tile().vertical_mirroring() {
+            data[6] |= 0b0000_0010;
+        } else {
+            data[6] &= !(0b0000_0010);
+        }
+
         Ok(())
     }
 }

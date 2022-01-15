@@ -122,10 +122,68 @@ impl TileGenerator {
             ),
             (
                 Terrain::Grass,
-                vec![(
-                    [Eq; 8],
-                    TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
-                )],
+                vec![
+                    (
+                        [Any, Diff(Sandy), DiffAny, Diff(Sandy), Eq, DiffAny, Eq, Eq],
+                        TileCodesSet::new(20..=23),
+                    ),
+                    (
+                        [Any, Diff(Sandy), DiffAny, Any, Eq, Diff(Sandy), Eq, Eq],
+                        TileCodesSet::new(20..=23),
+                    ),
+                    (
+                        [Any, Eq, Eq, Diff(Sandy), Eq, Any, Eq, Eq],
+                        TileCodesSet::new(24..=27),
+                    ),
+                    (
+                        [Diff(Sandy), Eq, Eq, Any, Eq, Diff(Sandy), Eq, Eq],
+                        TileCodesSet::new(24..=27),
+                    ),
+                    (
+                        [Any, Diff(Sandy), Any, Eq, Eq, Eq, Eq, Eq],
+                        TileCodesSet::new(28..=31),
+                    ),
+                    (
+                        [Diff(Sandy), Any, Diff(Sandy), Eq, Eq, Eq, Eq, Eq],
+                        TileCodesSet::new(28..=31),
+                    ),
+                    (
+                        [Eq, Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
+                        TileCodesSet::new(32..=35).add_codes(38..=39, 2),
+                    ),
+                    (
+                        [Any, Diff(Sandy), Any, Diff(Sandy), Eq, Eq, Eq, Eq],
+                        TileCodesSet::new(36..=37),
+                    ),
+                    (
+                        [Any, Diff(Sandy), Eq, Diff(Sandy), Eq, Any, Eq, Eq],
+                        TileCodesSet::new(36..=37),
+                    ),
+                    (
+                        [Any, Diff(Sandy), Eq, Any, Eq, Diff(Sandy), Eq, Eq],
+                        TileCodesSet::new(36..=37),
+                    ),
+                    (
+                        [Diff(Sandy), Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
+                        TileCodesSet::new(42..=42),
+                    ),
+                    (
+                        [Eq; 8],
+                        TileCodesSet::with_frequency(49..=56, 5).add_codes(57..=72, 1),
+                    ),
+                    (
+                        [Any, Any, Any, Diff(Sandy), Diff(Sandy), Any, Any, Any],
+                        TileCodesSet::new(74..=74),
+                    ),
+                    (
+                        [Any, Diff(Sandy), Any, Any, Any, Any, Diff(Sandy), Any],
+                        TileCodesSet::new(74..=74),
+                    ),
+                    (
+                        [Any, Diff(Sandy), Any, Any, Any, Diff(Sandy), Any, Diff(Sandy)],
+                        TileCodesSet::new(74..=74),
+                    ),
+                ],
             ),
             (
                 Terrain::Snow,
@@ -231,7 +289,7 @@ impl TileGenerator {
                     self.try_generate_code(terrain, &mirroring_neighborhood, &excluded_tile_codes)
                 };
                 if let Some(code) = code {
-                    return Some(Tile::new(code, vertical_mirroring, horizontal_mirroring));
+                    return Some(Tile::new(terrain, code, vertical_mirroring, horizontal_mirroring));
                 }
             }
         }
