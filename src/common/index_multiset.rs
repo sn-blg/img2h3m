@@ -36,4 +36,8 @@ impl<T: Clone + Copy + Unsigned + Eq + Hash> IndexMultiset<T> {
     pub fn remove_index(&mut self, index: T) -> Option<(T, usize)> {
         self.inner.take_all(&index)
     }
+
+    pub fn contains_index(&self, index: T) -> bool {
+        self.inner.contains(&index) > 0
+    }
 }

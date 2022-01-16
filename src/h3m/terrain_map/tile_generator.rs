@@ -1,5 +1,5 @@
 use super::draft_map_cell::DraftMapCell;
-use super::tile::Tile;
+use super::tile::{TerrainVisibleType, Tile};
 use super::tile_codes_set::TileCodesSet;
 use crate::h3m::Terrain;
 use std::collections::HashMap;
@@ -97,7 +97,7 @@ fn mirroring_neighborhood(
 }
 
 pub struct TileGenerator {
-    tile_codes: HashMap<Terrain, Vec<(NeighborhoodPattern, TileCodesSet)>>,
+    tile_codes: HashMap<Terrain, Vec<(NeighborhoodPattern, TileCodesSet, TerrainVisibleType)>>,
 }
 
 impl TileGenerator {
@@ -111,6 +111,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(21..=28, 4).add_codes(29..=44, 1),
+                    Some(Terrain::Dirt),
                 )],
             ),
             (
@@ -118,6 +119,7 @@ impl TileGenerator {
                 vec![(
                     [Any; 8],
                     TileCodesSet::with_frequency(0..=7, 4).add_codes(8..=23, 1),
+                    Some(Terrain::Sand),
                 )],
             ),
             (
@@ -126,62 +128,86 @@ impl TileGenerator {
                     (
                         [Any, Diff(Sandy), DiffAny, Diff(Sandy), Eq, DiffAny, Eq, Eq],
                         TileCodesSet::new(20..=23),
+                        None,
                     ),
                     (
                         [Any, Diff(Sandy), DiffAny, Any, Eq, Diff(Sandy), Eq, Eq],
                         TileCodesSet::new(20..=23),
+                        None,
                     ),
                     (
                         [Any, Eq, Eq, Diff(Sandy), Eq, Any, Eq, Eq],
                         TileCodesSet::new(24..=27),
+                        None,
                     ),
                     (
                         [Diff(Sandy), Eq, Eq, Any, Eq, Diff(Sandy), Eq, Eq],
                         TileCodesSet::new(24..=27),
+                        None,
                     ),
                     (
                         [Any, Diff(Sandy), Any, Eq, Eq, Eq, Eq, Eq],
                         TileCodesSet::new(28..=31),
+                        None,
                     ),
                     (
                         [Diff(Sandy), Any, Diff(Sandy), Eq, Eq, Eq, Eq, Eq],
                         TileCodesSet::new(28..=31),
+                        None,
                     ),
                     (
                         [Eq, Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
                         TileCodesSet::new(32..=35).add_codes(38..=39, 2),
+                        None,
                     ),
                     (
                         [Any, Diff(Sandy), Any, Diff(Sandy), Eq, Eq, Eq, Eq],
                         TileCodesSet::new(36..=37),
+                        None,
                     ),
                     (
                         [Any, Diff(Sandy), Eq, Diff(Sandy), Eq, Any, Eq, Eq],
                         TileCodesSet::new(36..=37),
+                        None,
                     ),
                     (
                         [Any, Diff(Sandy), Eq, Any, Eq, Diff(Sandy), Eq, Eq],
                         TileCodesSet::new(36..=37),
+                        None,
                     ),
                     (
                         [Diff(Sandy), Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
                         TileCodesSet::new(42..=42),
+                        None,
                     ),
                     (
                         [Eq; 8],
                         TileCodesSet::with_frequency(49..=56, 5).add_codes(57..=72, 1),
+                        Some(Terrain::Grass),
                     ),
                     (
                         [Any, Any, Any, Diff(Sandy), Diff(Sandy), Any, Any, Any],
                         TileCodesSet::new(74..=74),
+                        Some(Terrain::Sand),
                     ),
                     (
                         [Any, Diff(Sandy), Any, Any, Any, Any, Diff(Sandy), Any],
                         TileCodesSet::new(74..=74),
+                        Some(Terrain::Sand),
                     ),
                     (
-                        [Any, Diff(Sandy), Any, Any, Any, Diff(Sandy), Any, Diff(Sandy)],
+                        [
+                            Any,
+                            Diff(Sandy),
+                            Any,
+                            Any,
+                            Any,
+                            Diff(Sandy),
+                            Any,
+                            Diff(Sandy),
+                        ],
                         TileCodesSet::new(74..=74),
+                        Some(Terrain::Sand),
                     ),
                 ],
             ),
@@ -190,6 +216,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
+                    Some(Terrain::Snow),
                 )],
             ),
             (
@@ -197,6 +224,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
+                    Some(Terrain::Swamp),
                 )],
             ),
             (
@@ -204,6 +232,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
+                    Some(Terrain::Rough),
                 )],
             ),
             (
@@ -211,6 +240,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
+                    Some(Terrain::Subterranean),
                 )],
             ),
             (
@@ -218,6 +248,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
+                    Some(Terrain::Lava),
                 )],
             ),
             (
@@ -225,6 +256,7 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
+                    Some(Terrain::Highland),
                 )],
             ),
             (
@@ -232,10 +264,17 @@ impl TileGenerator {
                 vec![(
                     [Eq; 8],
                     TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
+                    Some(Terrain::Wasteland),
                 )],
             ),
-            (Terrain::Water, vec![([Eq; 8], TileCodesSet::new(21..=32))]),
-            (Terrain::Rock, vec![([Eq; 8], TileCodesSet::new(0..=7))]),
+            (
+                Terrain::Water,
+                vec![([Eq; 8], TileCodesSet::new(21..=32), Some(Terrain::Water))],
+            ),
+            (
+                Terrain::Rock,
+                vec![([Eq; 8], TileCodesSet::new(0..=7), Some(Terrain::Rock))],
+            ),
         ]);
         TileGenerator { tile_codes }
     }
@@ -243,16 +282,24 @@ impl TileGenerator {
     fn try_generate_code(
         &self,
         terrain: Terrain,
+        current_code: Option<u8>,
         neighborhood: &Neighborhood,
         excluded_tile_codes: &[u8],
-    ) -> Option<u8> {
-        for (pattern, tile_codes_set) in &self.tile_codes[&terrain] {
+    ) -> Option<(u8, TerrainVisibleType)> {
+        let generate_new_code = |tile_codes_set: &TileCodesSet| {
+            if let Some(current_code) = current_code {
+                if tile_codes_set.contains_code(current_code) {
+                    return current_code;
+                }
+            }
+            tile_codes_set
+                .random_not_excluded_code(excluded_tile_codes)
+                .unwrap_or_else(|| tile_codes_set.random_code())
+        };
+
+        for (pattern, tile_codes_set, terrain_visible_type) in &self.tile_codes[&terrain] {
             if is_neighborhood_pattern_matched(terrain, neighborhood, pattern) {
-                return Some(
-                    tile_codes_set
-                        .random_not_excluded_code(excluded_tile_codes)
-                        .unwrap_or_else(|| tile_codes_set.random_code()),
-                );
+                return Some((generate_new_code(tile_codes_set), *terrain_visible_type));
             }
         }
         None
@@ -273,23 +320,39 @@ impl TileGenerator {
         neighbors: &[Option<DraftMapCell>; 8],
     ) -> Option<Tile> {
         let terrain = cell.surface.terrain;
+        let current_code = cell.tile.map(|t| t.code());
         let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighbors);
         let neighborhood = neighbors.map(|c| Some(c?.surface.terrain));
 
         for vertical_mirroring in [false, true] {
             for horizontal_mirroring in [false, true] {
-                let code = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
-                    self.try_generate_code(terrain, &neighborhood, &excluded_tile_codes)
+                let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
+                    self.try_generate_code(
+                        terrain,
+                        current_code,
+                        &neighborhood,
+                        &excluded_tile_codes,
+                    )
                 } else {
                     let mirroring_neighborhood = mirroring_neighborhood(
                         &neighborhood,
                         vertical_mirroring,
                         horizontal_mirroring,
                     );
-                    self.try_generate_code(terrain, &mirroring_neighborhood, &excluded_tile_codes)
+                    self.try_generate_code(
+                        terrain,
+                        current_code,
+                        &mirroring_neighborhood,
+                        &excluded_tile_codes,
+                    )
                 };
-                if let Some(code) = code {
-                    return Some(Tile::new(terrain, code, vertical_mirroring, horizontal_mirroring));
+                if let Some((code, terrain_visible_type)) = code_info {
+                    return Some(Tile::new(
+                        terrain_visible_type,
+                        code,
+                        vertical_mirroring,
+                        horizontal_mirroring,
+                    ));
                 }
             }
         }

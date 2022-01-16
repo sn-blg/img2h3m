@@ -54,12 +54,22 @@ impl DraftTerrainMap {
 
     pub fn set_tile_codes(&mut self) {
         let generator = TileGenerator::new();
+        while self.set_tile_codes_iteration(&generator) {}
+    }
+
+    fn set_tile_codes_iteration(&mut self, generator: &TileGenerator) -> bool {
+        let mut was_changed = false;
         for index in 0..self.size * self.size {
             let neighbors = self.neighbours(index);
             if let Some(cell) = &mut self.cells[index] {
-                cell.tile = generator.try_generate(cell, &neighbors);
+                let tile = generator.try_generate(cell, &neighbors);
+                if tile != cell.tile {
+                    was_changed = true
+                }
+                cell.tile = tile;
             }
         }
+        was_changed
     }
 
     pub fn into_map_cells(self) -> Vec<Option<MapCell>> {

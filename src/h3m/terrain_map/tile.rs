@@ -1,21 +1,32 @@
 use crate::h3m::Terrain;
 
-#[derive(Clone, Copy)]
+pub type TerrainVisibleType = Option<Terrain>; // None if transitional tail
+
+#[derive(Clone, Copy, PartialEq)]
 pub struct Tile {
-    terrain: Terrain,
+    terrain_visible_type: TerrainVisibleType,
     code: u8,
     vertical_mirroring: bool,
     horizontal_mirroring: bool,
 }
 
 impl Tile {
-    pub fn new(terrain: Terrain, code: u8, vertical_mirroring: bool, horizontal_mirroring: bool) -> Tile {
+    pub fn new(
+        terrain_visible_type: TerrainVisibleType,
+        code: u8,
+        vertical_mirroring: bool,
+        horizontal_mirroring: bool,
+    ) -> Tile {
         Tile {
-            terrain,
+            terrain_visible_type,
             code,
             vertical_mirroring,
             horizontal_mirroring,
         }
+    }
+
+    pub fn terrain_visible_type(&self) -> TerrainVisibleType {
+        self.terrain_visible_type
     }
 
     pub fn code(&self) -> u8 {

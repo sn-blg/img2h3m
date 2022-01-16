@@ -49,4 +49,13 @@ impl TileCodesSet {
         let subset = &self.subsets[subset_index];
         subset.random_index().unwrap()
     }
+
+    pub fn contains_code(&self, code: u8) -> bool {
+        for subset in &self.subsets {
+            if subset.contains_index(code) {
+                return true;
+            }
+        }
+        false
+    }
 }
