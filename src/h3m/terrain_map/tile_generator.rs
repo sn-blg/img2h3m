@@ -5,17 +5,17 @@ use crate::h3m::Terrain;
 use std::collections::HashMap;
 
 #[derive(Clone, Copy, PartialEq)]
-enum TerrainСategory {
+enum TerrainCategory {
     Sandy,
     Dirty,
 }
 
 impl Terrain {
-    fn category(self) -> TerrainСategory {
+    fn category(self) -> TerrainCategory {
         if matches!(self, Terrain::Sand | Terrain::Water | Terrain::Rock) {
-            TerrainСategory::Sandy
+            TerrainCategory::Sandy
         } else {
-            TerrainСategory::Dirty
+            TerrainCategory::Dirty
         }
     }
 }
@@ -23,7 +23,7 @@ impl Terrain {
 #[derive(Clone, Copy, PartialEq)]
 enum TerrainRelation {
     Eq,                     // None or Some neighbour == central terrain
-    Diff(TerrainСategory), // Some neighbour != central terrain and neighbour in TerrainСategory
+    Diff(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainСategory
     DiffAny,                // Some neighbour != central terrain
     Any,                    // any neighbour, including None
 }
@@ -103,7 +103,7 @@ pub struct TileGenerator {
 impl TileGenerator {
     pub fn new() -> TileGenerator {
         use TerrainRelation::*;
-        use TerrainСategory::*;
+        use TerrainCategory::*;
 
         let tile_codes = HashMap::from([
             (
@@ -286,7 +286,7 @@ impl TileGenerator {
         neighborhood: &Neighborhood,
         excluded_tile_codes: &[u8],
     ) -> Option<(u8, TerrainVisibleType)> {
-        let generate_new_code = |tile_codes_set: &TileCodesSet| {
+        let generate_code = |tile_codes_set: &TileCodesSet| {
             if let Some(current_code) = current_code {
                 if tile_codes_set.contains_code(current_code) {
                     return current_code;
@@ -299,7 +299,7 @@ impl TileGenerator {
 
         for (pattern, tile_codes_set, terrain_visible_type) in &self.tile_codes[&terrain] {
             if is_neighborhood_pattern_matched(terrain, neighborhood, pattern) {
-                return Some((generate_new_code(tile_codes_set), *terrain_visible_type));
+                return Some((generate_code(tile_codes_set), *terrain_visible_type));
             }
         }
         None
