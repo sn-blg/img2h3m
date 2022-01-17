@@ -11,6 +11,10 @@ impl TileCodesSet {
         TileCodesSet::with_frequency(codes, 1)
     }
 
+    pub fn from_code(code: u8) -> TileCodesSet {
+        TileCodesSet::new(code..=code)
+    }
+
     pub fn with_frequency(codes: RangeInclusive<u8>, frequency: usize) -> TileCodesSet {
         TileCodesSet {
             subsets: Vec::new(),

@@ -22,24 +22,30 @@ impl Terrain {
 
 #[derive(Clone, Copy, PartialEq)]
 enum TerrainRelation {
-    Eq,                     // None or Some neighbour == central terrain
+    Eq,                    // None or Some neighbour == central terrain
     Diff(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainСategory
-    DiffAny,                // Some neighbour != central terrain
-    Any,                    // any neighbour, including None
+    DiffAny,               // Some neighbour != central terrain
+    Any,                   // any neighbour, including None
 }
 
 fn is_terrain_relation_matched(
-    terrain: Terrain,
-    neighbour: &Option<Terrain>,
+    cell: &DraftMapCell,
+    neighbour: &Option<DraftMapCell>,
     relation: TerrainRelation,
 ) -> bool {
     if let Some(neighbour) = neighbour {
+        let terrain = cell.surface.terrain;
+        let neighbour_terrain = neighbour
+            .tile
+            .map(|t| t.terrain_visible_type())
+            .flatten()
+            .unwrap_or(neighbour.surface.terrain);
         match relation {
-            TerrainRelation::Eq => *neighbour == terrain,
+            TerrainRelation::Eq => neighbour_terrain == terrain,
             TerrainRelation::Diff(category) => {
-                (*neighbour != terrain) && (neighbour.category() == category)
+                (neighbour_terrain != terrain) && (neighbour_terrain.category() == category)
             }
-            TerrainRelation::DiffAny => (*neighbour != terrain),
+            TerrainRelation::DiffAny => (neighbour_terrain != terrain),
             TerrainRelation::Any => true,
         }
     } else {
@@ -47,16 +53,16 @@ fn is_terrain_relation_matched(
     }
 }
 
-type Neighborhood = [Option<Terrain>; 8];
+type Neighborhood = [Option<DraftMapCell>; 8];
 type NeighborhoodPattern = [TerrainRelation; 8];
 
 fn is_neighborhood_pattern_matched(
-    terrain: Terrain,
+    cell: &DraftMapCell,
     neighborhood: &Neighborhood,
     neighborhood_pattern: &NeighborhoodPattern,
 ) -> bool {
     for (neighbour, &relation) in neighborhood.iter().zip(neighborhood_pattern) {
-        if !is_terrain_relation_matched(terrain, neighbour, relation) {
+        if !is_terrain_relation_matched(cell, neighbour, relation) {
             return false;
         }
     }
@@ -102,8 +108,8 @@ pub struct TileGenerator {
 
 impl TileGenerator {
     pub fn new() -> TileGenerator {
-        use TerrainRelation::*;
         use TerrainCategory::*;
+        use TerrainRelation::*;
 
         let tile_codes = HashMap::from([
             (
@@ -177,7 +183,7 @@ impl TileGenerator {
                     ),
                     (
                         [Diff(Sandy), Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
-                        TileCodesSet::new(42..=42),
+                        TileCodesSet::from_code(42),
                         None,
                     ),
                     (
@@ -187,26 +193,12 @@ impl TileGenerator {
                     ),
                     (
                         [Any, Any, Any, Diff(Sandy), Diff(Sandy), Any, Any, Any],
-                        TileCodesSet::new(74..=74),
+                        TileCodesSet::from_code(74),
                         Some(Terrain::Sand),
                     ),
                     (
                         [Any, Diff(Sandy), Any, Any, Any, Any, Diff(Sandy), Any],
-                        TileCodesSet::new(74..=74),
-                        Some(Terrain::Sand),
-                    ),
-                    (
-                        [
-                            Any,
-                            Diff(Sandy),
-                            Any,
-                            Any,
-                            Any,
-                            Diff(Sandy),
-                            Any,
-                            Diff(Sandy),
-                        ],
-                        TileCodesSet::new(74..=74),
+                        TileCodesSet::from_code(74),
                         Some(Terrain::Sand),
                     ),
                 ],
@@ -281,7 +273,7 @@ impl TileGenerator {
 
     fn try_generate_code(
         &self,
-        terrain: Terrain,
+        cell: &DraftMapCell,
         current_code: Option<u8>,
         neighborhood: &Neighborhood,
         excluded_tile_codes: &[u8],
@@ -297,16 +289,21 @@ impl TileGenerator {
                 .unwrap_or_else(|| tile_codes_set.random_code())
         };
 
-        for (pattern, tile_codes_set, terrain_visible_type) in &self.tile_codes[&terrain] {
-            if is_neighborhood_pattern_matched(terrain, neighborhood, pattern) {
+        for (pattern, tile_codes_set, terrain_visible_type) in
+            &self.tile_codes[&cell.surface.terrain]
+        {
+            if is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
                 return Some((generate_code(tile_codes_set), *terrain_visible_type));
             }
         }
         None
     }
 
-    fn excluded_tile_codes(cell: &DraftMapCell, neighbors: &[Option<DraftMapCell>; 8]) -> Vec<u8> {
-        neighbors
+    fn excluded_tile_codes(
+        cell: &DraftMapCell,
+        neighborhood: &[Option<DraftMapCell>; 8],
+    ) -> Vec<u8> {
+        neighborhood
             .iter()
             .filter_map(|c| c.as_ref())
             .filter(|neighbour| neighbour.surface.terrain == cell.surface.terrain)
@@ -317,22 +314,15 @@ impl TileGenerator {
     pub fn try_generate(
         &self,
         cell: &DraftMapCell,
-        neighbors: &[Option<DraftMapCell>; 8],
+        neighborhood: &[Option<DraftMapCell>; 8],
     ) -> Option<Tile> {
-        let terrain = cell.surface.terrain;
         let current_code = cell.tile.map(|t| t.code());
-        let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighbors);
-        let neighborhood = neighbors.map(|c| Some(c?.surface.terrain));
+        let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighborhood);
 
         for vertical_mirroring in [false, true] {
             for horizontal_mirroring in [false, true] {
                 let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
-                    self.try_generate_code(
-                        terrain,
-                        current_code,
-                        &neighborhood,
-                        &excluded_tile_codes,
-                    )
+                    self.try_generate_code(cell, current_code, &neighborhood, &excluded_tile_codes)
                 } else {
                     let mirroring_neighborhood = mirroring_neighborhood(
                         &neighborhood,
@@ -340,7 +330,7 @@ impl TileGenerator {
                         horizontal_mirroring,
                     );
                     self.try_generate_code(
-                        terrain,
+                        cell,
                         current_code,
                         &mirroring_neighborhood,
                         &excluded_tile_codes,
