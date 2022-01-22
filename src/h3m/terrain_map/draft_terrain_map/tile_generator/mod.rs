@@ -1,4 +1,4 @@
-use crate::h3m::terrain_map::draft_map_cell::DraftMapCell;
+use super::draft_map_cell::DraftMapCell;
 use crate::h3m::terrain_map::tile::{TerrainVisibleType, Tile};
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
 use tile_codes_set::TileCodesSet;

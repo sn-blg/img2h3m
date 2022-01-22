@@ -1,6 +1,6 @@
-use super::map_cell::MapCell;
-use super::tile::Tile;
 use crate::common::position::Position;
+use crate::h3m::terrain_map::map_cell::MapCell;
+use crate::h3m::terrain_map::tile::Tile;
 use crate::h3m::Surface;
 
 #[derive(Clone, Copy)]

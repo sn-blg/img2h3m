@@ -1,8 +1,11 @@
-use super::draft_map_cell::DraftMapCell;
-use super::map_cell::MapCell;
-use super::tile_generator::TileGenerator;
 use crate::common::position::{Position, SignedDeltaPos};
+use crate::h3m::terrain_map::map_cell::MapCell;
 use crate::h3m::Surface;
+use draft_map_cell::DraftMapCell;
+use tile_generator::TileGenerator;
+
+mod draft_map_cell;
+mod tile_generator;
 
 pub struct DraftTerrainMap {
     size: usize,

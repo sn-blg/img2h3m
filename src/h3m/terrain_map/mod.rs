@@ -3,11 +3,9 @@ use crate::h3m::Surface;
 use draft_terrain_map::DraftTerrainMap;
 pub use map_cell::MapCell;
 
-mod draft_map_cell;
 mod draft_terrain_map;
 mod map_cell;
 mod tile;
-mod tile_generator;
 
 pub struct TerrainMap {
     size: usize,
