@@ -7,7 +7,6 @@ mod draft_map_cell;
 mod draft_terrain_map;
 mod map_cell;
 mod tile;
-mod tile_codes_set;
 mod tile_generator;
 
 pub struct TerrainMap {
