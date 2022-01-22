@@ -111,11 +111,13 @@ impl TileGenerator {
         };
 
         for tiles_group_info in self.tiles_table.terrain_tile_groups(cell.surface.terrain) {
-            if is_neighborhood_pattern_matched(cell, &neighborhood, tiles_group_info.pattern()) {
-                return Some((
-                    generate_code(tiles_group_info.codes()),
-                    *tiles_group_info.terrain_visible_type(),
-                ));
+            for pattern in tiles_group_info.patterns() {
+                if is_neighborhood_pattern_matched(cell, &neighborhood, pattern) {
+                    return Some((
+                        generate_code(tiles_group_info.codes()),
+                        *tiles_group_info.terrain_visible_type(),
+                    ));
+                }
             }
         }
         None

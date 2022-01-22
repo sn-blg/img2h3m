@@ -7,26 +7,26 @@ use crate::h3m::Terrain;
 use std::collections::HashMap;
 
 pub struct TilesGroupInfo {
-    pattern: NeighborhoodPattern,
+    patterns: Vec<NeighborhoodPattern>,
     codes: TileCodesSet,
     terrain_visible_type: TerrainVisibleType,
 }
 
 impl TilesGroupInfo {
     fn new(
-        pattern: NeighborhoodPattern,
+        patterns: Vec<NeighborhoodPattern>,
         codes: TileCodesSet,
         terrain_visible_type: TerrainVisibleType,
     ) -> TilesGroupInfo {
         TilesGroupInfo {
-            pattern,
+            patterns,
             codes,
             terrain_visible_type,
         }
     }
 
-    pub fn pattern(&self) -> &NeighborhoodPattern {
-        &self.pattern
+    pub fn patterns(&self) -> &[NeighborhoodPattern] {
+        &self.patterns
     }
 
     pub fn codes(&self) -> &TileCodesSet {
@@ -43,6 +43,7 @@ pub struct TilesTable {
 }
 
 impl TilesTable {
+    #[rustfmt::skip]
     pub fn new() -> TilesTable {
         use TerrainCategory::*;
         use TerrainRelation::*;
@@ -51,7 +52,7 @@ impl TilesTable {
             (
                 Terrain::Dirt,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(21..=28, 4).add_codes(29..=44, 1),
                     Some(Terrain::Dirt),
                 )],
@@ -59,7 +60,7 @@ impl TilesTable {
             (
                 Terrain::Sand,
                 vec![(
-                    [Any; NEIGHBORHOOD_SIZE],
+                    vec![[Any; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(0..=7, 4).add_codes(8..=23, 1),
                     Some(Terrain::Sand),
                 )],
@@ -68,72 +69,75 @@ impl TilesTable {
                 Terrain::Grass,
                 vec![
                     (
-                        [Any, Diff(Sandy), DiffAny, Diff(Sandy), Eq, DiffAny, Eq, Eq],
-                        TileCodesSet::new(20..=23),
+                        vec![[  Any,            Diff(Sandy),    Any,
+                                Diff(Sandy),                    Eq,
+                                Any,            Eq,             Eq
+                            ],
+                            [
+                                Any,            Diff(Sandy),    Any,
+                                Any,                            Eq,
+                                Diff(Sandy),    Eq,             Eq
+                            ],
+                            [
+                                Any,            Any,            Diff(Sandy),
+                                Diff(Sandy),                    Eq,
+                                Any,            Eq,             Eq
+                            ],
+                        ],
+                        TileCodesSet::new(20..=23).add_codes(36..=37, 5),
                         None,
                     ),
                     (
-                        [Any, Diff(Sandy), DiffAny, Any, Eq, Diff(Sandy), Eq, Eq],
-                        TileCodesSet::new(20..=23),
-                        None,
-                    ),
-                    (
-                        [Any, Eq, Eq, Diff(Sandy), Eq, Any, Eq, Eq],
+                        vec![[  Any,            Eq,             Eq,
+                                Diff(Sandy),                    Eq,
+                                Any,            Eq,             Eq
+                            ],
+                        ],
                         TileCodesSet::new(24..=27),
                         None,
                     ),
                     (
-                        [Diff(Sandy), Eq, Eq, Any, Eq, Diff(Sandy), Eq, Eq],
-                        TileCodesSet::new(24..=27),
-                        None,
-                    ),
-                    (
-                        [Any, Diff(Sandy), Any, Eq, Eq, Eq, Eq, Eq],
+                        vec![[  Any,            Diff(Sandy),    Any,
+                                Eq,                             Eq,
+                                Eq,             Eq,             Eq
+                            ],
+                        ],
                         TileCodesSet::new(28..=31),
                         None,
                     ),
                     (
-                        [Diff(Sandy), Any, Diff(Sandy), Eq, Eq, Eq, Eq, Eq],
-                        TileCodesSet::new(28..=31),
+                        vec![[  Eq,             Eq,             Eq,
+                                Eq,                             Eq,
+                                Eq,             Eq,             Diff(Sandy)
+                            ],
+                        ],
+                        TileCodesSet::new(32..=35).add_codes(38..=39, 5),
                         None,
                     ),
                     (
-                        [Eq, Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
-                        TileCodesSet::new(32..=35).add_codes(38..=39, 2),
-                        None,
-                    ),
-                    (
-                        [Any, Diff(Sandy), Any, Diff(Sandy), Eq, Eq, Eq, Eq],
-                        TileCodesSet::new(36..=37),
-                        None,
-                    ),
-                    (
-                        [Any, Diff(Sandy), Eq, Diff(Sandy), Eq, Any, Eq, Eq],
-                        TileCodesSet::new(36..=37),
-                        None,
-                    ),
-                    (
-                        [Any, Diff(Sandy), Eq, Any, Eq, Diff(Sandy), Eq, Eq],
-                        TileCodesSet::new(36..=37),
-                        None,
-                    ),
-                    (
-                        [Diff(Sandy), Eq, Eq, Eq, Eq, Eq, Eq, Diff(Sandy)],
+                        vec![[  Diff(Sandy),    Eq,             Eq,
+                                Eq,                             Eq,
+                                Eq,             Eq,             Diff(Sandy)
+                            ],
+                        ],
                         TileCodesSet::from_code(42),
                         None,
                     ),
                     (
-                        [Eq; NEIGHBORHOOD_SIZE],
+                        vec![[Eq; NEIGHBORHOOD_SIZE]],
                         TileCodesSet::with_frequency(49..=56, 5).add_codes(57..=72, 1),
                         Some(Terrain::Grass),
                     ),
                     (
-                        [Any, Any, Any, Diff(Sandy), Diff(Sandy), Any, Any, Any],
-                        TileCodesSet::from_code(74),
-                        Some(Terrain::Sand),
-                    ),
-                    (
-                        [Any, Diff(Sandy), Any, Any, Any, Any, Diff(Sandy), Any],
+                        vec![[  Any,            Any,            Any,
+                                Diff(Sandy),                    Diff(Sandy),
+                                Any,            Any,            Any
+                            ],
+                            [   Any,            Diff(Sandy),    Any,
+                                Any,                            Any,
+                                Any,            Diff(Sandy),    Any
+                            ],
+                        ],
                         TileCodesSet::from_code(74),
                         Some(Terrain::Sand),
                     ),
@@ -142,7 +146,7 @@ impl TilesTable {
             (
                 Terrain::Snow,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
                     Some(Terrain::Snow),
                 )],
@@ -150,7 +154,7 @@ impl TilesTable {
             (
                 Terrain::Swamp,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
                     Some(Terrain::Swamp),
                 )],
@@ -158,7 +162,7 @@ impl TilesTable {
             (
                 Terrain::Rough,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
                     Some(Terrain::Rough),
                 )],
@@ -166,7 +170,7 @@ impl TilesTable {
             (
                 Terrain::Subterranean,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
                     Some(Terrain::Subterranean),
                 )],
@@ -174,7 +178,7 @@ impl TilesTable {
             (
                 Terrain::Lava,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
                     Some(Terrain::Lava),
                 )],
@@ -182,7 +186,7 @@ impl TilesTable {
             (
                 Terrain::Highland,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
                     Some(Terrain::Highland),
                 )],
@@ -190,7 +194,7 @@ impl TilesTable {
             (
                 Terrain::Wasteland,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
                     Some(Terrain::Wasteland),
                 )],
@@ -198,7 +202,7 @@ impl TilesTable {
             (
                 Terrain::Water,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::new(21..=32),
                     Some(Terrain::Water),
                 )],
@@ -206,7 +210,7 @@ impl TilesTable {
             (
                 Terrain::Rock,
                 vec![(
-                    [Eq; NEIGHBORHOOD_SIZE],
+                    vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::new(0..=7),
                     Some(Terrain::Rock),
                 )],
