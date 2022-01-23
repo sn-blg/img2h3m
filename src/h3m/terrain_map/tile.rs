@@ -40,4 +40,12 @@ impl Tile {
     pub fn horizontal_mirroring(&self) -> bool {
         self.horizontal_mirroring
     }
+
+    pub fn set_vertical_mirroring(&mut self, value: bool) {
+        self.vertical_mirroring = value;
+    }
+
+    pub fn set_horizontal_mirroring(&mut self, value: bool) {
+        self.horizontal_mirroring = value;
+    }
 }

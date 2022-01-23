@@ -1,5 +1,6 @@
 use super::draft_map_cell::DraftMapCell;
 use crate::h3m::terrain_map::tile::{TerrainVisibleType, Tile};
+use rand::{rngs::ThreadRng, Rng};
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
 use tile_codes_set::TileCodesSet;
 use tiles_table::TilesTable;
@@ -83,33 +84,28 @@ fn mirroring_neighborhood(
 
 pub struct TileGenerator {
     tiles_table: TilesTable,
+    rng: ThreadRng,
 }
 
 impl TileGenerator {
     pub fn new() -> TileGenerator {
         TileGenerator {
             tiles_table: TilesTable::new(),
+            rng: rand::thread_rng(),
         }
     }
 
     fn try_generate_code(
         &self,
         cell: &DraftMapCell,
-        current_code: Option<u8>,
         neighborhood: Neighborhood,
         excluded_tile_codes: &[u8],
     ) -> Option<(u8, TerrainVisibleType)> {
         let generate_code = |tile_codes_set: &TileCodesSet| {
-            if let Some(current_code) = current_code {
-                if tile_codes_set.contains_code(current_code) {
-                    return current_code;
-                }
-            }
             tile_codes_set
                 .random_not_excluded_code(excluded_tile_codes)
                 .unwrap_or_else(|| tile_codes_set.random_code())
         };
-
         for tiles_group_info in self.tiles_table.terrain_tile_groups(cell.surface.terrain) {
             for pattern in tiles_group_info.patterns() {
                 if is_neighborhood_pattern_matched(cell, &neighborhood, pattern) {
@@ -123,6 +119,24 @@ impl TileGenerator {
         None
     }
 
+    fn is_valid_code(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> bool {
+        if let Some(tile) = cell.tile {
+            let code = tile.code();
+            for tiles_group_info in self.tiles_table.terrain_tile_groups(cell.surface.terrain) {
+                for pattern in tiles_group_info.patterns() {
+                    if !is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
+                        continue;
+                    }
+                    if !tiles_group_info.codes().contains_code(code) {
+                        continue;
+                    }
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
     fn excluded_tile_codes(cell: &DraftMapCell, neighborhood: &Neighborhood) -> Vec<u8> {
         neighborhood
             .iter()
@@ -132,26 +146,19 @@ impl TileGenerator {
             .collect()
     }
 
-    pub fn try_generate(&self, cell: &DraftMapCell, neighborhood: Neighborhood) -> Option<Tile> {
-        let current_code = cell.tile.map(|t| t.code());
+    fn try_generate_impl(&self, cell: &DraftMapCell, neighborhood: Neighborhood) -> Option<Tile> {
         let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, &neighborhood);
-
         for vertical_mirroring in [false, true] {
             for horizontal_mirroring in [false, true] {
                 let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
-                    self.try_generate_code(cell, current_code, neighborhood, &excluded_tile_codes)
+                    self.try_generate_code(cell, neighborhood, &excluded_tile_codes)
                 } else {
                     let mirroring_neighborhood = mirroring_neighborhood(
                         &neighborhood,
                         vertical_mirroring,
                         horizontal_mirroring,
                     );
-                    self.try_generate_code(
-                        cell,
-                        current_code,
-                        mirroring_neighborhood,
-                        &excluded_tile_codes,
-                    )
+                    self.try_generate_code(cell, mirroring_neighborhood, &excluded_tile_codes)
                 };
                 if let Some((code, terrain_visible_type)) = code_info {
                     return Some(Tile::new(
@@ -164,5 +171,41 @@ impl TileGenerator {
             }
         }
         None
+    }
+
+    fn is_valid_tile(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> bool {
+        if let Some(tile) = cell.tile {
+            let vertical_mirroring = tile.vertical_mirroring();
+            let horizontal_mirroring = tile.horizontal_mirroring();
+            if (false, false) == (vertical_mirroring, horizontal_mirroring) {
+                self.is_valid_code(cell, neighborhood)
+            } else {
+                let mirroring_neighborhood =
+                    mirroring_neighborhood(neighborhood, vertical_mirroring, horizontal_mirroring);
+                self.is_valid_code(cell, &mirroring_neighborhood)
+            }
+        } else {
+            false
+        }
+    }
+
+    pub fn try_generate(
+        &mut self,
+        cell: &DraftMapCell,
+        neighborhood: Neighborhood,
+    ) -> Option<Tile> {
+        let tile = if self.is_valid_tile(cell, &neighborhood) {
+            cell.tile.unwrap()
+        } else {
+            let mut tile = self.try_generate_impl(cell, neighborhood)?;
+            if let Some(terrain_visible_type) = tile.terrain_visible_type() {
+                if terrain_visible_type != cell.surface.terrain {
+                    tile.set_vertical_mirroring(self.rng.gen());
+                    tile.set_horizontal_mirroring(self.rng.gen());
+                }
+            }
+            tile
+        };
+        Some(tile)
     }
 }

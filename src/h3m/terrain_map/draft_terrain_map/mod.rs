@@ -56,11 +56,11 @@ impl DraftTerrainMap {
     }
 
     pub fn set_tile_codes(&mut self) {
-        let generator = TileGenerator::new();
-        while self.set_tile_codes_iteration(&generator) {}
+        let mut generator = TileGenerator::new();
+        while self.set_tile_codes_iteration(&mut generator) {}
     }
 
-    fn set_tile_codes_iteration(&mut self, generator: &TileGenerator) -> bool {
+    fn set_tile_codes_iteration(&mut self, generator: &mut TileGenerator) -> bool {
         let mut was_changed = false;
         for index in 0..self.size * self.size {
             let neighbors = self.neighbours(index);
