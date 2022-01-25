@@ -1,6 +1,8 @@
 use super::draft_map_cell::DraftMapCell;
 use crate::h3m::terrain_map::tile::{TerrainVisibleType, Tile};
+use crate::h3m::Terrain;
 use rand::{rngs::ThreadRng, Rng};
+use std::cmp::Ordering;
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
 use tile_codes_set::TileCodesSet;
 use tiles_table::TilesTable;
@@ -195,13 +197,6 @@ impl TileGenerator {
         neighborhood: &Neighborhood,
         tile: &mut Tile,
     ) {
-        let mut get_mirroring = |neighbour_mirroring: Option<bool>| {
-            if let Some(neighbour_mirroring) = neighbour_mirroring {
-                return neighbour_mirroring;
-            }
-            self.rng.gen()
-        };
-
         let get_neighbour_tile = |neighbour_cell: &Option<DraftMapCell>, terrain_visible_type| {
             let neighbour_cell = match neighbour_cell {
                 Some(neighbour_cell) => neighbour_cell,
@@ -221,22 +216,77 @@ impl TileGenerator {
             Some(neighbour_tile)
         };
 
-        if let Some(terrain_visible_type) = tile.terrain_visible_type() {
-            if terrain_visible_type == cell.surface.terrain {
-                return;
-            }
-            let top_neighbour = &neighborhood[1];
-            tile.set_vertical_mirroring(get_mirroring(
-                get_neighbour_tile(top_neighbour, terrain_visible_type)
-                    .map(|tile| tile.vertical_mirroring()),
-            ));
+        let get_bad_combinations_count =
+            |terrain_visible_type, vertical_mirroring, horizontal_mirroring| {
+                let mut count = 0;
+                for (neighbour_tile, index) in [1, 3, 4, 6]
+                    .into_iter()
+                    .map(|index| {
+                        Some((
+                            get_neighbour_tile(&neighborhood[index], terrain_visible_type)?,
+                            index,
+                        ))
+                    })
+                    .flatten()
+                {
+                    if (neighbour_tile.horizontal_mirroring() == horizontal_mirroring)
+                        && (neighbour_tile.vertical_mirroring() == vertical_mirroring)
+                    {
+                        count += 1;
+                    }
 
-            let left_neighbour = &neighborhood[3];
-            tile.set_horizontal_mirroring(get_mirroring(
-                get_neighbour_tile(left_neighbour, terrain_visible_type)
-                    .map(|tile| tile.horizontal_mirroring()),
-            ));
+                    if (terrain_visible_type == Terrain::Sand)
+                        && [3, 4].contains(&index)
+                        && (neighbour_tile.horizontal_mirroring() != horizontal_mirroring)
+                    {
+                        count += 1;
+                    }
+                }
+                count
+            };
+
+        let terrain_visible_type = match tile.terrain_visible_type() {
+            Some(terrain_visible_type) => terrain_visible_type,
+            None => return,
+        };
+
+        if terrain_visible_type == cell.surface.terrain {
+            return;
         }
+
+        let mut mirrorings = Vec::new();
+        let mut current_bad_combinations_count = None;
+        for vertical_mirroring in [false, true] {
+            for horizontal_mirroring in [false, true] {
+                let bad_combinations_count = get_bad_combinations_count(
+                    terrain_visible_type,
+                    vertical_mirroring,
+                    horizontal_mirroring,
+                );
+                if let Some(current_bad_combinations_count_value) = current_bad_combinations_count {
+                    match bad_combinations_count.cmp(&current_bad_combinations_count_value) {
+                        Ordering::Equal => {
+                            mirrorings.push((vertical_mirroring, horizontal_mirroring))
+                        }
+                        Ordering::Less => {
+                            mirrorings.clear();
+                            mirrorings.push((vertical_mirroring, horizontal_mirroring));
+                            current_bad_combinations_count = Some(bad_combinations_count);
+                        }
+                        Ordering::Greater => (),
+                    }
+                } else {
+                    current_bad_combinations_count = Some(bad_combinations_count);
+                    mirrorings.push((vertical_mirroring, horizontal_mirroring));
+                }
+            }
+        }
+
+        let (vertical_mirroring, horizontal_mirroring) =
+            mirrorings[self.rng.gen_range(0..mirrorings.len())];
+
+        tile.set_vertical_mirroring(vertical_mirroring);
+        tile.set_horizontal_mirroring(horizontal_mirroring);
     }
 
     pub fn try_generate(
