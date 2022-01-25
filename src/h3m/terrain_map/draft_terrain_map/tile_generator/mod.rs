@@ -218,16 +218,20 @@ impl TileGenerator {
 
         let get_bad_combinations_count =
             |terrain_visible_type, vertical_mirroring, horizontal_mirroring| {
+                let vertical_neighbour_indexes = [1, 6];
+                let horizontal_neighbour_indexes = [3, 4];
                 let mut count = 0;
-                for (neighbour_tile, index) in [1, 3, 4, 6]
-                    .into_iter()
-                    .map(|index| {
-                        Some((
-                            get_neighbour_tile(&neighborhood[index], terrain_visible_type)?,
-                            index,
-                        ))
-                    })
-                    .flatten()
+                for (neighbour_tile, index) in
+                    [vertical_neighbour_indexes, horizontal_neighbour_indexes]
+                        .concat()
+                        .into_iter()
+                        .map(|index| {
+                            Some((
+                                get_neighbour_tile(&neighborhood[index], terrain_visible_type)?,
+                                index,
+                            ))
+                        })
+                        .flatten()
                 {
                     if (neighbour_tile.horizontal_mirroring() == horizontal_mirroring)
                         && (neighbour_tile.vertical_mirroring() == vertical_mirroring)
@@ -236,7 +240,7 @@ impl TileGenerator {
                     }
 
                     if (terrain_visible_type == Terrain::Sand)
-                        && [3, 4].contains(&index)
+                        && horizontal_neighbour_indexes.contains(&index)
                         && (neighbour_tile.horizontal_mirroring() != horizontal_mirroring)
                     {
                         count += 1;
