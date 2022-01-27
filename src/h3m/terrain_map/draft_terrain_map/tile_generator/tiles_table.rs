@@ -69,22 +69,20 @@ impl TilesTable {
                 Terrain::Grass,
                 vec![
                     (
-                        vec![[  Any,            Diff(Sandy),    Any,
+                        vec![[  Any,            Diff(Sandy),    DiffAny,
                                 Diff(Sandy),                    Eq,
-                                Any,            Eq,             Eq
+                                DiffAny,        Eq,             Eq
                             ],
-                            [
-                                Any,            Diff(Sandy),    Any,
+                            [   Any,            Diff(Sandy),    DiffAny,
                                 Any,                            Eq,
                                 Diff(Sandy),    Eq,             Eq
                             ],
-                            [
-                                Any,            Any,            Diff(Sandy),
+                            [   Any,            Any,            Diff(Sandy),
                                 Diff(Sandy),                    Eq,
-                                Any,            Eq,             Eq
+                                DiffAny,        Eq,             Eq
                             ],
                         ],
-                        TileCodesSet::new(20..=23).add_codes(36..=37, 5),
+                        TileCodesSet::with_frequency(20..=23, 4).add_codes(36..=37, 1),
                         None,
                     ),
                     (
@@ -112,6 +110,31 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(32..=35).add_codes(38..=39, 5),
+                        None,
+                    ),
+                    (
+                        vec![[  Any,            Diff(Sandy),    Eq,
+                                Diff(Sandy),                    Eq,
+                                Eq,             Eq,             Eq
+                            ],
+                            [   Any,            Diff(Sandy),    DiffAny,
+                                Diff(Sandy),                    Eq,
+                                Eq,             Eq,             Eq
+                            ],
+                            [   Any,            Diff(Sandy),    Eq,
+                                Diff(Sandy),                    Eq,
+                                DiffAny,        Eq,             Eq
+                            ],
+                            [   Any,            Diff(Sandy),    Eq,
+                                Any,                            Eq,
+                                Diff(Sandy),    Eq,             Eq
+                            ],
+                            [   Any,            Any,            Diff(Sandy),
+                                Diff(Sandy),                    Eq,
+                                Eq,             Eq,             Eq
+                            ],
+                        ],
+                        TileCodesSet::new(36..=37),
                         None,
                     ),
                     (
