@@ -6,9 +6,51 @@ use crate::h3m::terrain_map::tile::TerrainVisibleType;
 use crate::h3m::Terrain;
 use std::collections::HashMap;
 
+#[derive(Clone, Copy)]
 enum TileSymmetry {
     MainDiagonal,
     None,
+}
+
+#[rustfmt::skip]
+fn rotate_pattern_with_main_diagonal_symmetry(
+    pattern: &NeighborhoodPattern,
+) -> NeighborhoodPattern {
+    [
+        pattern[0], pattern[3], pattern[5],
+        pattern[1],             pattern[6],
+        pattern[2], pattern[4], pattern[7],
+    ]
+}
+
+fn additional_patterns(
+    pattern: &NeighborhoodPattern,
+    tile_symmetry: TileSymmetry,
+) -> Vec<NeighborhoodPattern> {
+    let mut additional_patterns = Vec::new();
+    match tile_symmetry {
+        TileSymmetry::MainDiagonal => {
+            additional_patterns.push(rotate_pattern_with_main_diagonal_symmetry(pattern))
+        }
+        TileSymmetry::None => (),
+    }
+    additional_patterns
+}
+
+fn expand_patterns(
+    patterns: Vec<NeighborhoodPattern>,
+    tile_symmetry: TileSymmetry,
+) -> Vec<NeighborhoodPattern> {
+    let mut expanded_patterns = Vec::with_capacity(patterns.len());
+    for pattern in patterns {
+        for additional_pattern in additional_patterns(&pattern, tile_symmetry) {
+            if additional_pattern != pattern {
+                expanded_patterns.push(additional_pattern);
+            }
+        }
+        expanded_patterns.push(pattern);
+    }
+    expanded_patterns
 }
 
 pub struct TilesGroupInfo {
@@ -22,10 +64,10 @@ impl TilesGroupInfo {
         patterns: Vec<NeighborhoodPattern>,
         codes: TileCodesSet,
         terrain_visible_type: TerrainVisibleType,
-        _tile_symmetry: TileSymmetry,
+        tile_symmetry: TileSymmetry,
     ) -> TilesGroupInfo {
         TilesGroupInfo {
-            patterns,
+            patterns: expand_patterns(patterns, tile_symmetry),
             codes,
             terrain_visible_type,
         }
@@ -83,13 +125,9 @@ impl TilesTable {
                                 Any,                            Eq,
                                 Diff(Sandy),    Eq,             Eq
                             ],
-                            [   Any,            Any,            Diff(Sandy),
-                                Diff(Sandy),                    Eq,
-                                DiffAny,        Eq,             Eq
-                            ],
                         ],
                         TileCodesSet::new(20..=23),
-                        (TerrainVisibleType::None, TileSymmetry::None),
+                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal),
                     ),
                     (
                         vec![[  Any,            Eq,             Eq,
@@ -121,27 +159,15 @@ impl TilesTable {
                     (
                         vec![[  Any,            Diff(Sandy),    Eq,
                                 Diff(Sandy),                    Eq,
-                                Eq,             Eq,             Eq
-                            ],
-                            [   Any,            Diff(Sandy),    DiffAny,
-                                Diff(Sandy),                    Eq,
-                                Eq,             Eq,             Eq
-                            ],
-                            [   Any,            Diff(Sandy),    Eq,
-                                Diff(Sandy),                    Eq,
-                                DiffAny,        Eq,             Eq
+                                Any,            Eq,             Eq
                             ],
                             [   Any,            Diff(Sandy),    Eq,
                                 Any,                            Eq,
                                 Diff(Sandy),    Eq,             Eq
                             ],
-                            [   Any,            Any,            Diff(Sandy),
-                                Diff(Sandy),                    Eq,
-                                Eq,             Eq,             Eq
-                            ],
                         ],
                         TileCodesSet::new(36..=37),
-                        (TerrainVisibleType::None, TileSymmetry::None),
+                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal),
                     ),
                     (
                         vec![[  Diff(Sandy),    Eq,             Eq,
@@ -162,13 +188,9 @@ impl TilesTable {
                                 Diff(Sandy),                    Diff(Sandy),
                                 Any,            Any,            Any
                             ],
-                            [   Any,            Diff(Sandy),    Any,
-                                Any,                            Any,
-                                Any,            Diff(Sandy),    Any
-                            ],
                         ],
                         TileCodesSet::from_code(74),
-                        (TerrainVisibleType::Diff(Terrain::Sand), TileSymmetry::None),
+                        (TerrainVisibleType::Diff(Terrain::Sand), TileSymmetry::MainDiagonal),
                     ),
                 ],
             ),
