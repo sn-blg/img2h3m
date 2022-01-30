@@ -56,6 +56,7 @@ fn expand_patterns(
 pub struct TilesGroupInfo {
     patterns: Vec<NeighborhoodPattern>,
     codes: TileCodesSet,
+    name: &'static str,
     terrain_visible_type: TerrainVisibleType,
 }
 
@@ -63,12 +64,14 @@ impl TilesGroupInfo {
     fn new(
         patterns: Vec<NeighborhoodPattern>,
         codes: TileCodesSet,
+        name: &'static str,
         terrain_visible_type: TerrainVisibleType,
         tile_symmetry: TileSymmetry,
     ) -> TilesGroupInfo {
         TilesGroupInfo {
             patterns: expand_patterns(patterns, tile_symmetry),
             codes,
+            name,
             terrain_visible_type,
         }
     }
@@ -79,6 +82,10 @@ impl TilesGroupInfo {
 
     pub fn codes(&self) -> &TileCodesSet {
         &self.codes
+    }
+
+    pub fn name(&self) -> &'static str {
+        self.name
     }
 
     pub fn terrain_visible_type(&self) -> &TerrainVisibleType {
@@ -102,7 +109,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(21..=28, 4).add_codes(29..=44, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -110,7 +117,7 @@ impl TilesTable {
                 vec![(
                     vec![[Any; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(0..=7, 4).add_codes(8..=23, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -127,7 +134,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(20..=23),
-                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal),
+                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal, ""),
                     ),
                     (
                         vec![[  Any,            Eq,             Eq,
@@ -136,7 +143,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(24..=27),
-                        (TerrainVisibleType::None, TileSymmetry::None),
+                        (TerrainVisibleType::None, TileSymmetry::None, ""),
                     ),
                     (
                         vec![[  Any,            Diff(Sandy),    Any,
@@ -145,7 +152,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(28..=31),
-                        (TerrainVisibleType::None, TileSymmetry::None),
+                        (TerrainVisibleType::None, TileSymmetry::None, ""),
                     ),
                     (
                         vec![[  Eq,             Eq,             Eq,
@@ -154,7 +161,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(32..=35).add_codes(38..=39, 5),
-                        (TerrainVisibleType::None, TileSymmetry::None),
+                        (TerrainVisibleType::None, TileSymmetry::None, ""),
                     ),
                     (
                         vec![[  Any,            Diff(Sandy),    Eq,
@@ -167,7 +174,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(36..=37),
-                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal),
+                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal, ""),
                     ),
                     (
                         vec![[  Diff(Sandy),    Eq,             Eq,
@@ -176,12 +183,12 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::from_code(42),
-                        (TerrainVisibleType::None, TileSymmetry::None),
+                        (TerrainVisibleType::None, TileSymmetry::None, ""),
                     ),
                     (
                         vec![[Eq; NEIGHBORHOOD_SIZE]],
                         TileCodesSet::with_frequency(49..=56, 5).add_codes(57..=72, 1),
-                        (TerrainVisibleType::Same, TileSymmetry::None),
+                        (TerrainVisibleType::Same, TileSymmetry::None, ""),
                     ),
                     (
                         vec![[  Any,            Any,            Any,
@@ -190,7 +197,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::from_code(74),
-                        (TerrainVisibleType::Diff(Terrain::Sand), TileSymmetry::MainDiagonal),
+                        (TerrainVisibleType::Diff(Terrain::Sand), TileSymmetry::MainDiagonal, ""),
                     ),
                 ],
             ),
@@ -199,7 +206,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -207,7 +214,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -215,7 +222,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -223,7 +230,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -231,7 +238,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(49..=56, 4).add_codes(57..=72, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -239,7 +246,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -247,7 +254,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -255,7 +262,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::new(21..=32),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
             (
@@ -263,7 +270,7 @@ impl TilesTable {
                 vec![(
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
                     TileCodesSet::new(0..=7),
-                    (TerrainVisibleType::Same, TileSymmetry::None),
+                    (TerrainVisibleType::Same, TileSymmetry::None, ""),
                 )],
             ),
         ];
@@ -277,8 +284,10 @@ impl TilesTable {
                         element
                             .1
                             .into_iter()
-                            .map(|(patterns, codes, (terrain_visible_type, tile_symmetry))| {
-                                TilesGroupInfo::new(patterns, codes, terrain_visible_type, tile_symmetry)
+                            .map(|( patterns,
+                                    codes,
+                                    (terrain_visible_type, tile_symmetry, name))| {
+                                TilesGroupInfo::new(patterns, codes, name, terrain_visible_type, tile_symmetry)
                             })
                             .collect::<Vec<TilesGroupInfo>>(),
                     )

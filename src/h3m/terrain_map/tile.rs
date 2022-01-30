@@ -9,6 +9,7 @@ pub enum TerrainVisibleType {
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Tile {
+    name: &'static str,
     terrain_visible_type: TerrainVisibleType,
     code: u8,
     vertical_mirroring: bool,
@@ -17,12 +18,14 @@ pub struct Tile {
 
 impl Tile {
     pub fn new(
+        name: &'static str,
         terrain_visible_type: TerrainVisibleType,
         code: u8,
         vertical_mirroring: bool,
         horizontal_mirroring: bool,
     ) -> Tile {
         Tile {
+            name,
             terrain_visible_type,
             code,
             vertical_mirroring,

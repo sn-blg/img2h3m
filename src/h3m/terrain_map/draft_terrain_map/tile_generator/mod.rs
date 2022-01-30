@@ -5,7 +5,7 @@ use rand::{rngs::ThreadRng, Rng};
 use std::cmp::Ordering;
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
 use tile_codes_set::TileCodesSet;
-use tiles_table::TilesTable;
+use tiles_table::{TilesGroupInfo, TilesTable};
 
 mod terrain_relation;
 mod tile_codes_set;
@@ -105,7 +105,7 @@ impl TileGenerator {
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         excluded_tile_codes: &[u8],
-    ) -> Option<(u8, TerrainVisibleType)> {
+    ) -> Option<(u8, &TilesGroupInfo)> {
         let generate_code = |tile_codes_set: &TileCodesSet| {
             tile_codes_set
                 .random_not_excluded_code(excluded_tile_codes)
@@ -114,10 +114,7 @@ impl TileGenerator {
         for tiles_group_info in self.tiles_table.terrain_tile_groups(cell.surface.terrain) {
             for pattern in tiles_group_info.patterns() {
                 if is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
-                    return Some((
-                        generate_code(tiles_group_info.codes()),
-                        *tiles_group_info.terrain_visible_type(),
-                    ));
+                    return Some((generate_code(tiles_group_info.codes()), tiles_group_info));
                 }
             }
         }
@@ -165,9 +162,10 @@ impl TileGenerator {
                     );
                     self.try_generate_code(cell, &mirroring_neighborhood, &excluded_tile_codes)
                 };
-                if let Some((code, terrain_visible_type)) = code_info {
+                if let Some((code, tiles_group_info)) = code_info {
                     return Some(Tile::new(
-                        terrain_visible_type,
+                        tiles_group_info.name(),
+                        *tiles_group_info.terrain_visible_type(),
                         code,
                         vertical_mirroring,
                         horizontal_mirroring,
