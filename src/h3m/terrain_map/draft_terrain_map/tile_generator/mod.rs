@@ -20,7 +20,10 @@ fn is_terrain_relation_matched(
         let terrain = cell.surface.terrain;
         let neighbour_terrain = neighbour
             .tile
-            .map(|t| t.terrain_visible_type())
+            .map(|t| match t.terrain_visible_type() {
+                TerrainVisibleType::Diff(terrain_visible_type) => Some(terrain_visible_type),
+                _ => None,
+            })
             .flatten()
             .unwrap_or(neighbour.surface.terrain);
         match relation {
@@ -191,25 +194,17 @@ impl TileGenerator {
         }
     }
 
-    fn try_randomize_mirroring(
-        &mut self,
-        cell: &DraftMapCell,
-        neighborhood: &Neighborhood,
-        tile: &mut Tile,
-    ) {
+    fn try_randomize_mirroring(&mut self, neighborhood: &Neighborhood, tile: &mut Tile) {
         let get_neighbour_tile = |neighbour_cell: &Option<DraftMapCell>, terrain_visible_type| {
             let neighbour_cell = match neighbour_cell {
                 Some(neighbour_cell) => neighbour_cell,
                 None => return None,
             };
             let neighbour_tile = neighbour_cell.tile?;
-            let neighbour_terrain = neighbour_cell.surface.terrain;
 
-            if neighbour_tile.terrain_visible_type() == Some(neighbour_terrain) {
-                return None;
-            }
-
-            if neighbour_tile.terrain_visible_type() != Some(terrain_visible_type) {
+            if neighbour_tile.terrain_visible_type()
+                != TerrainVisibleType::Diff(terrain_visible_type)
+            {
                 return None;
             }
 
@@ -250,13 +245,9 @@ impl TileGenerator {
             };
 
         let terrain_visible_type = match tile.terrain_visible_type() {
-            Some(terrain_visible_type) => terrain_visible_type,
-            None => return,
+            TerrainVisibleType::Diff(terrain_visible_type) => terrain_visible_type,
+            _ => return,
         };
-
-        if terrain_visible_type == cell.surface.terrain {
-            return;
-        }
 
         let mut mirrorings = Vec::new();
         let mut current_bad_combinations_count = None;
@@ -302,7 +293,7 @@ impl TileGenerator {
             cell.tile.unwrap()
         } else {
             let mut tile = self.try_generate_impl(cell, neighborhood)?;
-            self.try_randomize_mirroring(cell, neighborhood, &mut tile);
+            self.try_randomize_mirroring(neighborhood, &mut tile);
             tile
         };
         Some(tile)

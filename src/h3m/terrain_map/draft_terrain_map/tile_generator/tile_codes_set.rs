@@ -34,7 +34,9 @@ impl TileCodesSet {
             subset
         });
 
-        self.subset_indexes.add_index(new_subset_index, frequency);
+        if frequency > 0 {
+            self.subset_indexes.add_index(new_subset_index, frequency);
+        }
         self
     }
 

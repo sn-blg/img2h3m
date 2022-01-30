@@ -1,6 +1,11 @@
 use crate::h3m::Terrain;
 
-pub type TerrainVisibleType = Option<Terrain>; // None if transitional tail
+#[derive(Clone, Copy, PartialEq)]
+pub enum TerrainVisibleType {
+    Same,
+    Diff(Terrain),
+    None, // transitional tail
+}
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Tile {
