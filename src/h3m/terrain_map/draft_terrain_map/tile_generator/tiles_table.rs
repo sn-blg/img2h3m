@@ -126,11 +126,11 @@ impl TilesTable {
                     (
                         vec![[  Any,            Diff(Sandy),    DiffAny,
                                 Diff(Sandy),                    Eq,
-                                DiffAny,        Eq,             Eq
+                                DiffAny,        Eq,             Eq,
                             ],
                             [   Any,            Diff(Sandy),    DiffAny,
                                 Any,                            Eq,
-                                Diff(Sandy),    Eq,             Eq
+                                Diff(Sandy),    Eq,             Eq,
                             ],
                         ],
                         TileCodesSet::new(20..=23),
@@ -139,7 +139,7 @@ impl TilesTable {
                     (
                         vec![[  Any,            Eq,             Eq,
                                 Diff(Sandy),                    Eq,
-                                Any,            Eq,             Eq
+                                Any,            Eq,             Eq,
                             ],
                         ],
                         TileCodesSet::new(24..=27),
@@ -148,7 +148,7 @@ impl TilesTable {
                     (
                         vec![[  Any,            Diff(Sandy),    Any,
                                 Eq,                             Eq,
-                                Eq,             Eq,             Eq
+                                Eq,             Eq,             Eq,
                             ],
                         ],
                         TileCodesSet::new(28..=31),
@@ -157,7 +157,7 @@ impl TilesTable {
                     (
                         vec![[  Eq,             Eq,                                 Eq,
                                 Eq,                                                 SameNamed("horizontal_half_sand"),
-                                Eq,             SameNamed("vertical_half_sand"),    Diff(Sandy)
+                                Eq,             SameNamed("vertical_half_sand"),    Diff(Sandy),
                             ],
                         ],
                         TileCodesSet::new(32..=35),
@@ -170,7 +170,7 @@ impl TilesTable {
                             ],
                             [   Any,            Diff(Sandy),    Eq,
                                 Any,                            Eq,
-                                Diff(Sandy),    Eq,             Eq
+                                Diff(Sandy),    Eq,             Eq,
                             ],
                         ],
                         TileCodesSet::new(36..=37),
@@ -179,7 +179,7 @@ impl TilesTable {
                     (
                         vec![[  Eq,             Eq,             Eq,
                                 Eq,                             Eq,
-                                Eq,             Eq,             Diff(Sandy)
+                                Eq,             Eq,             Diff(Sandy),
                             ],
                         ],
                         TileCodesSet::new(38..=39),
@@ -188,7 +188,7 @@ impl TilesTable {
                     (
                         vec![[  Diff(Sandy),    Eq,             Eq,
                                 Eq,                             Eq,
-                                Eq,             Eq,             Diff(Sandy)
+                                Eq,             Eq,             Diff(Sandy),
                             ],
                         ],
                         TileCodesSet::from_code(42),
@@ -202,7 +202,11 @@ impl TilesTable {
                     (
                         vec![[  Any,            Any,            Any,
                                 Diff(Sandy),                    Diff(Sandy),
-                                Any,            Any,            Any
+                                Any,            Any,            Any,
+                            ],
+                            [   Diff(Sandy),    Any,            Any,
+                                Any,                            Diff(Sandy),
+                                Any,            Diff(Sandy),    Any,
                             ],
                         ],
                         TileCodesSet::from_code(74),

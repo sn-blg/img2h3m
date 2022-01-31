@@ -61,3 +61,15 @@ impl Tile {
         self.horizontal_mirroring = value;
     }
 }
+
+impl Default for Tile {
+    fn default() -> Self {
+        Tile {
+            name: "",
+            terrain_visible_type: TerrainVisibleType::None,
+            code: 0,
+            vertical_mirroring: false,
+            horizontal_mirroring: false,
+        }
+    }
+}
