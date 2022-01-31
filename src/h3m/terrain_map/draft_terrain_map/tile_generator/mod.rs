@@ -28,6 +28,13 @@ fn is_terrain_relation_matched(
             .unwrap_or(neighbour.surface.terrain);
         match relation {
             TerrainRelation::Eq => neighbour_terrain == terrain,
+            TerrainRelation::SameNamed(name) => {
+                if let Some(neighbour_tile) = neighbour.tile {
+                    (neighbour_terrain == terrain) && (neighbour_tile.name() == name)
+                } else {
+                    false
+                }
+            }
             TerrainRelation::Diff(category) => {
                 (neighbour_terrain != terrain) && (neighbour_terrain.category() == category)
             }
@@ -129,10 +136,7 @@ impl TileGenerator {
                     if !is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
                         continue;
                     }
-                    if !tiles_group_info.codes().contains_code(code) {
-                        continue;
-                    }
-                    return true;
+                    return tiles_group_info.codes().contains_code(code);
                 }
             }
         }

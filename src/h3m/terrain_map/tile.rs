@@ -33,6 +33,10 @@ impl Tile {
         }
     }
 
+    pub fn name(&self) -> &'static str {
+        self.name
+    }
+
     pub fn terrain_visible_type(&self) -> TerrainVisibleType {
         self.terrain_visible_type
     }

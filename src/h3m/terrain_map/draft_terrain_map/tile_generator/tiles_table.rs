@@ -143,7 +143,7 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(24..=27),
-                        (TerrainVisibleType::None, TileSymmetry::None, ""),
+                        (TerrainVisibleType::None, TileSymmetry::None, "vertical_half_sand"),
                     ),
                     (
                         vec![[  Any,            Diff(Sandy),    Any,
@@ -152,15 +152,15 @@ impl TilesTable {
                             ],
                         ],
                         TileCodesSet::new(28..=31),
-                        (TerrainVisibleType::None, TileSymmetry::None, ""),
+                        (TerrainVisibleType::None, TileSymmetry::None, "horizontal_half_sand"),
                     ),
                     (
-                        vec![[  Eq,             Eq,             Eq,
-                                Eq,                             Eq,
-                                Eq,             Eq,             Diff(Sandy)
+                        vec![[  Eq,             Eq,                                 Eq,
+                                Eq,                                                 SameNamed("horizontal_half_sand"),
+                                Eq,             SameNamed("vertical_half_sand"),    Diff(Sandy)
                             ],
                         ],
-                        TileCodesSet::new(32..=35).add_codes(38..=39, 5),
+                        TileCodesSet::new(32..=35),
                         (TerrainVisibleType::None, TileSymmetry::None, ""),
                     ),
                     (
@@ -175,6 +175,15 @@ impl TilesTable {
                         ],
                         TileCodesSet::new(36..=37),
                         (TerrainVisibleType::None, TileSymmetry::MainDiagonal, ""),
+                    ),
+                    (
+                        vec![[  Eq,             Eq,             Eq,
+                                Eq,                             Eq,
+                                Eq,             Eq,             Diff(Sandy)
+                            ],
+                        ],
+                        TileCodesSet::new(38..=39),
+                        (TerrainVisibleType::None, TileSymmetry::None, ""),
                     ),
                     (
                         vec![[  Diff(Sandy),    Eq,             Eq,
