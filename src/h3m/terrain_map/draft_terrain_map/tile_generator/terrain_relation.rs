@@ -18,11 +18,12 @@ impl Terrain {
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TerrainRelation {
-    Eq,                      // None or Some neighbour == central terrain
-    SameNamed(&'static str), // Some neighbour == central terrain and neighbour tail name == str
-    Diff(TerrainCategory),   // Some neighbour != central terrain and neighbour in TerrainСategory
-    DiffAny,                 // Some neighbour != central terrain
-    Any,                     // any neighbour, including None
+    Eq,                         // None or Some neighbour == central terrain
+    SameNamed(&'static str),    // Some neighbour == central terrain and neighbour tail name == str
+    Diff(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainСategory
+    DiffAny,               // Some neighbour != central terrain
+    Any,                   // any neighbour, including None
+    AnyExcept(TerrainCategory), // any neighbour, including None, except neighbour in TerrainCategory
 }
 
 pub const NEIGHBORHOOD_SIZE: usize = 8;

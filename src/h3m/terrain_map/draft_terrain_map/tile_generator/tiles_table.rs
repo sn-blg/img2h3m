@@ -212,6 +212,16 @@ impl TilesTable {
                 Terrain::Grass,
                 vec![
                     (
+                        vec![[  AnyExcept(Sandy),   Diff(Dirty),    Diff(Dirty),
+                                AnyExcept(Sandy),                   Eq,
+                                Diff(Dirty),        Eq,             Eq,
+                            ],
+                        ],
+                        TileCodesSet::new(0..=3),
+                        (TerrainVisibleType::None, TileSymmetry::MainDiagonal, ""),
+                    ),
+
+                    (
                         vec![[  Any,            Diff(Sandy),    DiffAny,
                                 Diff(Sandy),                    Eq,
                                 DiffAny,        Eq,             Eq,

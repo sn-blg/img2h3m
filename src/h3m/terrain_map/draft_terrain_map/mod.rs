@@ -57,7 +57,13 @@ impl DraftTerrainMap {
 
     pub fn set_tile_codes(&mut self) {
         let mut generator = TileGenerator::new();
-        while self.set_tile_codes_iteration(&mut generator) {}
+        for _ in 0..(256 * 256usize) {
+            let was_changed = self.set_tile_codes_iteration(&mut generator);
+            if !was_changed {
+                return;
+            }
+        }
+        panic!();
     }
 
     fn set_tile_codes_iteration(&mut self, generator: &mut TileGenerator) -> bool {

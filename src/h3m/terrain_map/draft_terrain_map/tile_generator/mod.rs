@@ -40,9 +40,13 @@ fn is_terrain_relation_matched(
             }
             TerrainRelation::DiffAny => (neighbour_terrain != terrain),
             TerrainRelation::Any => true,
+            TerrainRelation::AnyExcept(category) => (neighbour_terrain.category() != category),
         }
     } else {
-        matches!(relation, TerrainRelation::Eq | TerrainRelation::Any)
+        matches!(
+            relation,
+            TerrainRelation::Eq | TerrainRelation::Any | TerrainRelation::AnyExcept(_)
+        )
     }
 }
 
@@ -154,8 +158,8 @@ impl TileGenerator {
 
     fn try_generate_impl(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> Option<Tile> {
         let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighborhood);
-        for vertical_mirroring in [false, true] {
-            for horizontal_mirroring in [false, true] {
+        for horizontal_mirroring in [false, true] {
+            for vertical_mirroring in [false, true] {
                 let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
                     self.try_generate_code(cell, neighborhood, &excluded_tile_codes)
                 } else {
