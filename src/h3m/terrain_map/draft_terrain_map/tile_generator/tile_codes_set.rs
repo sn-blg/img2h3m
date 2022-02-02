@@ -1,6 +1,7 @@
 use crate::common::index_multiset::IndexMultiset;
 use std::ops::RangeInclusive;
 
+#[derive(Clone)]
 pub struct TileCodesSet {
     subsets: Vec<IndexMultiset<u8>>,
     subset_indexes: IndexMultiset<usize>,
