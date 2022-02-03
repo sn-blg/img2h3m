@@ -12,6 +12,8 @@ pub mod result;
 mod surface;
 mod terrain_map;
 
+pub const MAX_MAP_LENGTH: usize = 256 * 256usize;
+
 pub struct H3m {
     info: H3mInfo,
     raw_map: Vec<u8>,

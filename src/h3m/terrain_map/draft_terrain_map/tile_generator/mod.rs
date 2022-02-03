@@ -1,6 +1,8 @@
 use super::draft_map_cell::DraftMapCell;
-use crate::h3m::terrain_map::tile::{TerrainVisibleType, Tile};
-use crate::h3m::Terrain;
+use crate::h3m::{
+    terrain_map::tile::{TerrainVisibleType, Tile},
+    Terrain,
+};
 use rand::{rngs::ThreadRng, Rng};
 use std::cmp::Ordering;
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};

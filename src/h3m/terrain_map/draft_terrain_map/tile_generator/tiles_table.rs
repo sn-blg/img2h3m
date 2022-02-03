@@ -203,7 +203,7 @@ impl TilesTable {
             ),
         ];
 
-        let grass_table = vec![
+        let old_common_ground_table = vec![
             (
                 vec![[  AnyExcept(Sandy),   Diff(Dirty),    Diff(Dirty),
                         AnyExcept(Sandy),                   Eq,
@@ -334,12 +334,30 @@ impl TilesTable {
                 (TerrainVisibleType::None, TileSymmetry::None, ""),
             ),
             (
+                vec![[  Diff(Dirty),    Eq,             Eq,
+                        Eq,                             Eq,
+                        Eq,             Eq,             Diff(Sandy),
+                    ],
+                ],
+                TileCodesSet::from_code(41),
+                (TerrainVisibleType::None, TileSymmetry::None, ""),
+            ),
+            (
                 vec![[  Diff(Sandy),    Eq,             Eq,
                         Eq,                             Eq,
                         Eq,             Eq,             Diff(Sandy),
                     ],
                 ],
                 TileCodesSet::from_code(42),
+                (TerrainVisibleType::None, TileSymmetry::None, ""),
+            ),
+            (
+                vec![[  Eq,             Eq,                 AnyExcept(Sandy),
+                        Eq,                                 Diff(Dirty),
+                        Diff(Sandy),    AnyExcept(Sandy),   AnyExcept(Sandy),
+                    ],
+                ],
+                TileCodesSet::from_code(43),
                 (TerrainVisibleType::None, TileSymmetry::None, ""),
             ),
             (
@@ -362,11 +380,15 @@ impl TilesTable {
             ),
             (
                 vec![[  Any,            Any,            Any,
-                        Diff(Sandy),                    Diff(Sandy),
+                        Diff(Sandy),                    DiffAny,
                         Any,            Any,            Any,
                     ],
                     [   Diff(Sandy),    Any,            Any,
                         Any,                            Diff(Sandy),
+                        Any,            Diff(Sandy),    Any,
+                    ],
+                    [   Diff(Dirty),    Any,            Any,
+                        Any,                            Diff(Dirty),
                         Any,            Diff(Sandy),    Any,
                     ],
                 ],
@@ -375,7 +397,7 @@ impl TilesTable {
             ),
         ];
 
-        let highland_table =  vec![
+        let new_common_ground_table =  vec![
             (
                 vec![[Eq; NEIGHBORHOOD_SIZE]],
                 TileCodesSet::with_frequency(77..=101, 4).add_codes(102..=117, 1),
@@ -410,35 +432,35 @@ impl TilesTable {
             ),
             (
                 Terrain::Grass,
-                &grass_table,
+                &old_common_ground_table,
             ),
             (
                 Terrain::Snow,
-                &grass_table,
+                &old_common_ground_table,
             ),
             (
                 Terrain::Swamp,
-                &grass_table,
+                &old_common_ground_table,
             ),
             (
                 Terrain::Rough,
-                &grass_table,
+                &old_common_ground_table,
             ),
             (
                 Terrain::Subterranean,
-                &grass_table,
+                &old_common_ground_table,
             ),
             (
                 Terrain::Lava,
-                &grass_table,
+                &old_common_ground_table,
             ),
             (
                 Terrain::Highland,
-                &highland_table,
+                &new_common_ground_table,
             ),
             (
                 Terrain::Wasteland,
-                &highland_table,
+                &new_common_ground_table,
             ),
             (
                 Terrain::Water,
