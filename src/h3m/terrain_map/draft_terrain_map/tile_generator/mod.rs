@@ -30,6 +30,9 @@ fn is_terrain_relation_matched(
             .unwrap_or(neighbour.surface.terrain);
         match relation {
             TerrainRelation::Eq => neighbour_terrain == terrain,
+            TerrainRelation::EqOr(category) => {
+                (neighbour_terrain == terrain) || (neighbour_terrain.category() == category)
+            }
             TerrainRelation::SameNamed(name) => {
                 if let Some(neighbour_tile) = neighbour.tile {
                     (neighbour_terrain == terrain) && (neighbour_tile.name() == name)
@@ -42,12 +45,11 @@ fn is_terrain_relation_matched(
             }
             TerrainRelation::DiffAny => (neighbour_terrain != terrain),
             TerrainRelation::Any => true,
-            TerrainRelation::AnyExcept(category) => (neighbour_terrain.category() != category),
         }
     } else {
         matches!(
             relation,
-            TerrainRelation::Eq | TerrainRelation::Any | TerrainRelation::AnyExcept(_)
+            TerrainRelation::Eq | TerrainRelation::EqOr(_) | TerrainRelation::Any
         )
     }
 }
