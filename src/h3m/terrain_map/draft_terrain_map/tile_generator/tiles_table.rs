@@ -93,6 +93,21 @@ impl TilesGroupInfo {
     }
 }
 
+static VERTICAL_HALF_DIRT: &str = "vertical_half_dirt";
+static HORIZONTAL_HALF_DIRT: &str = "horizontal_half_dirt";
+
+static VERTICAL_HALF_SAND: &str = "vertical_half_sand";
+static HORIZONTAL_HALF_SAND: &str = "horizontal_half_sand";
+
+static VERTICAL_HALF_DIRT_SAND: &str = "vertical_half_dirt_sand";
+static HORIZONTAL_HALF_DIRT_SAND: &str = "horizontal_half_dirt_sand";
+
+static VERTICAL_HALF_DIRT_ARR: &[&str] = &[VERTICAL_HALF_DIRT, VERTICAL_HALF_DIRT_SAND];
+static HORIZONTAL_HALF_DIRT_ARR: &[&str] = &[HORIZONTAL_HALF_DIRT, HORIZONTAL_HALF_DIRT_SAND];
+
+static VERTICAL_HALF_SAND_ARR: &[&str] = &[VERTICAL_HALF_SAND];
+static HORIZONTAL_HALF_SAND_ARR: &[&str] = &[HORIZONTAL_HALF_SAND];
+
 pub struct TilesTable {
     inner: HashMap<Terrain, Vec<TilesGroupInfo>>,
 }
@@ -124,7 +139,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(4..=7),
-                (TerrainVisibleType::None, TileSymmetry::None, "vertical_half_sand"),
+                (TerrainVisibleType::None, TileSymmetry::None, VERTICAL_HALF_SAND),
             ),
             (
                 vec![[  Any,            Diff(Sandy),    Any,
@@ -133,12 +148,12 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(8..=11),
-                (TerrainVisibleType::None, TileSymmetry::None, "horizontal_half_sand"),
+                (TerrainVisibleType::None, TileSymmetry::None, HORIZONTAL_HALF_SAND),
             ),
             (
                 vec![[  EqOr(Dirty),             EqOr(Dirty),                       EqOr(Dirty),
-                        EqOr(Dirty),                                                SameNamed("horizontal_half_sand"),
-                        EqOr(Dirty),             SameNamed("vertical_half_sand"),   Diff(Sandy),
+                        EqOr(Dirty),                                                SameNamed(HORIZONTAL_HALF_SAND_ARR),
+                        EqOr(Dirty),             SameNamed(VERTICAL_HALF_SAND_ARR), Diff(Sandy),
                     ],
                 ],
                 TileCodesSet::new(12..=15),
@@ -220,7 +235,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(4..=7),
-                (TerrainVisibleType::None, TileSymmetry::None, "vertical_half_dirt"),
+                (TerrainVisibleType::None, TileSymmetry::None, VERTICAL_HALF_DIRT),
             ),
             (
                 vec![[  EqOr(Dirty),    Diff(Dirty),    EqOr(Dirty),
@@ -229,12 +244,12 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(8..=11),
-                (TerrainVisibleType::None, TileSymmetry::None, "horizontal_half_dirt"),
+                (TerrainVisibleType::None, TileSymmetry::None, HORIZONTAL_HALF_DIRT),
             ),
             (
                 vec![[  Eq,             Eq,                                 Eq,
-                        Eq,                                                 SameNamed("horizontal_half_dirt"),
-                        Eq,             SameNamed("vertical_half_dirt"),    Diff(Dirty),
+                        Eq,                                                 SameNamed(HORIZONTAL_HALF_DIRT_ARR),
+                        Eq,             SameNamed(VERTICAL_HALF_DIRT_ARR),  Diff(Dirty),
                     ],
                 ],
                 TileCodesSet::new(12..=15),
@@ -282,7 +297,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(24..=27),
-                (TerrainVisibleType::None, TileSymmetry::None, "vertical_half_sand"),
+                (TerrainVisibleType::None, TileSymmetry::None, VERTICAL_HALF_SAND),
             ),
             (
                 vec![[  Any,            Diff(Sandy),    Any,
@@ -291,12 +306,12 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(28..=31),
-                (TerrainVisibleType::None, TileSymmetry::None, "horizontal_half_sand"),
+                (TerrainVisibleType::None, TileSymmetry::None, HORIZONTAL_HALF_SAND),
             ),
             (
                 vec![[  Eq,             Eq,                                 Eq,
-                        Eq,                                                 SameNamed("horizontal_half_sand"),
-                        Eq,             SameNamed("vertical_half_sand"),    Diff(Sandy),
+                        Eq,                                                 SameNamed(HORIZONTAL_HALF_SAND_ARR),
+                        Eq,             SameNamed(VERTICAL_HALF_SAND_ARR),  Diff(Sandy),
                     ],
                 ],
                 TileCodesSet::new(32..=35),
@@ -376,7 +391,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::from_code(45),
-                (TerrainVisibleType::None, TileSymmetry::None, ""),
+                (TerrainVisibleType::None, TileSymmetry::None, VERTICAL_HALF_DIRT_SAND),
             ),
             (
                 vec![[  Eq,             Eq,             Eq,
@@ -385,7 +400,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::from_code(46),
-                (TerrainVisibleType::None, TileSymmetry::None, ""),
+                (TerrainVisibleType::None, TileSymmetry::None, HORIZONTAL_HALF_DIRT_SAND),
             ),
             (
                 vec![[  Eq,             Eq,             Any,

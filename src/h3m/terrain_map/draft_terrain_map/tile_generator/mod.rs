@@ -33,9 +33,9 @@ fn is_terrain_relation_matched(
             TerrainRelation::EqOr(category) => {
                 (neighbour_terrain == terrain) || (neighbour_terrain.category() == category)
             }
-            TerrainRelation::SameNamed(name) => {
+            TerrainRelation::SameNamed(names) => {
                 if let Some(neighbour_tile) = neighbour.tile {
-                    (neighbour_terrain == terrain) && (neighbour_tile.name() == name)
+                    (neighbour_terrain == terrain) && (names.contains(&neighbour_tile.name()))
                 } else {
                     false
                 }
