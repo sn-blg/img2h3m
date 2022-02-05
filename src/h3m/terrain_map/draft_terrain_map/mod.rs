@@ -1,5 +1,5 @@
 use crate::common::position::{Position, SignedDeltaPos};
-use crate::h3m::{terrain_map::map_cell::MapCell, Surface, MAX_MAP_LENGTH};
+use crate::h3m::{terrain_map::map_cell::MapCell, Surface, MAX_MAP_SIZE};
 use draft_map_cell::DraftMapCell;
 use tile_generator::TileGenerator;
 
@@ -56,7 +56,7 @@ impl DraftTerrainMap {
 
     pub fn set_tile_codes(&mut self) {
         let mut generator = TileGenerator::new();
-        for _ in 0..MAX_MAP_LENGTH {
+        for _n in 0..MAX_MAP_SIZE {
             let was_changed = self.set_tile_codes_iteration(&mut generator);
             if !was_changed {
                 return;

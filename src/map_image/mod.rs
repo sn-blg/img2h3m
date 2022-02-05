@@ -1,5 +1,5 @@
 use crate::common::position::Position;
-use crate::h3m::{Surface, MAX_MAP_LENGTH};
+use crate::h3m::{Surface, MAX_MAP_SIZE};
 use image::Rgb;
 use palettes::Palettes;
 use terrain_check::TerrainCheck;
@@ -42,7 +42,7 @@ impl MapImage {
     }
 
     pub fn fix(&mut self) {
-        for _ in 0..MAX_MAP_LENGTH {
+        for _ in 0..MAX_MAP_SIZE {
             let has_problems = self.fix_iteration();
             if !has_problems {
                 return;
