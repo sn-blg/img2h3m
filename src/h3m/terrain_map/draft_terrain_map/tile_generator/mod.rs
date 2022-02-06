@@ -4,7 +4,7 @@ use crate::h3m::{
     Terrain,
 };
 use rand::{rngs::ThreadRng, Rng};
-use std::cmp::Ordering;
+use std::cmp::{Eq, Ordering};
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
 use tile_codes_set::TileCodesSet;
 use tiles_table::{TilesGroupInfo, TilesTable};
@@ -12,6 +12,20 @@ use tiles_table::{TilesGroupInfo, TilesTable};
 mod terrain_relation;
 mod tile_codes_set;
 mod tiles_table;
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum TileGeneratingMode {
+    Main,
+    WeakFallback,
+    Fallback,
+    ForcedFallback,
+}
+
+impl TileGeneratingMode {
+    fn use_fallback(self) -> bool {
+        self >= TileGeneratingMode::WeakFallback
+    }
+}
 
 fn is_terrain_relation_matched(
     cell: &DraftMapCell,
@@ -190,6 +204,7 @@ impl TileGenerator {
                 };
                 if let Some((code, tiles_group_info)) = code_info {
                     return Some(Tile::new(
+                        composition,
                         tiles_group_info.name(),
                         tiles_group_info.terrain_visible_type(),
                         code,
@@ -206,10 +221,10 @@ impl TileGenerator {
         &self,
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
-        use_fallback: bool,
+        mode: TileGeneratingMode,
     ) -> bool {
         if let Some(tile) = cell.tile {
-            if use_fallback {
+            if mode == TileGeneratingMode::ForcedFallback {
                 if let TerrainVisibleType::Diff(Terrain::Sand) = tile.terrain_visible_type() {
                     return true;
                 }
@@ -322,16 +337,24 @@ impl TileGenerator {
         &mut self,
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
-        use_fallback: bool,
+        mode: TileGeneratingMode,
     ) -> Option<Tile> {
-        let tile = if self.is_valid_tile(cell, neighborhood, use_fallback) {
-            cell.tile.unwrap()
+        let tile = if self.is_valid_tile(cell, neighborhood, mode) {
+            let tile = cell.tile.unwrap();
+            if (tile.composition() == TileComposition::Main)
+                || (mode >= TileGeneratingMode::Fallback)
+            {
+                tile
+            } else {
+                self.try_generate_impl(cell, neighborhood, TileComposition::Main)
+                    .unwrap_or(tile)
+            }
         } else {
             let mut tile = if let Some(tile) =
                 self.try_generate_impl(cell, neighborhood, TileComposition::Main)
             {
                 tile
-            } else if use_fallback {
+            } else if mode.use_fallback() {
                 self.try_generate_impl(cell, neighborhood, TileComposition::Fallback)?
             } else {
                 return None;

@@ -1,7 +1,7 @@
 use crate::common::position::{Position, SignedDeltaPos};
 use crate::h3m::{terrain_map::map_cell::MapCell, Surface, MAX_MAP_SIZE};
 use draft_map_cell::DraftMapCell;
-use tile_generator::TileGenerator;
+use tile_generator::{TileGeneratingMode, TileGenerator};
 
 mod draft_map_cell;
 mod tile_generator;
@@ -54,27 +54,69 @@ impl DraftTerrainMap {
         ]
     }
 
-    pub fn set_tile_codes(&mut self, use_fallback: bool) {
+    pub fn set_tile_codes(&mut self) {
         let mut generator = TileGenerator::new();
-        for _ in 0..MAX_MAP_SIZE {
-            let was_changed = self.set_tile_codes_iteration(&mut generator, use_fallback);
+        self.set_tile_codes_main(&mut generator);
+        self.set_tile_codes_fallback(&mut generator);
+    }
+
+    fn set_tile_codes_iterations_with_mode(
+        &mut self,
+        generator: &mut TileGenerator,
+        mode: TileGeneratingMode,
+        iter_count: usize,
+    ) -> bool {
+        for _ in 0..iter_count {
+            let was_changed = self.set_tile_codes_iteration(generator, mode);
             if !was_changed {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn set_tile_codes_main(&mut self, generator: &mut TileGenerator) {
+        let is_done = self.set_tile_codes_iterations_with_mode(
+            generator,
+            TileGeneratingMode::Main,
+            MAX_MAP_SIZE,
+        );
+
+        if !is_done {
+            panic!();
+        }
+    }
+
+    fn set_tile_codes_fallback(&mut self, generator: &mut TileGenerator) {
+        const FALLBACK_ITER_COUNT: usize = 16;
+
+        let modes = [
+            (TileGeneratingMode::WeakFallback, FALLBACK_ITER_COUNT),
+            (TileGeneratingMode::Fallback, FALLBACK_ITER_COUNT),
+            (TileGeneratingMode::ForcedFallback, MAX_MAP_SIZE),
+        ];
+
+        for (mode, iter_count) in modes {
+            let is_done = self.set_tile_codes_iterations_with_mode(generator, mode, iter_count);
+
+            if is_done {
                 return;
             }
         }
+
         panic!();
     }
 
     fn set_tile_codes_iteration(
         &mut self,
         generator: &mut TileGenerator,
-        use_fallback: bool,
+        mode: TileGeneratingMode,
     ) -> bool {
         let mut was_changed = false;
         for index in 0..self.size * self.size {
             let neighbors = self.neighbours(index);
             if let Some(cell) = &mut self.cells[index] {
-                let tile = generator.try_generate(cell, &neighbors, use_fallback);
+                let tile = generator.try_generate(cell, &neighbors, mode);
                 if tile != cell.tile {
                     was_changed = true
                 }

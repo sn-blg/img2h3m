@@ -15,6 +15,7 @@ pub enum TerrainVisibleType {
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Tile {
+    composition: TileComposition,
     name: &'static str,
     terrain_visible_type: TerrainVisibleType,
     code: u8,
@@ -24,6 +25,7 @@ pub struct Tile {
 
 impl Tile {
     pub fn new(
+        composition: TileComposition,
         name: &'static str,
         terrain_visible_type: TerrainVisibleType,
         code: u8,
@@ -31,12 +33,17 @@ impl Tile {
         horizontal_mirroring: bool,
     ) -> Tile {
         Tile {
+            composition,
             name,
             terrain_visible_type,
             code,
             vertical_mirroring,
             horizontal_mirroring,
         }
+    }
+
+    pub fn composition(&self) -> TileComposition {
+        self.composition
     }
 
     pub fn name(&self) -> &'static str {
@@ -71,6 +78,7 @@ impl Tile {
 impl Default for Tile {
     fn default() -> Self {
         Tile {
+            composition: TileComposition::Main,
             name: "",
             terrain_visible_type: TerrainVisibleType::None,
             code: 0,
