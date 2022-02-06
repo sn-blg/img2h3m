@@ -1,6 +1,12 @@
 use crate::h3m::Terrain;
 
 #[derive(Clone, Copy, PartialEq)]
+pub enum TileComposition {
+    Main,
+    Fallback,
+}
+
+#[derive(Clone, Copy, PartialEq)]
 pub enum TerrainVisibleType {
     Same,
     Diff(Terrain),

@@ -54,10 +54,10 @@ impl DraftTerrainMap {
         ]
     }
 
-    pub fn set_tile_codes(&mut self) {
+    pub fn set_tile_codes(&mut self, use_fallback: bool) {
         let mut generator = TileGenerator::new();
-        for _n in 0..MAX_MAP_SIZE {
-            let was_changed = self.set_tile_codes_iteration(&mut generator);
+        for _ in 0..MAX_MAP_SIZE {
+            let was_changed = self.set_tile_codes_iteration(&mut generator, use_fallback);
             if !was_changed {
                 return;
             }
@@ -65,12 +65,16 @@ impl DraftTerrainMap {
         panic!();
     }
 
-    fn set_tile_codes_iteration(&mut self, generator: &mut TileGenerator) -> bool {
+    fn set_tile_codes_iteration(
+        &mut self,
+        generator: &mut TileGenerator,
+        use_fallback: bool,
+    ) -> bool {
         let mut was_changed = false;
         for index in 0..self.size * self.size {
             let neighbors = self.neighbours(index);
             if let Some(cell) = &mut self.cells[index] {
-                let tile = generator.try_generate(cell, &neighbors);
+                let tile = generator.try_generate(cell, &neighbors, use_fallback);
                 if tile != cell.tile {
                     was_changed = true
                 }

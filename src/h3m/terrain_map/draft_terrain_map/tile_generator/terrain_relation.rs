@@ -20,8 +20,8 @@ impl Terrain {
 pub enum TerrainRelation {
     SameNamed(&'static [&'static str]), // Some neighbour == central terrain and neighbour tail name == any name in [str]
     Eq,                                 // None or Some neighbour == central terrain
-    EqOr(TerrainCategory), // None or Some neighbour == central terrain or Some neighbour in TerrainСategory
-    Diff(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainСategory
+    EqOr(TerrainCategory), // None or Some neighbour == central terrain or Some neighbour in TerrainCategory
+    Diff(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainCategory
     DiffAny,               // Some neighbour != central terrain
     Any,                   // any neighbour, including None
 }

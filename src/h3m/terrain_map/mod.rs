@@ -46,7 +46,8 @@ impl TerrainMap {
         }
 
         let mut draft_terrain_map = DraftTerrainMap::new(size, surfaces);
-        draft_terrain_map.set_tile_codes();
+        draft_terrain_map.set_tile_codes(false);
+        draft_terrain_map.set_tile_codes(true);
 
         Ok(TerrainMap {
             size,

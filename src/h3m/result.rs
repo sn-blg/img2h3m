@@ -78,12 +78,12 @@ impl From<io::Error> for H3mError {
 
 impl From<TryFromIntError> for H3mError {
     fn from(err: TryFromIntError) -> H3mError {
-        H3mError::Internal(InternalError::new(format!("Сonversion error: {}.", err)))
+        H3mError::Internal(InternalError::new(format!("Conversion error: {}.", err)))
     }
 }
 
 impl From<Infallible> for H3mError {
     fn from(err: Infallible) -> H3mError {
-        H3mError::Internal(InternalError::new(format!("Сonversion error: {}.", err)))
+        H3mError::Internal(InternalError::new(format!("Conversion error: {}.", err)))
     }
 }

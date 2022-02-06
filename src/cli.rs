@@ -33,7 +33,7 @@ pub fn get_config() -> Config {
         .arg(
             Arg::with_name("obstacles")
                 .short("o")
-                .help("Сreate obstacles on the map \
+                .help("Create obstacles on the map \
                        (attention, this option may delete all the original objects and events on the input map)"),
         )
         .get_matches();
