@@ -21,12 +21,6 @@ pub enum TileGeneratingMode {
     ForcedFallback,
 }
 
-impl TileGeneratingMode {
-    fn use_fallback(self) -> bool {
-        self >= TileGeneratingMode::WeakFallback
-    }
-}
-
 fn is_terrain_relation_matched(
     cell: &DraftMapCell,
     neighbour: &Option<DraftMapCell>,
@@ -224,11 +218,12 @@ impl TileGenerator {
         mode: TileGeneratingMode,
     ) -> bool {
         if let Some(tile) = cell.tile {
-            if mode == TileGeneratingMode::ForcedFallback {
-                if let TerrainVisibleType::Diff(Terrain::Sand) = tile.terrain_visible_type() {
-                    return true;
-                }
+            match (mode, tile.composition()) {
+                (TileGeneratingMode::WeakFallback, TileComposition::Main) => return true,
+                (TileGeneratingMode::ForcedFallback, TileComposition::Fallback) => return true,
+                _ => (),
             }
+
             let vertical_mirroring = tile.vertical_mirroring();
             let horizontal_mirroring = tile.horizontal_mirroring();
             if (false, false) == (vertical_mirroring, horizontal_mirroring) {
@@ -341,20 +336,20 @@ impl TileGenerator {
     ) -> Option<Tile> {
         let tile = if self.is_valid_tile(cell, neighborhood, mode) {
             let tile = cell.tile.unwrap();
-            if (tile.composition() == TileComposition::Main)
-                || (mode >= TileGeneratingMode::Fallback)
+            if (mode == TileGeneratingMode::WeakFallback)
+                && (tile.composition() == TileComposition::Fallback)
             {
-                tile
-            } else {
                 self.try_generate_impl(cell, neighborhood, TileComposition::Main)
                     .unwrap_or(tile)
+            } else {
+                tile
             }
         } else {
             let mut tile = if let Some(tile) =
                 self.try_generate_impl(cell, neighborhood, TileComposition::Main)
             {
                 tile
-            } else if mode.use_fallback() {
+            } else if mode >= TileGeneratingMode::WeakFallback {
                 self.try_generate_impl(cell, neighborhood, TileComposition::Fallback)?
             } else {
                 return None;

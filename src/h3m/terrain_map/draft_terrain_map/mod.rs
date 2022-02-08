@@ -55,9 +55,22 @@ impl DraftTerrainMap {
     }
 
     pub fn set_tile_codes(&mut self) {
+        const FALLBACK_ITER_COUNT: usize = 16;
+        let modes = [
+            (TileGeneratingMode::Main, MAX_MAP_SIZE, true),
+            (TileGeneratingMode::WeakFallback, FALLBACK_ITER_COUNT, false),
+            (TileGeneratingMode::Fallback, FALLBACK_ITER_COUNT, false),
+            (TileGeneratingMode::ForcedFallback, MAX_MAP_SIZE, true),
+        ];
+
         let mut generator = TileGenerator::new();
-        self.set_tile_codes_main(&mut generator);
-        self.set_tile_codes_fallback(&mut generator);
+        for (mode, iter_count, is_main_step) in modes {
+            let is_done =
+                self.set_tile_codes_iterations_with_mode(&mut generator, mode, iter_count);
+            if !is_done && is_main_step {
+                panic!();
+            }
+        }
     }
 
     fn set_tile_codes_iterations_with_mode(
@@ -73,38 +86,6 @@ impl DraftTerrainMap {
             }
         }
         false
-    }
-
-    fn set_tile_codes_main(&mut self, generator: &mut TileGenerator) {
-        let is_done = self.set_tile_codes_iterations_with_mode(
-            generator,
-            TileGeneratingMode::Main,
-            MAX_MAP_SIZE,
-        );
-
-        if !is_done {
-            panic!();
-        }
-    }
-
-    fn set_tile_codes_fallback(&mut self, generator: &mut TileGenerator) {
-        const FALLBACK_ITER_COUNT: usize = 16;
-
-        let modes = [
-            (TileGeneratingMode::WeakFallback, FALLBACK_ITER_COUNT),
-            (TileGeneratingMode::Fallback, FALLBACK_ITER_COUNT),
-            (TileGeneratingMode::ForcedFallback, MAX_MAP_SIZE),
-        ];
-
-        for (mode, iter_count) in modes {
-            let is_done = self.set_tile_codes_iterations_with_mode(generator, mode, iter_count);
-
-            if is_done {
-                return;
-            }
-        }
-
-        panic!();
     }
 
     fn set_tile_codes_iteration(
