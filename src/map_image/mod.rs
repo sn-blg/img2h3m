@@ -21,12 +21,12 @@ pub struct MapImage {
 }
 
 impl MapImage {
-    pub fn new(size: usize, obstacles: bool) -> MapImage {
+    pub fn new(size: usize, one_tile_water: bool, obstacles: bool) -> MapImage {
         MapImage {
             size,
             pixels: vec![None; size * size],
             palettes: Palettes::new(obstacles),
-            terrain_check: TerrainCheck::new(size),
+            terrain_check: TerrainCheck::new(size, one_tile_water),
         }
     }
 

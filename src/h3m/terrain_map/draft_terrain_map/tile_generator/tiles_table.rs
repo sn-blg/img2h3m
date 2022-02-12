@@ -145,7 +145,7 @@ pub struct TilesTable {
 
 impl TilesTable {
     #[rustfmt::skip]
-    pub fn new() -> TilesTable {
+    pub fn new(one_tile_water: bool) -> TilesTable {
         use TerrainCategory::*;
         use TerrainRelation::*;
 
@@ -722,6 +722,10 @@ impl TilesTable {
                 (TerrainVisibleType::Same, TileSymmetry::Full, TileComposition::Main, ""),
             ),
         ];
+
+        if one_tile_water {
+            //water_table
+        }
 
         let rock_table = vec![
             (

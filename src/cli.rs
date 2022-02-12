@@ -26,9 +26,8 @@ pub fn get_config() -> Config {
                 .required(true),
         )
         .arg(
-            Arg::with_name("fix")
-                .short("f")
-                .help("Fix critical errors in result map"),
+            Arg::with_name("otw")
+                .help("Use one-tile water"),
         )
         .arg(
             Arg::with_name("obstacles")
@@ -49,7 +48,7 @@ pub fn get_config() -> Config {
         land_image_path: matches.value_of("land image").map(|i| i.to_string()),
         underground_image_path: matches.value_of("underground image").map(|i| i.to_string()),
         map_path: matches.value_of("map").unwrap().to_string(),
-        fix: matches.is_present("fix"),
         obstacles: matches.is_present("obstacles"),
+        one_tile_water: matches.is_present("otw"),
     }
 }

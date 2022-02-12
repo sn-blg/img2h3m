@@ -33,6 +33,7 @@ impl TerrainMap {
 
     pub fn generate(
         size: usize,
+        one_tile_water: bool,
         underground: bool,
         surfaces: &[Option<Surface>],
     ) -> H3mResult<TerrainMap> {
@@ -46,7 +47,7 @@ impl TerrainMap {
         }
 
         let mut draft_terrain_map = DraftTerrainMap::new(size, surfaces);
-        draft_terrain_map.set_tile_codes();
+        draft_terrain_map.set_tile_codes(one_tile_water);
 
         Ok(TerrainMap {
             size,

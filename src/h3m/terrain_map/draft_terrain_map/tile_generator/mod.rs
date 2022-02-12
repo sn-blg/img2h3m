@@ -114,9 +114,9 @@ pub struct TileGenerator {
 }
 
 impl TileGenerator {
-    pub fn new() -> TileGenerator {
+    pub fn new(one_tile_water: bool) -> TileGenerator {
         TileGenerator {
-            tiles_table: TilesTable::new(),
+            tiles_table: TilesTable::new(one_tile_water),
             rng: rand::thread_rng(),
         }
     }

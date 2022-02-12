@@ -99,13 +99,15 @@ fn problem_patterns() -> Vec<ProblemPattern> {
 
 pub struct TerrainCheck {
     size: usize,
+    one_tile_water: bool,
     problem_patterns: Vec<ProblemPattern>,
 }
 
 impl TerrainCheck {
-    pub fn new(size: usize) -> TerrainCheck {
+    pub fn new(size: usize, one_tile_water: bool) -> TerrainCheck {
         TerrainCheck {
             size,
+            one_tile_water,
             problem_patterns: problem_patterns(),
         }
     }
@@ -127,16 +129,26 @@ impl TerrainCheck {
         let test_terrain = terrain_getter(position);
 
         if let Some(test_terrain) = test_terrain {
-            if test_terrain.is_ground() {
-                return false;
+            if self.problemless_terrain(test_terrain) {
+                false
+            } else {
+                self.has_neighborhood_problem(&[
+                    neighbour_getter(-1, -1), neighbour_getter(-1, 0), neighbour_getter(-1, 1),
+                    neighbour_getter( 0, -1), Some(test_terrain),      neighbour_getter( 0, 1),
+                    neighbour_getter( 1, -1), neighbour_getter( 1, 0), neighbour_getter( 1, 1),
+                ])
             }
-            self.has_neighborhood_problem(&[
-                neighbour_getter(-1, -1), neighbour_getter(-1, 0), neighbour_getter(-1, 1),
-                neighbour_getter( 0, -1), Some(test_terrain),      neighbour_getter( 0, 1),
-                neighbour_getter( 1, -1), neighbour_getter( 1, 0), neighbour_getter( 1, 1),
-            ])
         } else {
             false
+        }
+    }
+
+    fn problemless_terrain(&self, terrain: Terrain) -> bool {
+        assert!(!Terrain::Water.is_ground());
+        if terrain == Terrain::Water {
+            self.one_tile_water
+        } else {
+            terrain.is_ground()
         }
     }
 

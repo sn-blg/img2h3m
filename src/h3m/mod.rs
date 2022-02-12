@@ -55,10 +55,12 @@ impl H3m {
 
     pub fn set_surfaces(
         &mut self,
+        one_tile_water: bool,
         underground: bool,
         surfaces: &[Option<Surface>],
     ) -> H3mResult<()> {
-        let terrain_map = TerrainMap::generate(self.map_size(), underground, surfaces)?;
+        let terrain_map =
+            TerrainMap::generate(self.map_size(), one_tile_water, underground, surfaces)?;
 
         for (index, map_cell) in terrain_map.cells().iter().enumerate() {
             if let Some(map_cell) = map_cell {

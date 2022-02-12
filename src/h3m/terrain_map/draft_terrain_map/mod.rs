@@ -54,8 +54,8 @@ impl DraftTerrainMap {
         ]
     }
 
-    pub fn set_tile_codes(&mut self) {
-        let mut generator = TileGenerator::new();
+    pub fn set_tile_codes(&mut self, one_tile_water: bool) {
+        let mut generator = TileGenerator::new(one_tile_water);
         for mode in [TileGeneratingMode::Main, TileGeneratingMode::Fallback] {
             let is_done =
                 self.set_tile_codes_iterations_with_mode(&mut generator, mode, MAX_MAP_SIZE);
