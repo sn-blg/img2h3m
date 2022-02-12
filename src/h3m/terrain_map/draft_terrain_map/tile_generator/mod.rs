@@ -16,9 +16,7 @@ mod tiles_table;
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum TileGeneratingMode {
     Main,
-    WeakFallback,
     Fallback,
-    ForcedFallback,
 }
 
 fn is_terrain_relation_matched(
@@ -218,10 +216,10 @@ impl TileGenerator {
         mode: TileGeneratingMode,
     ) -> bool {
         if let Some(tile) = cell.tile {
-            match (mode, tile.composition()) {
-                (TileGeneratingMode::WeakFallback, TileComposition::Main) => return true,
-                (TileGeneratingMode::ForcedFallback, TileComposition::Fallback) => return true,
-                _ => (),
+            if let (TileGeneratingMode::Fallback, TileComposition::Fallback) =
+                (mode, tile.composition())
+            {
+                return true;
             }
 
             let vertical_mirroring = tile.vertical_mirroring();
@@ -335,21 +333,13 @@ impl TileGenerator {
         mode: TileGeneratingMode,
     ) -> Option<Tile> {
         let tile = if self.is_valid_tile(cell, neighborhood, mode) {
-            let tile = cell.tile.unwrap();
-            if (mode == TileGeneratingMode::WeakFallback)
-                && (tile.composition() == TileComposition::Fallback)
-            {
-                self.try_generate_impl(cell, neighborhood, TileComposition::Main)
-                    .unwrap_or(tile)
-            } else {
-                tile
-            }
+            cell.tile.unwrap()
         } else {
             let mut tile = if let Some(tile) =
                 self.try_generate_impl(cell, neighborhood, TileComposition::Main)
             {
                 tile
-            } else if mode >= TileGeneratingMode::WeakFallback {
+            } else if mode == TileGeneratingMode::Fallback {
                 self.try_generate_impl(cell, neighborhood, TileComposition::Fallback)?
             } else {
                 return None;

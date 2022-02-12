@@ -55,19 +55,11 @@ impl DraftTerrainMap {
     }
 
     pub fn set_tile_codes(&mut self) {
-        const FALLBACK_ITER_COUNT: usize = 16;
-        let modes = [
-            (TileGeneratingMode::Main, MAX_MAP_SIZE, true),
-            (TileGeneratingMode::WeakFallback, FALLBACK_ITER_COUNT, false),
-            (TileGeneratingMode::Fallback, FALLBACK_ITER_COUNT, false),
-            (TileGeneratingMode::ForcedFallback, MAX_MAP_SIZE, true),
-        ];
-
         let mut generator = TileGenerator::new();
-        for (mode, iter_count, is_main_step) in modes {
+        for mode in [TileGeneratingMode::Main, TileGeneratingMode::Fallback] {
             let is_done =
-                self.set_tile_codes_iterations_with_mode(&mut generator, mode, iter_count);
-            if !is_done && is_main_step {
+                self.set_tile_codes_iterations_with_mode(&mut generator, mode, MAX_MAP_SIZE);
+            if !is_done {
                 panic!();
             }
         }
