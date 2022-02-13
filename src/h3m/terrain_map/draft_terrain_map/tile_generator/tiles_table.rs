@@ -657,7 +657,7 @@ impl TilesTable {
             ),
         ];
 
-        let water_table = vec![
+        let main_water_table = vec![
             (
                 vec![[  Any,            DiffAny,        DiffAny,
                         Any,                            Eq,
@@ -723,9 +723,150 @@ impl TilesTable {
             ),
         ];
 
-        if one_tile_water {
-            //water_table
-        }
+        let water_table = if !one_tile_water {
+            main_water_table
+        } else {
+            let mut water_table = Vec::new();
+            water_table.extend(main_water_table);
+            water_table.extend(vec![
+                (
+                    vec![[  Any,            DiffAny,        Any,
+                            DiffAny,                        DiffAny,
+                            Any,            DiffAny,        Any,
+                        ],
+                    ],
+                    TileCodesSet::new(33..=36),
+                    (TerrainVisibleType::None, TileSymmetry::Full, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  Any,            DiffAny,        Any,
+                            DiffAny,                        DiffAny,
+                            Any,            Eq,             Any,
+                        ],
+                    ],
+                    TileCodesSet::new(37..=40),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  Any,            Eq,             Any,
+                            DiffAny,                        DiffAny,
+                            Any,            Eq,             Any,
+                        ],
+                    ],
+                    TileCodesSet::new(41..=44),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  Any,            DiffAny,        Any,
+                            Eq,                             Eq,
+                            Any,            DiffAny,        Any,
+                        ],
+                    ],
+                    TileCodesSet::new(45..=48),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  Any,            DiffAny,        Any,
+                            DiffAny,                        Eq,
+                            Any,            Eq,             DiffAny,
+                        ],
+                    ],
+                    TileCodesSet::new(49..=52),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             Eq,
+                            Eq,                             Eq,
+                            DiffAny,        Eq,             Eq,
+                        ],
+                    ],
+                    TileCodesSet::new(53..=54),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             DiffAny,
+                            Eq,                             Eq,
+                            Eq,             Eq,             Eq,
+                        ],
+                    ],
+                    TileCodesSet::new(55..=56),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             Eq,
+                            Eq,                             Eq,
+                            Eq,             Eq,             DiffAny,
+                        ],
+                    ],
+                    TileCodesSet::new(57..=58),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             DiffAny,
+                            Eq,                             Eq,
+                            DiffAny,        Eq,             Eq,
+                        ],
+                    ],
+                    TileCodesSet::new(59..=62),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             DiffAny,
+                            DiffAny,                        Eq,
+                            DiffAny,        Eq,             Eq,
+                        ],
+                    ],
+                    TileCodesSet::new(63..=66),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        DiffAny,        DiffAny,
+                            Eq,                             Eq,
+                            DiffAny,        Eq,             Eq,
+                        ],
+                    ],
+                    TileCodesSet::new(67..=70),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             DiffAny,
+                            DiffAny,                        Eq,
+                            DiffAny,        Eq,             DiffAny,
+                        ],
+                    ],
+                    TileCodesSet::new(71..=72),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        DiffAny,        DiffAny,
+                            Eq,                             Eq,
+                            DiffAny,        Eq,             DiffAny,
+                        ],
+                    ],
+                    TileCodesSet::new(73..=74),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  DiffAny,        Eq,             DiffAny,
+                            Eq,                             Eq,
+                            DiffAny,        Eq,             DiffAny,
+                        ],
+                    ],
+                    TileCodesSet::from_code(75),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+                (
+                    vec![[  Any,            DiffAny,        Any,
+                            DiffAny,                        Eq,
+                            Any,            DiffAny,        Any,
+                        ],
+                    ],
+                    TileCodesSet::new(76..=79),
+                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                ),
+            ]);
+            water_table
+        };
 
         let rock_table = vec![
             (
