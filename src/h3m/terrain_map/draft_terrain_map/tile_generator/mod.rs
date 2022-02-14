@@ -148,17 +148,33 @@ impl TileGenerator {
 
     fn is_valid_code(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> bool {
         if let Some(tile) = cell.tile {
-            let code = tile.code();
-            for tiles_group_info in self.tiles_table.terrain_tile_groups(cell.surface.terrain) {
-                for pattern in tiles_group_info.patterns() {
-                    if !is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
-                        continue;
-                    }
-                    return tiles_group_info.codes().contains_code(code);
+            let tiles_group_info =
+                &self.tiles_table.terrain_tile_groups(cell.surface.terrain)[tile.group_number()];
+            assert!(tiles_group_info.codes().contains_code(tile.code()));
+
+            for pattern in tiles_group_info.patterns() {
+                if is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
+                    return true;
                 }
             }
         }
         false
+    }
+
+    fn is_valid_tile(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> bool {
+        if let Some(tile) = cell.tile {
+            let vertical_mirroring = tile.vertical_mirroring();
+            let horizontal_mirroring = tile.horizontal_mirroring();
+            if (false, false) == (vertical_mirroring, horizontal_mirroring) {
+                self.is_valid_code(cell, neighborhood)
+            } else {
+                let mirroring_neighborhood =
+                    mirroring_neighborhood(neighborhood, vertical_mirroring, horizontal_mirroring);
+                self.is_valid_code(cell, &mirroring_neighborhood)
+            }
+        } else {
+            false
+        }
     }
 
     fn excluded_tile_codes(cell: &DraftMapCell, neighborhood: &Neighborhood) -> Vec<u8> {
@@ -170,13 +186,14 @@ impl TileGenerator {
             .collect()
     }
 
-    fn try_generate_impl(
+    fn try_generate_tile_with_composition(
         &self,
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         composition: TileComposition,
     ) -> Option<Tile> {
         let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighborhood);
+        let mut generated_tile: Option<Tile> = None;
         for horizontal_mirroring in [false, true] {
             for vertical_mirroring in [false, true] {
                 let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
@@ -195,45 +212,26 @@ impl TileGenerator {
                     )
                 };
                 if let Some((code, tiles_group_info)) = code_info {
-                    return Some(Tile::new(
-                        composition,
-                        tiles_group_info.name(),
-                        tiles_group_info.terrain_visible_type(),
-                        code,
-                        vertical_mirroring,
-                        horizontal_mirroring,
-                    ));
+                    let is_more_suitable_tile = if let Some(generated_tile) = generated_tile {
+                        tiles_group_info.group_number() < generated_tile.group_number()
+                    } else {
+                        true
+                    };
+                    if is_more_suitable_tile {
+                        generated_tile = Some(Tile::new(
+                            composition,
+                            tiles_group_info.name(),
+                            tiles_group_info.terrain_visible_type(),
+                            code,
+                            vertical_mirroring,
+                            horizontal_mirroring,
+                            tiles_group_info.group_number(),
+                        ));
+                    }
                 }
             }
         }
-        None
-    }
-
-    fn is_valid_tile(
-        &self,
-        cell: &DraftMapCell,
-        neighborhood: &Neighborhood,
-        mode: TileGeneratingMode,
-    ) -> bool {
-        if let Some(tile) = cell.tile {
-            if let (TileGeneratingMode::Fallback, TileComposition::Fallback) =
-                (mode, tile.composition())
-            {
-                return true;
-            }
-
-            let vertical_mirroring = tile.vertical_mirroring();
-            let horizontal_mirroring = tile.horizontal_mirroring();
-            if (false, false) == (vertical_mirroring, horizontal_mirroring) {
-                self.is_valid_code(cell, neighborhood)
-            } else {
-                let mirroring_neighborhood =
-                    mirroring_neighborhood(neighborhood, vertical_mirroring, horizontal_mirroring);
-                self.is_valid_code(cell, &mirroring_neighborhood)
-            }
-        } else {
-            false
-        }
+        generated_tile
     }
 
     fn try_randomize_mirroring(&mut self, neighborhood: &Neighborhood, tile: &mut Tile) {
@@ -326,27 +324,57 @@ impl TileGenerator {
         tile.set_horizontal_mirroring(horizontal_mirroring);
     }
 
-    pub fn try_generate(
+    pub fn try_generate_tile_impl(
         &mut self,
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         mode: TileGeneratingMode,
     ) -> Option<Tile> {
-        let tile = if self.is_valid_tile(cell, neighborhood, mode) {
-            cell.tile.unwrap()
-        } else {
-            let mut tile = if let Some(tile) =
-                self.try_generate_impl(cell, neighborhood, TileComposition::Main)
-            {
-                tile
-            } else if mode == TileGeneratingMode::Fallback {
-                self.try_generate_impl(cell, neighborhood, TileComposition::Fallback)?
-            } else {
-                return None;
-            };
-            self.try_randomize_mirroring(neighborhood, &mut tile);
+        let mut tile = if let Some(tile) =
+            self.try_generate_tile_with_composition(cell, neighborhood, TileComposition::Main)
+        {
             tile
+        } else if mode == TileGeneratingMode::Fallback {
+            self.try_generate_tile_with_composition(cell, neighborhood, TileComposition::Fallback)?
+        } else {
+            return None;
         };
+        self.try_randomize_mirroring(neighborhood, &mut tile);
         Some(tile)
+    }
+
+    fn is_forced_fallback_tile(&self, cell: &DraftMapCell, mode: TileGeneratingMode) -> bool {
+        if let Some(tile) = cell.tile {
+            matches!(
+                (mode, tile.composition()),
+                (TileGeneratingMode::Fallback, TileComposition::Fallback)
+            )
+        } else {
+            false
+        }
+    }
+
+    pub fn try_generate_tile(
+        &mut self,
+        cell: &DraftMapCell,
+        neighborhood: &Neighborhood,
+        mode: TileGeneratingMode,
+    ) -> Option<Tile> {
+        if self.is_forced_fallback_tile(cell, mode) {
+            assert!(cell.tile.is_some());
+            cell.tile
+        } else if !self.is_valid_tile(cell, neighborhood) {
+            self.try_generate_tile_impl(cell, neighborhood, mode)
+        } else {
+            let current_tile = cell.tile.unwrap();
+            let new_tile = self
+                .try_generate_tile_impl(cell, neighborhood, mode)
+                .unwrap();
+            if new_tile.group_number() < current_tile.group_number() {
+                Some(new_tile)
+            } else {
+                Some(current_tile)
+            }
+        }
     }
 }

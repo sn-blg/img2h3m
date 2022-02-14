@@ -89,7 +89,7 @@ impl DraftTerrainMap {
         for index in 0..self.size * self.size {
             let neighbors = self.neighbours(index);
             if let Some(cell) = &mut self.cells[index] {
-                let tile = generator.try_generate(cell, &neighbors, mode);
+                let tile = generator.try_generate_tile(cell, &neighbors, mode);
                 if tile != cell.tile {
                     was_changed = true
                 }

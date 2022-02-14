@@ -21,6 +21,7 @@ pub struct Tile {
     code: u8,
     vertical_mirroring: bool,
     horizontal_mirroring: bool,
+    group_number: usize,
 }
 
 impl Tile {
@@ -31,6 +32,7 @@ impl Tile {
         code: u8,
         vertical_mirroring: bool,
         horizontal_mirroring: bool,
+        group_number: usize,
     ) -> Tile {
         Tile {
             composition,
@@ -39,6 +41,7 @@ impl Tile {
             code,
             vertical_mirroring,
             horizontal_mirroring,
+            group_number,
         }
     }
 
@@ -73,6 +76,10 @@ impl Tile {
     pub fn set_horizontal_mirroring(&mut self, value: bool) {
         self.horizontal_mirroring = value;
     }
+
+    pub fn group_number(&self) -> usize {
+        self.group_number
+    }
 }
 
 impl Default for Tile {
@@ -84,6 +91,7 @@ impl Default for Tile {
             code: 0,
             vertical_mirroring: false,
             horizontal_mirroring: false,
+            group_number: 0,
         }
     }
 }

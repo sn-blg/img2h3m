@@ -83,6 +83,7 @@ pub struct TilesGroupInfo {
     composition: TileComposition,
     name: &'static str,
     terrain_visible_type: TerrainVisibleType,
+    group_number: usize,
 }
 
 impl TilesGroupInfo {
@@ -93,6 +94,7 @@ impl TilesGroupInfo {
         name: &'static str,
         terrain_visible_type: TerrainVisibleType,
         tile_symmetry: TileSymmetry,
+        group_number: usize,
     ) -> TilesGroupInfo {
         TilesGroupInfo {
             patterns: expand_patterns(patterns, tile_symmetry),
@@ -100,6 +102,7 @@ impl TilesGroupInfo {
             composition,
             name,
             terrain_visible_type,
+            group_number,
         }
     }
 
@@ -121,6 +124,10 @@ impl TilesGroupInfo {
 
     pub fn terrain_visible_type(&self) -> TerrainVisibleType {
         self.terrain_visible_type
+    }
+
+    pub fn group_number(&self) -> usize {
+        self.group_number
     }
 }
 
@@ -871,7 +878,7 @@ impl TilesTable {
                             DiffAny,                                                Eq,
                             Any,                        Eq,                         Eq,
                         ],
-                        [   SameNamed(CHANNEL_ARR),     SameNamed(CHANNEL_ARR),     DiffAny,
+                        [   Any,                        SameNamed(CHANNEL_ARR),     DiffAny,
                             DiffAny,                                                Eq,
                             Any,                        Eq,                         Eq,
                         ],
@@ -880,7 +887,7 @@ impl TilesTable {
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
-                    vec![[  SameNamed(CHANNEL_ARR),     DiffAny,                    Any,
+                    vec![[  Any,                        DiffAny,                    Any,
                             SameNamed(CHANNEL_ARR),                                 Eq,
                             DiffAny,                    Eq,                         Eq,
                         ],
@@ -965,12 +972,15 @@ impl TilesTable {
                         element
                             .1
                             .iter()
-                            .map(|( patterns,
-                                    codes,
-                                    (   terrain_visible_type,
-                                        tile_symmetry,
-                                        composition,
-                                        name
+                            .enumerate()
+                            .map(|( group_number,
+                                    (   patterns,
+                                        codes,
+                                        (   terrain_visible_type,
+                                            tile_symmetry,
+                                            composition,
+                                            name
+                                        )
                                     )
                                 )|
                             {
@@ -980,7 +990,8 @@ impl TilesTable {
                                     *composition,
                                     name,
                                     *terrain_visible_type,
-                                    *tile_symmetry)
+                                    *tile_symmetry,
+                                    group_number)
                             })
                             .collect::<Vec<TilesGroupInfo>>(),
                     )
