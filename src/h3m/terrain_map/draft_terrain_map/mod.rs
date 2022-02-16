@@ -1,7 +1,7 @@
 use crate::common::position::{Position, SignedDeltaPos};
 use crate::h3m::{terrain_map::map_cell::MapCell, Surface, MAX_MAP_SIZE};
 use draft_map_cell::DraftMapCell;
-use tile_generator::{TileGeneratingMode, TileGenerator};
+use tile_generator::{Neighborhood, TileGeneratingMode, TileGenerator};
 
 mod draft_map_cell;
 mod tile_generator;
@@ -27,7 +27,7 @@ impl DraftTerrainMap {
         }
     }
 
-    fn neighbours(&self, index: usize) -> [Option<DraftMapCell>; 8] {
+    fn neighborhood(&self, index: usize) -> Neighborhood {
         let cell = match &self.cells[index] {
             Some(cell) => cell,
             None => return [None; 8],
@@ -87,9 +87,9 @@ impl DraftTerrainMap {
     ) -> bool {
         let mut was_changed = false;
         for index in 0..self.size * self.size {
-            let neighbors = self.neighbours(index);
+            let neighborhood = self.neighborhood(index);
             if let Some(cell) = &mut self.cells[index] {
-                let tile = generator.try_generate_tile(cell, &neighbors, mode);
+                let tile = generator.try_generate_tile(cell, &neighborhood, mode);
                 if tile != cell.tile {
                     was_changed = true
                 }

@@ -1,3 +1,4 @@
+use super::common::NEIGHBORHOOD_SIZE;
 use crate::h3m::Terrain;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -25,7 +26,5 @@ pub enum TerrainRelation {
     DiffAny,               // Some neighbour != central terrain
     Any,                   // any neighbour, including None
 }
-
-pub const NEIGHBORHOOD_SIZE: usize = 8;
 
 pub type NeighborhoodPattern = [TerrainRelation; NEIGHBORHOOD_SIZE];

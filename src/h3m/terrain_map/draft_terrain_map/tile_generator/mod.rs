@@ -1,17 +1,21 @@
 use super::draft_map_cell::DraftMapCell;
 use crate::h3m::Terrain;
+use common::NEIGHBORHOOD_SIZE;
 pub use draft_tile::DraftTile;
 use draft_tile::{TerrainVisibleType, TileComposition};
 use rand::{rngs::ThreadRng, Rng};
 use std::cmp::{Eq, Ordering};
-use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
+use terrain_relation::{NeighborhoodPattern, TerrainRelation};
 use tile_codes_set::TileCodesSet;
 use tiles_table::{TilesGroupInfo, TilesTable};
 
+mod common;
 mod draft_tile;
 mod terrain_relation;
 mod tile_codes_set;
 mod tiles_table;
+
+pub type Neighborhood = [Option<DraftMapCell>; NEIGHBORHOOD_SIZE];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum TileGeneratingMode {
@@ -59,8 +63,6 @@ fn is_terrain_relation_matched(
         )
     }
 }
-
-type Neighborhood = [Option<DraftMapCell>; NEIGHBORHOOD_SIZE];
 
 fn is_neighborhood_pattern_matched(
     cell: &DraftMapCell,
