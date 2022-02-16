@@ -1,14 +1,14 @@
 use super::draft_map_cell::DraftMapCell;
-use crate::h3m::{
-    terrain_map::tile::{TerrainVisibleType, Tile, TileComposition},
-    Terrain,
-};
+use crate::h3m::Terrain;
+pub use draft_tile::DraftTile;
+use draft_tile::{TerrainVisibleType, TileComposition};
 use rand::{rngs::ThreadRng, Rng};
 use std::cmp::{Eq, Ordering};
 use terrain_relation::{NeighborhoodPattern, TerrainRelation, NEIGHBORHOOD_SIZE};
 use tile_codes_set::TileCodesSet;
 use tiles_table::{TilesGroupInfo, TilesTable};
 
+mod draft_tile;
 mod terrain_relation;
 mod tile_codes_set;
 mod tiles_table;
@@ -191,9 +191,9 @@ impl TileGenerator {
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         composition: TileComposition,
-    ) -> Option<Tile> {
+    ) -> Option<DraftTile> {
         let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighborhood);
-        let mut generated_tile: Option<Tile> = None;
+        let mut generated_tile: Option<DraftTile> = None;
         for horizontal_mirroring in [false, true] {
             for vertical_mirroring in [false, true] {
                 let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
@@ -218,7 +218,7 @@ impl TileGenerator {
                         true
                     };
                     if is_more_suitable_tile {
-                        generated_tile = Some(Tile::new(
+                        generated_tile = Some(DraftTile::new(
                             composition,
                             tiles_group_info.name(),
                             tiles_group_info.terrain_visible_type(),
@@ -234,7 +234,7 @@ impl TileGenerator {
         generated_tile
     }
 
-    fn try_randomize_mirroring(&mut self, neighborhood: &Neighborhood, tile: &mut Tile) {
+    fn randomize_mirroring(&mut self, neighborhood: &Neighborhood, tile: &mut DraftTile) {
         let get_neighbour_tile = |neighbour_cell: &Option<DraftMapCell>, terrain_visible_type| {
             let neighbour_cell = match neighbour_cell {
                 Some(neighbour_cell) => neighbour_cell,
@@ -329,7 +329,7 @@ impl TileGenerator {
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         mode: TileGeneratingMode,
-    ) -> Option<Tile> {
+    ) -> Option<DraftTile> {
         let mut tile = if let Some(tile) =
             self.try_generate_tile_with_composition(cell, neighborhood, TileComposition::Main)
         {
@@ -339,7 +339,7 @@ impl TileGenerator {
         } else {
             return None;
         };
-        self.try_randomize_mirroring(neighborhood, &mut tile);
+        self.randomize_mirroring(neighborhood, &mut tile);
         Some(tile)
     }
 
@@ -359,7 +359,7 @@ impl TileGenerator {
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         mode: TileGeneratingMode,
-    ) -> Option<Tile> {
+    ) -> Option<DraftTile> {
         if self.is_forced_fallback_tile(cell, mode) {
             assert!(cell.tile.is_some());
             cell.tile

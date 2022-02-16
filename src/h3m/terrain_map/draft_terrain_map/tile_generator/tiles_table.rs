@@ -1,8 +1,8 @@
+use super::draft_tile::{TerrainVisibleType, TileComposition};
 use super::terrain_relation::{
     NeighborhoodPattern, TerrainCategory, TerrainRelation, NEIGHBORHOOD_SIZE,
 };
 use super::TileCodesSet;
-use crate::h3m::terrain_map::tile::{TerrainVisibleType, TileComposition};
 use crate::h3m::Terrain;
 use std::collections::HashMap;
 

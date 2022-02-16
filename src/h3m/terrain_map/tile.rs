@@ -1,12 +1,6 @@
 use crate::h3m::Terrain;
 
 #[derive(Clone, Copy, PartialEq)]
-pub enum TileComposition {
-    Main,
-    Fallback,
-}
-
-#[derive(Clone, Copy, PartialEq)]
 pub enum TerrainVisibleType {
     Same,
     Diff(Terrain),
@@ -15,45 +9,28 @@ pub enum TerrainVisibleType {
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Tile {
-    composition: TileComposition,
-    name: &'static str,
     terrain_visible_type: TerrainVisibleType,
     code: u8,
     vertical_mirroring: bool,
     horizontal_mirroring: bool,
-    group_number: usize,
 }
 
 impl Tile {
     pub fn new(
-        composition: TileComposition,
-        name: &'static str,
         terrain_visible_type: TerrainVisibleType,
         code: u8,
         vertical_mirroring: bool,
         horizontal_mirroring: bool,
-        group_number: usize,
     ) -> Tile {
         Tile {
-            composition,
-            name,
             terrain_visible_type,
             code,
             vertical_mirroring,
             horizontal_mirroring,
-            group_number,
         }
     }
 
-    pub fn composition(&self) -> TileComposition {
-        self.composition
-    }
-
-    pub fn name(&self) -> &'static str {
-        self.name
-    }
-
-    pub fn terrain_visible_type(&self) -> TerrainVisibleType {
+    pub fn _terrain_visible_type(&self) -> TerrainVisibleType {
         self.terrain_visible_type
     }
 
@@ -67,31 +44,5 @@ impl Tile {
 
     pub fn horizontal_mirroring(&self) -> bool {
         self.horizontal_mirroring
-    }
-
-    pub fn set_vertical_mirroring(&mut self, value: bool) {
-        self.vertical_mirroring = value;
-    }
-
-    pub fn set_horizontal_mirroring(&mut self, value: bool) {
-        self.horizontal_mirroring = value;
-    }
-
-    pub fn group_number(&self) -> usize {
-        self.group_number
-    }
-}
-
-impl Default for Tile {
-    fn default() -> Self {
-        Tile {
-            composition: TileComposition::Main,
-            name: "",
-            terrain_visible_type: TerrainVisibleType::None,
-            code: 0,
-            vertical_mirroring: false,
-            horizontal_mirroring: false,
-            group_number: 0,
-        }
     }
 }

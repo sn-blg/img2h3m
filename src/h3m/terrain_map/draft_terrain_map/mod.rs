@@ -69,9 +69,9 @@ impl DraftTerrainMap {
         &mut self,
         generator: &mut TileGenerator,
         mode: TileGeneratingMode,
-        iter_count: usize,
+        max_iter_count: usize,
     ) -> bool {
-        for _ in 0..iter_count {
+        for _ in 0..max_iter_count {
             let was_changed = self.set_tile_codes_iteration(generator, mode);
             if !was_changed {
                 return true;
