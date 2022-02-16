@@ -148,37 +148,6 @@ impl TileGenerator {
         None
     }
 
-    fn is_valid_code(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> bool {
-        if let Some(tile) = cell.tile {
-            let tiles_group_info =
-                &self.tiles_table.terrain_tile_groups(cell.surface.terrain)[tile.group_number()];
-            assert!(tiles_group_info.codes().contains_code(tile.code()));
-
-            for pattern in tiles_group_info.patterns() {
-                if is_neighborhood_pattern_matched(cell, neighborhood, pattern) {
-                    return true;
-                }
-            }
-        }
-        false
-    }
-
-    fn is_valid_tile(&self, cell: &DraftMapCell, neighborhood: &Neighborhood) -> bool {
-        if let Some(tile) = cell.tile {
-            let vertical_mirroring = tile.vertical_mirroring();
-            let horizontal_mirroring = tile.horizontal_mirroring();
-            if (false, false) == (vertical_mirroring, horizontal_mirroring) {
-                self.is_valid_code(cell, neighborhood)
-            } else {
-                let mirroring_neighborhood =
-                    mirroring_neighborhood(neighborhood, vertical_mirroring, horizontal_mirroring);
-                self.is_valid_code(cell, &mirroring_neighborhood)
-            }
-        } else {
-            false
-        }
-    }
-
     fn excluded_tile_codes(cell: &DraftMapCell, neighborhood: &Neighborhood) -> Vec<u8> {
         neighborhood
             .iter()
@@ -221,13 +190,12 @@ impl TileGenerator {
                     };
                     if is_more_suitable_tile {
                         generated_tile = Some(DraftTile::new(
+                            tiles_group_info,
                             composition,
-                            tiles_group_info.name(),
-                            tiles_group_info.terrain_visible_type(),
                             code,
                             vertical_mirroring,
                             horizontal_mirroring,
-                            tiles_group_info.group_number(),
+                            neighborhood,
                         ));
                     }
                 }
@@ -345,15 +313,27 @@ impl TileGenerator {
         Some(tile)
     }
 
-    fn is_forced_fallback_tile(&self, cell: &DraftMapCell, mode: TileGeneratingMode) -> bool {
+    fn need_change_tile(
+        &self,
+        cell: &DraftMapCell,
+        neighborhood: &Neighborhood,
+        mode: TileGeneratingMode,
+    ) -> bool {
         if let Some(tile) = cell.tile {
-            matches!(
+            let is_forced_fallback_tile = matches!(
                 (mode, tile.composition()),
                 (TileGeneratingMode::Fallback, TileComposition::Fallback)
-            )
-        } else {
-            false
+            );
+
+            if is_forced_fallback_tile {
+                return false;
+            }
+
+            if !tile.is_neighborhood_changed(neighborhood) {
+                return false;
+            }
         }
+        true
     }
 
     pub fn try_generate_tile(
@@ -362,21 +342,11 @@ impl TileGenerator {
         neighborhood: &Neighborhood,
         mode: TileGeneratingMode,
     ) -> Option<DraftTile> {
-        if self.is_forced_fallback_tile(cell, mode) {
-            assert!(cell.tile.is_some());
-            cell.tile
-        } else if !self.is_valid_tile(cell, neighborhood) {
+        if self.need_change_tile(cell, neighborhood, mode) {
             self.try_generate_tile_impl(cell, neighborhood, mode)
         } else {
-            let current_tile = cell.tile.unwrap();
-            let new_tile = self
-                .try_generate_tile_impl(cell, neighborhood, mode)
-                .unwrap();
-            if new_tile.group_number() < current_tile.group_number() {
-                Some(new_tile)
-            } else {
-                Some(current_tile)
-            }
+            assert!(cell.tile.is_some());
+            cell.tile
         }
     }
 }
