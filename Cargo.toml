@@ -17,6 +17,6 @@ hashbag = "0.1.4"
 num = "0.4.0"
 
 [profile.release]
-opt-level = 'z'  # Optimize for size
+opt-level = 3  # all optimizations
 lto = true
 panic = 'abort'
