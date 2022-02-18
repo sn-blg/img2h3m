@@ -87,28 +87,24 @@ impl DraftTerrainMap {
         mode: TileGeneratingMode,
         backward_direction: bool,
     ) -> bool {
-        let map_len = self.size * self.size;
+        let map_range = 0..self.size * self.size;
         let mut was_changed = false;
 
-        let mut try_change_tile = |index| {
+        let try_change_tile = |index| {
             let neighborhood = self.neighborhood(index);
             if let Some(cell) = &mut self.cells[index] {
                 let tile = generator.try_generate_tile(cell, &neighborhood, mode);
                 if tile != cell.tile {
-                    was_changed = true
+                    was_changed = true;
+                    cell.tile = tile;
                 }
-                cell.tile = tile;
             }
         };
 
         if backward_direction {
-            for index in (0..map_len).rev() {
-                try_change_tile(index);
-            }
+            map_range.rev().for_each(try_change_tile);
         } else {
-            for index in 0..map_len {
-                try_change_tile(index);
-            }
+            map_range.for_each(try_change_tile);
         }
 
         was_changed
