@@ -1,6 +1,7 @@
 use crate::common::position::{Position, SignedDeltaPos};
 use crate::h3m::{terrain_map::map_cell::MapCell, Surface, MAX_MAP_SIZE};
 use draft_map_cell::DraftMapCell;
+use num::Integer;
 use tile_generator::{Neighborhood, TileGeneratingMode, TileGenerator};
 
 mod draft_map_cell;
@@ -71,8 +72,8 @@ impl DraftTerrainMap {
         mode: TileGeneratingMode,
         max_iter_count: usize,
     ) -> bool {
-        for _ in 0..max_iter_count {
-            let was_changed = self.set_tile_codes_iteration(generator, mode);
+        for iter_index in 0..max_iter_count {
+            let was_changed = self.set_tile_codes_iteration(generator, mode, iter_index.is_odd());
             if !was_changed {
                 return true;
             }
@@ -84,9 +85,12 @@ impl DraftTerrainMap {
         &mut self,
         generator: &mut TileGenerator,
         mode: TileGeneratingMode,
+        backward_direction: bool,
     ) -> bool {
+        let map_len = self.size * self.size;
         let mut was_changed = false;
-        for index in 0..self.size * self.size {
+
+        let mut try_change_tile = |index| {
             let neighborhood = self.neighborhood(index);
             if let Some(cell) = &mut self.cells[index] {
                 let tile = generator.try_generate_tile(cell, &neighborhood, mode);
@@ -95,7 +99,18 @@ impl DraftTerrainMap {
                 }
                 cell.tile = tile;
             }
+        };
+
+        if backward_direction {
+            for index in (0..map_len).rev() {
+                try_change_tile(index);
+            }
+        } else {
+            for index in 0..map_len {
+                try_change_tile(index);
+            }
         }
+
         was_changed
     }
 
