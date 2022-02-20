@@ -87,7 +87,7 @@ impl DraftTerrainMap {
         mode: TileGeneratingMode,
         backward_direction: bool,
     ) -> bool {
-        let map_range = 0..self.size * self.size;
+        let map_range = 0..(self.size * self.size);
         let mut was_changed = false;
 
         let try_change_tile = |index| {

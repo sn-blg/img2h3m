@@ -887,6 +887,42 @@ impl TilesTable {
                 TileCodesSet::new(0..=7),
                 (TerrainVisibleType::Same, TileSymmetry::Full, TileComposition::Main, ""),
             ),
+            (
+                vec![[  DiffAny,        DiffAny,        DiffAny,
+                        DiffAny,                        Eq,
+                        DiffAny,        Eq,             Eq,
+                    ],
+                ],
+                TileCodesSet::new(8..=9),
+                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+            ),
+            (
+                vec![[  DiffAny,        DiffAny,        DiffAny,
+                        Eq,                             DiffAny,
+                        Eq,             Eq,             DiffAny,
+                    ],
+                ],
+                TileCodesSet::new(10..=11),
+                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+            ),
+            (
+                vec![[  DiffAny,        Eq,             Eq,
+                        DiffAny,                        Eq,
+                        DiffAny,        DiffAny,        DiffAny,
+                    ],
+                ],
+                TileCodesSet::new(12..=13),
+                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+            ),
+            (
+                vec![[  Eq,             Eq,             DiffAny,
+                        Eq,                             DiffAny,
+                        DiffAny,        DiffAny,        DiffAny,
+                    ],
+                ],
+                TileCodesSet::new(14..=15),
+                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+            ),
         ];
 
         let result_table = [

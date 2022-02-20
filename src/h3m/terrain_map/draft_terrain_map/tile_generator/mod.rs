@@ -164,7 +164,6 @@ impl TileGenerator {
         composition: TileComposition,
     ) -> Option<DraftTile> {
         let excluded_tile_codes = TileGenerator::excluded_tile_codes(cell, neighborhood);
-        let mut generated_tile: Option<DraftTile> = None;
         for horizontal_mirroring in [false, true] {
             for vertical_mirroring in [false, true] {
                 let code_info = if (false, false) == (vertical_mirroring, horizontal_mirroring) {
@@ -183,25 +182,18 @@ impl TileGenerator {
                     )
                 };
                 if let Some((code, tiles_group_info)) = code_info {
-                    let is_more_suitable_tile = if let Some(generated_tile) = generated_tile {
-                        tiles_group_info.group_number() < generated_tile.group_number()
-                    } else {
-                        true
-                    };
-                    if is_more_suitable_tile {
-                        generated_tile = Some(DraftTile::new(
-                            tiles_group_info,
-                            composition,
-                            code,
-                            vertical_mirroring,
-                            horizontal_mirroring,
-                            neighborhood,
-                        ));
-                    }
+                    return Some(DraftTile::new(
+                        tiles_group_info,
+                        composition,
+                        code,
+                        vertical_mirroring,
+                        horizontal_mirroring,
+                        neighborhood,
+                    ));
                 }
             }
         }
-        generated_tile
+        None
     }
 
     fn randomize_mirroring(&mut self, neighborhood: &Neighborhood, tile: &mut DraftTile) {
