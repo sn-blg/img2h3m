@@ -81,13 +81,18 @@ fn expand_patterns(
     tile_symmetry: TileSymmetry,
 ) -> Vec<NeighborhoodPattern> {
     let mut expanded_patterns = Vec::with_capacity(patterns.len());
+
+    let mut add_pattern_if_new = |pattern| {
+        if !expanded_patterns.contains(&pattern) {
+            expanded_patterns.push(pattern);
+        }
+    };
+
     for &pattern in patterns {
         for additional_pattern in additional_patterns(&pattern, tile_symmetry) {
-            if additional_pattern != pattern {
-                expanded_patterns.push(additional_pattern);
-            }
+            add_pattern_if_new(additional_pattern);
         }
-        expanded_patterns.push(pattern);
+        add_pattern_if_new(pattern);
     }
     expanded_patterns
 }
@@ -173,11 +178,11 @@ impl TilesTable {
 
         let dirt_table = vec![
             (
-                vec![[  Any,            Diff(Sandy),    DiffAny,
+                vec![[  Any,            Diff(Sandy),    NotSame,
                         Diff(Sandy),                    EqOr(Dirty),
-                        DiffAny,        EqOr(Dirty),    EqOr(Dirty),
+                        NotSame,        EqOr(Dirty),    EqOr(Dirty),
                     ],
-                    [   Any,            Diff(Sandy),    DiffAny,
+                    [   Any,            Diff(Sandy),    NotSame,
                         Any,                            EqOr(Dirty),
                         Diff(Sandy),    EqOr(Dirty),    EqOr(Dirty),
                     ],
@@ -273,13 +278,17 @@ impl TilesTable {
 
         let old_common_ground_table = vec![
             (
-                vec![[  EqOr(Dirty),    Diff(Dirty),    Diff(Dirty),
+                vec![[  Diff(Dirty),    EqOr(Dirty),    Diff(Dirty),
                         EqOr(Dirty),                    Eq,
                         Diff(Dirty),    Eq,             Eq,
                     ],
-                    [   Diff(Dirty),    EqOr(Dirty),    Diff(Dirty),
+                    [   EqOr(Dirty),    Diff(Dirty),    NotSame,
                         EqOr(Dirty),                    Eq,
                         Diff(Dirty),    Eq,             Eq,
+                    ],
+                    [   EqOr(Dirty),    Diff(Dirty),    NotSame,
+                        Diff(Dirty),                    Eq,
+                        NotSame,        Eq,             Eq,
                     ],
                 ],
                 TileCodesSet::new(0..=3),
@@ -693,6 +702,10 @@ impl TilesTable {
                         Any,                            Eq,
                         DiffAny,        Eq,             Eq,
                     ],
+                    [   Any,            DiffAny,        NotSame,
+                        DiffAny,                        Eq,
+                        NotSame,        Eq,             Eq,
+                    ],
                 ],
                 TileCodesSet::new(0..=3),
                 (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
@@ -727,11 +740,11 @@ impl TilesTable {
             (
                 vec![[  Any,            DiffAny,        Any,
                         DiffAny,                        Eq,
-                        Eq,             Eq,             Eq,
+                        Same,           Eq,             Eq,
                     ],
-                    [   Any,            DiffAny,        Eq,
-                        Any,                            Eq,
-                        DiffAny,        Eq,             Eq,
+                    [   Any,            Any,            DiffAny,
+                        DiffAny,                        Eq,
+                        Same,           Eq,             Eq,
                     ],
                 ],
                 TileCodesSet::new(16..=17),
@@ -904,36 +917,36 @@ impl TilesTable {
                 (TerrainVisibleType::Same, TileSymmetry::Full, TileComposition::Main, ""),
             ),
             (
-                vec![[  Any,            DiffAny,        DiffAny,
+                vec![[  Any,            DiffAny,        NotSame,
                         DiffAny,                        Eq,
-                        DiffAny,        Eq,             Eq,
+                        NotSame,        Eq,             Eq,
                     ],
                 ],
                 TileCodesSet::new(8..=9),
                 (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
-                vec![[  DiffAny,        DiffAny,        Any,
+                vec![[  NotSame,        DiffAny,        Any,
                         Eq,                             DiffAny,
-                        Eq,             Eq,             DiffAny,
+                        Eq,             Eq,             NotSame,
                     ],
                 ],
                 TileCodesSet::new(10..=11),
                 (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
-                vec![[  DiffAny,        Eq,             Eq,
+                vec![[  NotSame,        Eq,             Eq,
                         DiffAny,                        Eq,
-                        Any,            DiffAny,        DiffAny,
+                        Any,            DiffAny,        NotSame,
                     ],
                 ],
                 TileCodesSet::new(12..=13),
                 (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
-                vec![[  Eq,             Eq,             DiffAny,
+                vec![[  Eq,             Eq,             NotSame,
                         Eq,                             DiffAny,
-                        DiffAny,        DiffAny,        Any,
+                        NotSame,        DiffAny,        Any,
                     ],
                 ],
                 TileCodesSet::new(14..=15),
@@ -1014,7 +1027,7 @@ impl TilesTable {
             (
                 vec![[  Any,        DiffAny,        Any,
                         DiffAny,                    Eq,
-                        Eq,         Eq,             Eq,
+                        Same,       Eq,             Eq,
                     ],
                 ],
                 TileCodesSet::new(32..=33),
@@ -1023,7 +1036,7 @@ impl TilesTable {
             (
                 vec![[  Any,        DiffAny,        Any,
                         Eq,                         DiffAny,
-                        Eq,         Eq,             Eq,
+                        Eq,         Eq,             Same,
                     ],
                 ],
                 TileCodesSet::new(34..=35),
@@ -1032,7 +1045,7 @@ impl TilesTable {
             (
                 vec![[  Any,        Eq,             Eq,
                         DiffAny,                    Eq,
-                        Any,        DiffAny,        Eq,
+                        Any,        DiffAny,        Same,
                     ],
                 ],
                 TileCodesSet::new(36..=37),
@@ -1041,7 +1054,7 @@ impl TilesTable {
             (
                 vec![[  Eq,         Eq,             Any,
                         Eq,                         DiffAny,
-                        Eq,         DiffAny,        Any,
+                        Same,       DiffAny,        Any,
                     ],
                 ],
                 TileCodesSet::new(38..=39),

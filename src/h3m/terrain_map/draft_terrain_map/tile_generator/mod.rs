@@ -39,7 +39,7 @@ fn is_terrain_relation_matched(
             .flatten()
             .unwrap_or(neighbour.surface.terrain);
         match relation {
-            TerrainRelation::Eq => neighbour_terrain == terrain,
+            TerrainRelation::Eq | TerrainRelation::Same => neighbour_terrain == terrain,
             TerrainRelation::EqOr(category) => {
                 (neighbour_terrain == terrain) || (neighbour_terrain.category() == category)
             }
@@ -53,13 +53,16 @@ fn is_terrain_relation_matched(
             TerrainRelation::Diff(category) => {
                 (neighbour_terrain != terrain) && (neighbour_terrain.category() == category)
             }
-            TerrainRelation::DiffAny => (neighbour_terrain != terrain),
+            TerrainRelation::DiffAny | TerrainRelation::NotSame => neighbour_terrain != terrain,
             TerrainRelation::Any => true,
         }
     } else {
         matches!(
             relation,
-            TerrainRelation::Eq | TerrainRelation::EqOr(_) | TerrainRelation::Any
+            TerrainRelation::NotSame
+                | TerrainRelation::Eq
+                | TerrainRelation::EqOr(_)
+                | TerrainRelation::Any
         )
     }
 }

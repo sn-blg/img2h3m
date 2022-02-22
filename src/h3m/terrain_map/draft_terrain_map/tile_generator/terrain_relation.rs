@@ -19,7 +19,9 @@ impl Terrain {
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TerrainRelation {
+    Same,                               // Some neighbour == central terrain
     SameNamed(&'static [&'static str]), // Some neighbour == central terrain and neighbour tail name == any name in [str]
+    NotSame,                            // None or Some neighbour != central terrain
     Eq,                                 // None or Some neighbour == central terrain
     EqOr(TerrainCategory), // None or Some neighbour == central terrain or Some neighbour in TerrainCategory
     Diff(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainCategory
