@@ -39,10 +39,7 @@ fn is_terrain_relation_matched(
             .flatten()
             .unwrap_or(neighbour.surface.terrain);
         match relation {
-            TerrainRelation::Eq | TerrainRelation::Same => neighbour_terrain == terrain,
-            TerrainRelation::EqOr(category) => {
-                (neighbour_terrain == terrain) || (neighbour_terrain.category() == category)
-            }
+            TerrainRelation::Same | TerrainRelation::Eq => neighbour_terrain == terrain,
             TerrainRelation::SameNamed(names) => {
                 if let Some(neighbour_tile) = neighbour.tile {
                     (neighbour_terrain == terrain) && (names.contains(&neighbour_tile.name()))
@@ -50,18 +47,25 @@ fn is_terrain_relation_matched(
                     false
                 }
             }
-            TerrainRelation::Diff(category) => {
+
+            TerrainRelation::Other(category) | TerrainRelation::Diff(category) => {
                 (neighbour_terrain != terrain) && (neighbour_terrain.category() == category)
             }
-            TerrainRelation::DiffAny | TerrainRelation::NotSame => neighbour_terrain != terrain,
+            TerrainRelation::OtherAny | TerrainRelation::DiffAny => neighbour_terrain != terrain,
+
+            TerrainRelation::EqOr(category) => {
+                (neighbour_terrain == terrain) || (neighbour_terrain.category() == category)
+            }
+
             TerrainRelation::Any => true,
         }
     } else {
         matches!(
             relation,
-            TerrainRelation::NotSame
-                | TerrainRelation::Eq
+            TerrainRelation::Eq
                 | TerrainRelation::EqOr(_)
+                | TerrainRelation::Diff(_)
+                | TerrainRelation::DiffAny
                 | TerrainRelation::Any
         )
     }
