@@ -1,6 +1,6 @@
 use hashbag::HashBag;
 use num::Unsigned;
-use rand::Rng;
+use rand::{rngs::ThreadRng, Rng};
 use std::hash::Hash;
 
 #[derive(Clone)]
@@ -23,13 +23,13 @@ impl<T: Clone + Copy + Unsigned + Eq + Hash> IndexMultiset<T> {
         self.inner.insert_many(index, frequency);
     }
 
-    pub fn random_index(&self) -> Option<T> {
+    pub fn random_index(&self, rng: &mut ThreadRng) -> Option<T> {
         if self.inner.is_empty() {
             return None;
         }
         self.inner
             .iter()
-            .nth(rand::thread_rng().gen_range(0..self.inner.len()))
+            .nth(rng.gen_range(0..self.inner.len()))
             .cloned()
     }
 

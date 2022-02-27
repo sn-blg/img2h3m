@@ -1,4 +1,5 @@
 use crate::common::index_multiset::IndexMultiset;
+use rand::rngs::ThreadRng;
 use std::ops::RangeInclusive;
 
 #[derive(Clone)]
@@ -41,19 +42,23 @@ impl TileCodesSet {
         self
     }
 
-    pub fn random_not_excluded_code(&self, excluded_codes: &[u8]) -> Option<u8> {
-        let subset_index = self.subset_indexes.random_index().unwrap();
+    pub fn random_not_excluded_code(
+        &self,
+        excluded_codes: &[u8],
+        rng: &mut ThreadRng,
+    ) -> Option<u8> {
+        let subset_index = self.subset_indexes.random_index(rng).unwrap();
         let mut subset = self.subsets[subset_index].clone();
 
         for &code in excluded_codes {
             subset.remove_index(code);
         }
-        subset.random_index()
+        subset.random_index(rng)
     }
 
-    pub fn random_code(&self) -> u8 {
-        let subset_index = self.subset_indexes.random_index().unwrap();
+    pub fn random_code(&self, rng: &mut ThreadRng) -> u8 {
+        let subset_index = self.subset_indexes.random_index(rng).unwrap();
         let subset = &self.subsets[subset_index];
-        subset.random_index().unwrap()
+        subset.random_index(rng).unwrap()
     }
 }

@@ -131,16 +131,16 @@ impl TileGenerator {
     }
 
     fn try_generate_code(
-        &self,
+        &mut self,
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         excluded_tile_codes: &[u8],
         composition: TileComposition,
     ) -> Option<(u8, &TilesGroupInfo)> {
-        let generate_code = |tile_codes_set: &TileCodesSet| {
+        let mut generate_code = |tile_codes_set: &TileCodesSet| {
             tile_codes_set
-                .random_not_excluded_code(excluded_tile_codes)
-                .unwrap_or_else(|| tile_codes_set.random_code())
+                .random_not_excluded_code(excluded_tile_codes, &mut self.rng)
+                .unwrap_or_else(|| tile_codes_set.random_code(&mut self.rng))
         };
         for tiles_group_info in self.tiles_table.terrain_tile_groups(cell.surface.terrain) {
             if tiles_group_info.composition() != composition {
@@ -165,7 +165,7 @@ impl TileGenerator {
     }
 
     fn try_generate_tile_with_composition(
-        &self,
+        &mut self,
         cell: &DraftMapCell,
         neighborhood: &Neighborhood,
         composition: TileComposition,

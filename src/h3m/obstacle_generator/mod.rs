@@ -2,8 +2,8 @@ use crate::h3m::parser::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
 use map_area::{make_map_areas, MapArea};
-
 use obstacle_template_list::ObstacleTemplateList;
+use rand::rngs::ThreadRng;
 use template_index_set::TemplateIndexSet;
 
 mod common;
@@ -32,6 +32,7 @@ impl ObjectsData {
 pub struct ObstacleGenerator {
     obstacle_template_list: ObstacleTemplateList,
     objects_data: ObjectsData,
+    rng: ThreadRng,
 }
 
 impl ObstacleGenerator {
@@ -39,6 +40,7 @@ impl ObstacleGenerator {
         ObstacleGenerator {
             obstacle_template_list: ObstacleTemplateList::new(),
             objects_data: ObjectsData::new(default_object_templates),
+            rng: rand::thread_rng(),
         }
     }
 
@@ -53,7 +55,7 @@ impl ObstacleGenerator {
     fn generate_in_area(&mut self, underground: bool, mut map_area: MapArea) -> H3mResult<()> {
         let mut template_index_set = TemplateIndexSet::new(&self.obstacle_template_list);
         while !template_index_set.is_empty() {
-            let template_index = template_index_set.random_index();
+            let template_index = template_index_set.random_index(&mut self.rng);
             let position_index = self.try_position_obstacle(template_index, &map_area);
             match position_index {
                 Some(position_index) => {

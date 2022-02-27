@@ -1,5 +1,6 @@
 use super::obstacle_template_list::ObstacleTemplateList;
 use crate::common::index_multiset::IndexMultiset;
+use rand::rngs::ThreadRng;
 
 pub struct TemplateIndexSet(IndexMultiset<usize>);
 
@@ -16,8 +17,8 @@ impl TemplateIndexSet {
         self.0.is_empty()
     }
 
-    pub fn random_index(&self) -> usize {
-        self.0.random_index().unwrap()
+    pub fn random_index(&self, rng: &mut ThreadRng) -> usize {
+        self.0.random_index(rng).unwrap()
     }
 
     pub fn remove_index(&mut self, index: usize) {
