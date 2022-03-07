@@ -346,7 +346,7 @@ impl TilesTable {
                             Other(Dirty),   Eq,             Eq,
                         ],
                     ],
-                    TileCodesSet::new(16..=17),
+                    if is_old { TileCodesSet::new(16..=17) } else { TileCodesSet::new(28..=30) },
                     (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
@@ -355,7 +355,7 @@ impl TilesTable {
                             Eq,             Eq,             Other(Dirty),
                         ],
                     ],
-                    TileCodesSet::new(18..=19),
+                    if is_old { TileCodesSet::new(18..=19) } else { TileCodesSet::new(31..=33) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -368,7 +368,7 @@ impl TilesTable {
                             Other(Sandy),   Eq,             Eq,
                         ],
                     ],
-                    TileCodesSet::new(20..=23),
+                    if is_old { TileCodesSet::new(20..=23) } else { TileCodesSet::new(34..=39) },
                     (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
@@ -377,7 +377,7 @@ impl TilesTable {
                             Any,            Eq,             Eq,
                         ],
                     ],
-                    TileCodesSet::new(24..=27),
+                    if is_old { TileCodesSet::new(24..=27) } else { TileCodesSet::new(40..=47) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
                 ),
                 (
@@ -386,7 +386,7 @@ impl TilesTable {
                             Eq,             Eq,             Eq,
                         ],
                     ],
-                    TileCodesSet::new(28..=31),
+                    if is_old { TileCodesSet::new(28..=31) } else { TileCodesSet::new(48..=55) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
                 ),
                 (
@@ -395,7 +395,7 @@ impl TilesTable {
                             Eq,             SameNamed(VERTICAL_HALF_SAND_ARR),  Other(Sandy),
                         ],
                     ],
-                    TileCodesSet::new(32..=35),
+                    if is_old { TileCodesSet::new(32..=35) } else { TileCodesSet::new(56..=61) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -408,7 +408,7 @@ impl TilesTable {
                             Other(Sandy),   Eq,             Eq,
                         ],
                     ],
-                    TileCodesSet::new(36..=37),
+                    if is_old { TileCodesSet::new(36..=37) } else { TileCodesSet::new(62..=64) },
                     (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
@@ -417,7 +417,7 @@ impl TilesTable {
                             Eq,             Eq,             Other(Sandy),
                         ],
                     ],
-                    TileCodesSet::new(38..=39),
+                    if is_old { TileCodesSet::new(38..=39) } else { TileCodesSet::new(65..=67) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -426,7 +426,7 @@ impl TilesTable {
                             Eq,             Eq,             Other(Dirty),
                         ],
                     ],
-                    TileCodesSet::from_code(40),
+                    if is_old { TileCodesSet::from_code(40) } else { TileCodesSet::from_code(68) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -435,7 +435,7 @@ impl TilesTable {
                             Eq,             Eq,             Other(Sandy),
                         ],
                     ],
-                    TileCodesSet::from_code(41),
+                    if is_old { TileCodesSet::from_code(41) } else { TileCodesSet::from_code(69) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -444,7 +444,7 @@ impl TilesTable {
                             Eq,             Eq,             Other(Sandy),
                         ],
                     ],
-                    TileCodesSet::from_code(42),
+                    if is_old { TileCodesSet::from_code(42) } else { TileCodesSet::from_code(70) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -461,7 +461,7 @@ impl TilesTable {
                             Other(Sandy),   EqOr(Dirty),    Other(Dirty),
                         ],
                     ],
-                    TileCodesSet::from_code(43),
+                    if is_old { TileCodesSet::from_code(43) } else { TileCodesSet::from_code(71) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -478,7 +478,7 @@ impl TilesTable {
                             Other(Dirty),   EqOr(Dirty),    Other(Dirty),
                         ],
                     ],
-                    TileCodesSet::from_code(44),
+                    if is_old { TileCodesSet::from_code(44) } else { TileCodesSet::from_code(72) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -491,7 +491,7 @@ impl TilesTable {
                             Eq,             Eq,             Other(Sandy),
                         ],
                     ],
-                    TileCodesSet::from_code(45),
+                    if is_old { TileCodesSet::from_code(45) } else { TileCodesSet::from_code(73) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_DIRT_SAND),
                 ),
                 (
@@ -504,7 +504,7 @@ impl TilesTable {
                             Other(Dirty),   EqOr(Dirty),    Other(Sandy),
                         ],
                     ],
-                    TileCodesSet::from_code(46),
+                    if is_old { TileCodesSet::from_code(46) } else { TileCodesSet::from_code(74) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_DIRT_SAND),
                 ),
                 (
@@ -517,7 +517,7 @@ impl TilesTable {
                             Other(Dirty),   EqOr(Dirty),    Any,
                         ],
                     ],
-                    TileCodesSet::from_code(47),
+                    if is_old { TileCodesSet::from_code(47) } else { TileCodesSet::from_code(75) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
@@ -530,7 +530,7 @@ impl TilesTable {
                             Any,            Other(Sandy),   Any,
                         ],
                     ],
-                    TileCodesSet::from_code(48),
+                    if is_old { TileCodesSet::from_code(48) } else { TileCodesSet::from_code(76) },
                     (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
