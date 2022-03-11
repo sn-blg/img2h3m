@@ -26,8 +26,9 @@ pub fn get_config() -> Config {
                 .required(true),
         )
         .arg(
-            Arg::with_name("otw")
-                .help("Use one-tile water"),
+            Arg::with_name("base tiles")
+                .short("b")
+                .help("Use only base tiles. Don't use additional tiles, like one-tile water"),
         )
         .arg(
             Arg::with_name("obstacles")
@@ -49,6 +50,6 @@ pub fn get_config() -> Config {
         underground_image_path: matches.value_of("underground image").map(|i| i.to_string()),
         map_path: matches.value_of("map").unwrap().to_string(),
         obstacles: matches.is_present("obstacles"),
-        one_tile_water: matches.is_present("otw"),
+        one_tile_water: !matches.is_present("base tiles"),
     }
 }
