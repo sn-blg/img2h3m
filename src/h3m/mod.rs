@@ -12,12 +12,34 @@ pub mod result;
 mod surface;
 mod terrain_map;
 
-pub const MAX_MAP_SIZE: usize = 252usize;
+pub const MAX_MAP_SIZE: usize = 252;
 
 pub struct H3m {
     info: H3mInfo,
     raw_map: Vec<u8>,
     obstacle_generator: Option<ObstacleGenerator>,
+}
+
+fn set_map_cell(map_cell: &MapCell, data: &mut [u8]) {
+    data[0] = map_cell.surface().terrain.code();
+    data[1] = map_cell.tile().code();
+
+    let mut set_mirroring = |bit: u8, value| {
+        if value {
+            data[6] |= bit;
+        } else {
+            data[6] &= !(bit);
+        }
+    };
+
+    const HORIZONTAL_MIRRORING_BIT: u8 = 0b0000_0001;
+    const VERTICAL_MIRRORING_BIT: u8 = 0b0000_0010;
+
+    set_mirroring(
+        HORIZONTAL_MIRRORING_BIT,
+        map_cell.tile().horizontal_mirroring(),
+    );
+    set_mirroring(VERTICAL_MIRRORING_BIT, map_cell.tile().vertical_mirroring());
 }
 
 impl H3m {
@@ -64,7 +86,7 @@ impl H3m {
 
         for (index, map_cell) in terrain_map.cells().iter().enumerate() {
             if let Some(map_cell) = map_cell {
-                self.set_map_cell(index, underground, map_cell)?;
+                self.set_map_cell_by_index(index, underground, map_cell)?;
             }
         }
 
@@ -77,7 +99,7 @@ impl H3m {
         Ok(())
     }
 
-    fn set_map_cell(
+    fn set_map_cell_by_index(
         &mut self,
         index: usize,
         underground: bool,
@@ -102,21 +124,7 @@ impl H3m {
         } + index * MAP_CELL_SIZE;
 
         let data = &mut self.raw_map[offset..offset + MAP_CELL_SIZE];
-
-        data[0] = map_cell.surface().terrain.code();
-        data[1] = map_cell.tile().code();
-
-        if map_cell.tile().horizontal_mirroring() {
-            data[6] |= 0b0000_0001;
-        } else {
-            data[6] &= !(0b0000_0001);
-        }
-
-        if map_cell.tile().vertical_mirroring() {
-            data[6] |= 0b0000_0010;
-        } else {
-            data[6] &= !(0b0000_0010);
-        }
+        set_map_cell(map_cell, data);
 
         Ok(())
     }
