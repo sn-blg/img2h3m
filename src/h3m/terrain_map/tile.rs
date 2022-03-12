@@ -4,7 +4,7 @@ use crate::h3m::Terrain;
 pub enum TerrainVisibleType {
     Same,
     Diff(Terrain),
-    None, // transitional tail
+    Mixed,
 }
 
 #[derive(Clone, Copy, PartialEq)]

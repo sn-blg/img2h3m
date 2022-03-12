@@ -107,7 +107,7 @@ impl Default for DraftTile {
         DraftTile {
             composition: TileComposition::Main,
             name: "",
-            terrain_visible_type: TerrainVisibleType::None,
+            terrain_visible_type: TerrainVisibleType::Mixed,
             code: 0,
             vertical_mirroring: false,
             horizontal_mirroring: false,

@@ -28,7 +28,7 @@ pub fn get_config() -> Config {
         .arg(
             Arg::with_name("base tiles")
                 .short("b")
-                .help("Use only base tiles. Don't use additional tiles, like one-tile water"),
+                .help("Use only base tiles. Don't use additional tiles (one-tile water)"),
         )
         .arg(
             Arg::with_name("obstacles")

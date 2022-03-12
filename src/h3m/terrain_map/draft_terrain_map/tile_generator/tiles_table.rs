@@ -194,7 +194,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(0..=3),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            EqOr(Dirty),    EqOr(Dirty),
@@ -203,7 +203,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(4..=7),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
             ),
             (
                 vec![[  Any,            Other(Sandy),   Any,
@@ -212,7 +212,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(8..=11),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
             ),
             (
                 vec![[  EqOr(Dirty),             EqOr(Dirty),                       EqOr(Dirty),
@@ -221,7 +221,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(12..=15),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            Other(Sandy),   EqOr(Dirty),
@@ -234,7 +234,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(16..=17),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  EqOr(Dirty),    EqOr(Dirty),    EqOr(Dirty),
@@ -243,7 +243,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(18..=19),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Other(Sandy),   EqOr(Dirty),    EqOr(Dirty),
@@ -252,7 +252,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::from_code(20),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[EqOr(Dirty); NEIGHBORHOOD_SIZE]],
@@ -299,7 +299,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(0..=3) } else { TileCodesSet::new(0..=5) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  EqOr(Dirty),    Eq,             Eq,
@@ -312,7 +312,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(4..=7) } else { TileCodesSet::new(6..=13) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_DIRT),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_DIRT),
                 ),
                 (
                     vec![[  EqOr(Dirty),    Other(Dirty),   EqOr(Dirty),
@@ -325,7 +325,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(8..=11) } else { TileCodesSet::new(14..=21) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_DIRT),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_DIRT),
                 ),
                 (
                     vec![[  Eq,             Eq,                                 Eq,
@@ -334,7 +334,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(12..=15) } else { TileCodesSet::new(22..=27) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  EqOr(Dirty),    Other(Dirty),   Eq,
@@ -347,7 +347,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(16..=17) } else { TileCodesSet::new(28..=30) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             Eq,
@@ -356,7 +356,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(18..=19) } else { TileCodesSet::new(31..=33) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Other(Sandy),   DiffAny,
@@ -369,7 +369,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(20..=23) } else { TileCodesSet::new(34..=39) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Eq,             Eq,
@@ -378,7 +378,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(24..=27) } else { TileCodesSet::new(40..=47) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
                 ),
                 (
                     vec![[  Any,            Other(Sandy),   Any,
@@ -387,7 +387,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(28..=31) } else { TileCodesSet::new(48..=55) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
                 ),
                 (
                     vec![[  Eq,             Eq,                                 Eq,
@@ -396,7 +396,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(32..=35) } else { TileCodesSet::new(56..=61) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Other(Sandy),   Eq,
@@ -409,7 +409,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(36..=37) } else { TileCodesSet::new(62..=64) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             Eq,
@@ -418,7 +418,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(38..=39) } else { TileCodesSet::new(65..=67) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Other(Dirty),   Eq,             Eq,
@@ -427,7 +427,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(40) } else { TileCodesSet::from_code(68) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Other(Dirty),   Eq,             Eq,
@@ -436,7 +436,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(41) } else { TileCodesSet::from_code(69) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Other(Sandy),   Eq,             Eq,
@@ -445,7 +445,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(42) } else { TileCodesSet::from_code(70) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             EqOr(Dirty),
@@ -462,7 +462,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(43) } else { TileCodesSet::from_code(71) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             Other(Sandy),
@@ -479,7 +479,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(44) } else { TileCodesSet::from_code(72) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             EqOr(Dirty),
@@ -492,7 +492,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(45) } else { TileCodesSet::from_code(73) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_DIRT_SAND),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_DIRT_SAND),
                 ),
                 (
                     vec![[  Eq,             Eq,             Eq,
@@ -505,7 +505,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(46) } else { TileCodesSet::from_code(74) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_DIRT_SAND),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_DIRT_SAND),
                 ),
                 (
                     vec![[  Eq,             Eq,             Any,
@@ -518,7 +518,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(47) } else { TileCodesSet::from_code(75) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             Other(Dirty),
@@ -531,7 +531,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(48) } else { TileCodesSet::from_code(76) },
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[Eq; NEIGHBORHOOD_SIZE]],
@@ -569,7 +569,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(75) } else { TileCodesSet::from_code(120) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Other(Sandy),   Any,
@@ -595,7 +595,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(76) } else { TileCodesSet::from_code(121) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             Other(Sandy),
@@ -608,7 +608,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(77) } else { TileCodesSet::from_code(122) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             EqOr(Dirty),
@@ -625,7 +625,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(78) } else { TileCodesSet::from_code(123) },
-                    (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
 
                 (
@@ -724,7 +724,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(0..=3),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            Eq,         Eq,
@@ -733,7 +733,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(4..=7),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_SAND),
             ),
             (
                 vec![[  Any,            OtherAny,   Any,
@@ -742,7 +742,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(8..=11),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_SAND),
             ),
             (
                 vec![[  Eq,             Eq,                                 Eq,
@@ -751,7 +751,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(12..=15),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            OtherAny,   Any,
@@ -764,7 +764,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(16..=17),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,             Eq,         Eq,
@@ -773,7 +773,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(18..=19),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[Eq; NEIGHBORHOOD_SIZE]],
@@ -793,7 +793,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(33..=36),
-                    (TerrainVisibleType::None, TileSymmetry::Full, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::Full, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            OtherAny,       Any,
@@ -802,7 +802,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(37..=40),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Eq,             Any,
@@ -811,7 +811,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(41..=44),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            OtherAny,       Any,
@@ -820,7 +820,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(45..=48),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            OtherAny,       Any,
@@ -829,7 +829,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(49..=52),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  OtherAny,       Eq,             Eq,
@@ -838,7 +838,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(53..=54),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  OtherAny,       Eq,             OtherAny,
@@ -847,7 +847,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(55..=56),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  OtherAny,       Eq,             Eq,
@@ -856,7 +856,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(57..=58),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  OtherAny,       Eq,             OtherAny,
@@ -865,7 +865,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(59..=62),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Eq,             OtherAny,
@@ -874,7 +874,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(63..=66),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            OtherAny,       Any,
@@ -883,7 +883,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(67..=70),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Eq,             OtherAny,
@@ -892,7 +892,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(71..=72),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            OtherAny,       Any,
@@ -901,7 +901,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(73..=74),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  OtherAny,       Eq,             OtherAny,
@@ -910,7 +910,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::from_code(75),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            OtherAny,       Any,
@@ -919,7 +919,7 @@ impl TilesTable {
                         ],
                     ],
                     TileCodesSet::new(76..=79),
-                    (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                    (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
                 ),
             ];
             water_table.extend(main_water_table);
@@ -943,7 +943,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(8..=9),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  DiffAny,        OtherAny,       Any,
@@ -956,7 +956,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(10..=11),
-                (TerrainVisibleType::None, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  DiffAny,        Eq,             Eq,
@@ -969,7 +969,7 @@ impl TilesTable {
                 ],
                 ],
                 TileCodesSet::new(12..=13),
-                (TerrainVisibleType::None, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,             Eq,             DiffAny,
@@ -982,7 +982,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(14..=15),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            Eq,             Eq,
@@ -991,7 +991,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(16..=17),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_ROCK),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_ROCK),
             ),
             (
                 vec![[  Eq,             Eq,             Any,
@@ -1000,7 +1000,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(18..=19),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_ROCK),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, VERTICAL_HALF_ROCK),
             ),
             (
                 vec![[  Any,            OtherAny,       Any,
@@ -1009,7 +1009,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(20..=21),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_ROCK),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_ROCK),
             ),
             (
                 vec![[  Eq,             Eq,             Eq,
@@ -1018,7 +1018,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(22..=23),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_ROCK),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, HORIZONTAL_HALF_ROCK),
             ),
             (
                 vec![[  Eq,             Eq,                                     Eq,
@@ -1027,7 +1027,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(24..=25),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,                                     Eq,                                 Eq,
@@ -1036,7 +1036,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(26..=27),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,         SameNamed(VERTICAL_HALF_ROCK_ARR),  OtherAny,
@@ -1045,7 +1045,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(28..=29),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  OtherAny,                               SameNamed(VERTICAL_HALF_ROCK_ARR),  Eq,
@@ -1054,7 +1054,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(30..=31),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            OtherAny,       Any,
@@ -1067,7 +1067,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(32..=33),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            OtherAny,       Any,
@@ -1080,7 +1080,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(34..=35),
-                (TerrainVisibleType::None, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Any,            Eq,             Eq,
@@ -1093,7 +1093,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(36..=37),
-                (TerrainVisibleType::None, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,             Eq,             Any,
@@ -1106,7 +1106,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(38..=39),
-                (TerrainVisibleType::None, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,             Eq,             Eq,
@@ -1115,7 +1115,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(40..=41),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,             Eq,             Eq,
@@ -1124,7 +1124,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(42..=43),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  Eq,             Eq,             OtherAny,
@@ -1133,7 +1133,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(44..=45),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
             (
                 vec![[  OtherAny,       Eq,             Eq,
@@ -1142,7 +1142,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(46..=47),
-                (TerrainVisibleType::None, TileSymmetry::None, TileComposition::Main, ""),
+                (TerrainVisibleType::Mixed, TileSymmetry::None, TileComposition::Main, ""),
             ),
         ];
 
