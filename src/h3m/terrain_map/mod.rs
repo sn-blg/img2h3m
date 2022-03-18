@@ -64,6 +64,8 @@ impl TerrainMap {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::h3m::Terrain;
+    use strum::IntoEnumIterator;
 
     #[test]
     fn generate_map_for_various_combinations_of_surfaces() {
@@ -73,6 +75,8 @@ mod tests {
         let size = 8;
         let len = size * size;
         let surfaces = Vec::with_capacity(len);
+
+        for _terrain in Terrain::iter() {}
 
         assert!(TerrainMap::generate(size, one_tile_water, underground, &surfaces).is_ok());
     }

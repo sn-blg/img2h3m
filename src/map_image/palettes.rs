@@ -1,6 +1,7 @@
 use crate::h3m::{Surface, Terrain};
 use delta_e::DE2000;
 use image::Rgb;
+use strum::IntoEnumIterator;
 
 type RgbColor = [u8; 3];
 
@@ -92,18 +93,9 @@ impl Palettes {
             }
         };
 
-        add_terrain(Terrain::Dirt);
-        add_terrain(Terrain::Sand);
-        add_terrain(Terrain::Grass);
-        add_terrain(Terrain::Snow);
-        add_terrain(Terrain::Swamp);
-        add_terrain(Terrain::Rough);
-        add_terrain(Terrain::Subterranean);
-        add_terrain(Terrain::Lava);
-        add_terrain(Terrain::Highland);
-        add_terrain(Terrain::Wasteland);
-        add_terrain(Terrain::Water);
-        add_terrain(Terrain::Rock);
+        for terrain in Terrain::iter() {
+            add_terrain(terrain);
+        }
 
         palettes
     }

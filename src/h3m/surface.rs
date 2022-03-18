@@ -1,4 +1,6 @@
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+use strum_macros::EnumIter;
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash, EnumIter)]
 pub enum Terrain {
     Dirt,
     Sand,
