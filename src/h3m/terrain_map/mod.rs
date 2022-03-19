@@ -67,17 +67,80 @@ mod tests {
     use crate::h3m::Terrain;
     use strum::IntoEnumIterator;
 
+    impl Default for Surface {
+        fn default() -> Self {
+            Surface {
+                terrain: Terrain::Dirt,
+                obstacle: false,
+            }
+        }
+    }
+
+    struct Surfaces(Vec<Option<Surface>>);
+    impl Surfaces {
+        fn update_element(&mut self, index: usize, overflow: &mut bool) {
+            let terrain = self.0[index].unwrap().terrain;
+            let mut iter = Terrain::iter().skip_while(|&t| t != terrain);
+            assert_eq!(iter.next(), Some(terrain));
+            let next_terrain = {
+                let next_terrain = iter.next();
+                if next_terrain == Some(Terrain::Rock) {
+                    iter.next()
+                } else {
+                    next_terrain
+                }
+            };
+            let next_terrain = {
+                if let Some(next_terrain) = next_terrain {
+                    *overflow = false;
+                    next_terrain
+                } else {
+                    *overflow = true;
+                    Terrain::iter().next().unwrap()
+                }
+            };
+            self.0[index] = Some(Surface {
+                terrain: next_terrain,
+                obstacle: false,
+            });
+        }
+
+        fn next(&mut self, overflow: &mut bool) {
+            let len = self.0.len();
+            for index in 0..len {
+                self.update_element(index, overflow);
+                if !*overflow {
+                    break;
+                }
+            }
+        }
+
+        fn print(&self) {
+            let len = self.0.len();
+            print!("[  ");
+            for index in 0..len {
+                let terrain = self.0[index].unwrap().terrain;
+                print!("{:?}  ", terrain);
+            }
+            println!("  ]");
+        }
+    }
+
     #[test]
     fn generate_map_for_various_combinations_of_surfaces() {
         let one_tile_water = true;
         let underground = false;
 
-        let size = 8;
-        let len = size * size;
-        let surfaces = Vec::with_capacity(len);
+        let size = 3;
+        let mut surfaces = Surfaces(vec![Some(Surface::default()); size * size]);
+        let mut overflow = false;
 
-        for _terrain in Terrain::iter() {}
-
-        assert!(TerrainMap::generate(size, one_tile_water, underground, &surfaces).is_ok());
+        while !overflow {
+            surfaces.print();
+            assert!(TerrainMap::generate(size, one_tile_water, underground, &surfaces.0).is_ok());
+            surfaces.next(&mut overflow);
+        }
+        println!("---");
+        surfaces.print();
     }
 }
