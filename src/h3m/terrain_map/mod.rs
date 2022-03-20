@@ -78,20 +78,24 @@ mod tests {
 
     struct Surfaces(Vec<Option<Surface>>);
     impl Surfaces {
-        fn update_element(&mut self, index: usize, overflow: &mut bool) {
-            let terrain = self.0[index].unwrap().terrain;
+        fn next_terrain(terrain: Terrain) -> Option<Terrain> {
             let mut iter = Terrain::iter().skip_while(|&t| t != terrain);
             assert_eq!(iter.next(), Some(terrain));
-            let next_terrain = {
-                let next_terrain = iter.next();
-                if next_terrain == Some(Terrain::Rock) {
-                    iter.next()
-                } else {
-                    next_terrain
+            for next_terrain in iter {
+                if matches!(
+                    next_terrain,
+                    Terrain::Dirt | Terrain::Grass | Terrain::Water
+                ) {
+                    return Some(next_terrain);
                 }
-            };
+            }
+            None
+        }
+
+        fn update_element(&mut self, index: usize, overflow: &mut bool) {
+            let terrain = self.0[index].unwrap().terrain;
             let next_terrain = {
-                if let Some(next_terrain) = next_terrain {
+                if let Some(next_terrain) = Surfaces::next_terrain(terrain) {
                     *overflow = false;
                     next_terrain
                 } else {
@@ -114,16 +118,6 @@ mod tests {
                 }
             }
         }
-
-        fn print(&self) {
-            let len = self.0.len();
-            print!("[  ");
-            for index in 0..len {
-                let terrain = self.0[index].unwrap().terrain;
-                print!("{:?}  ", terrain);
-            }
-            println!("  ]");
-        }
     }
 
     #[test]
@@ -136,11 +130,8 @@ mod tests {
         let mut overflow = false;
 
         while !overflow {
-            surfaces.print();
             assert!(TerrainMap::generate(size, one_tile_water, underground, &surfaces.0).is_ok());
             surfaces.next(&mut overflow);
         }
-        println!("---");
-        surfaces.print();
     }
 }
