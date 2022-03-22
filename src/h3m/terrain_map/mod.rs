@@ -70,7 +70,7 @@ mod tests {
     impl Default for Surface {
         fn default() -> Self {
             Surface {
-                terrain: Terrain::Dirt,
+                terrain: Terrain::iter().next().unwrap(),
                 obstacle: false,
             }
         }
