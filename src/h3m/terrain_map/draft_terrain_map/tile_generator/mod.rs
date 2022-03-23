@@ -225,14 +225,17 @@ impl TileGenerator {
                 let vertical_neighbour_indexes = [1, 6];
                 let horizontal_neighbour_indexes = [3, 4];
                 let mut count = 0;
-                for (neighbour_tile, index) in
+                for (neighbour_tile, neighbour_index) in
                     [vertical_neighbour_indexes, horizontal_neighbour_indexes]
                         .concat()
                         .into_iter()
-                        .map(|index| {
+                        .map(|neighbour_index| {
                             Some((
-                                get_neighbour_tile(&neighborhood[index], terrain_visible_type)?,
-                                index,
+                                get_neighbour_tile(
+                                    &neighborhood[neighbour_index],
+                                    terrain_visible_type,
+                                )?,
+                                neighbour_index,
                             ))
                         })
                         .flatten()
@@ -244,10 +247,34 @@ impl TileGenerator {
                     }
 
                     if (terrain_visible_type == Terrain::Sand)
-                        && horizontal_neighbour_indexes.contains(&index)
+                        && horizontal_neighbour_indexes.contains(&neighbour_index)
                         && (neighbour_tile.horizontal_mirroring() != horizontal_mirroring)
                     {
                         count += 1;
+                    }
+
+                    if terrain_visible_type == Terrain::Dirt {
+                        match (
+                            horizontal_mirroring,
+                            vertical_mirroring,
+                            neighbour_index,
+                            neighbour_tile.horizontal_mirroring(),
+                            neighbour_tile.vertical_mirroring(),
+                        ) {
+                            (true, true, 4, false, true) |
+                            (true, true, 6, true, false) |
+
+                            (true, false, 1, true, true) |
+                            (true, false, 4, false, false) |
+
+                            (false, true, 3, true, true) |
+                            (false, true, 6, false, false) |
+
+                            (false, false, 1, false, true) |
+                            (false, false, 3, true, false) => count += 1,
+
+                            _ => {}
+                        }
                     }
                 }
                 count
