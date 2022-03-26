@@ -261,17 +261,14 @@ impl TileGenerator {
                             neighbour_tile.horizontal_mirroring(),
                             neighbour_tile.vertical_mirroring(),
                         ) {
-                            (true, true, 4, false, true) |
-                            (true, true, 6, true, false) |
-
-                            (true, false, 1, true, true) |
-                            (true, false, 4, false, false) |
-
-                            (false, true, 3, true, true) |
-                            (false, true, 6, false, false) |
-
-                            (false, false, 1, false, true) |
-                            (false, false, 3, true, false) => count += 1,
+                            (true, true, 4, false, true)
+                            | (true, true, 6, true, false)
+                            | (true, false, 1, true, true)
+                            | (true, false, 4, false, false)
+                            | (false, true, 3, true, true)
+                            | (false, true, 6, false, false)
+                            | (false, false, 1, false, true)
+                            | (false, false, 3, true, false) => count += 1,
 
                             _ => {}
                         }
