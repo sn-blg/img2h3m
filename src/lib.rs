@@ -41,7 +41,7 @@ impl H3m {
             MapImage::from_image(image_path, self.map_size(), one_tile_water, obstacles)?;
         map_image.fix();
         let surfaces = map_image.surfaces();
-        self.set_surfaces(one_tile_water, underground, &surfaces)?;
+        self.set_surfaces(one_tile_water, obstacles, underground, &surfaces)?;
 
         Ok(())
     }

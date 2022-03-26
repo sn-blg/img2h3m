@@ -78,6 +78,7 @@ impl H3m {
     pub fn set_surfaces(
         &mut self,
         one_tile_water: bool,
+        obstacles: bool,
         underground: bool,
         surfaces: &[Option<Surface>],
     ) -> H3mResult<()> {
@@ -90,10 +91,16 @@ impl H3m {
             }
         }
 
-        if terrain_map.has_obstacles() {
-            self.obstacle_generator
-                .get_or_insert_with(|| ObstacleGenerator::new(&self.info.default_object_templates))
-                .generate(&terrain_map)?;
+        if obstacles {
+            let obstacle_generator = self
+                .obstacle_generator
+                .get_or_insert_with(|| ObstacleGenerator::new(&self.info.default_object_templates));
+
+            if terrain_map.has_obstacles() {
+                obstacle_generator.generate(&terrain_map)?;
+            }
+        } else {
+            assert!(!terrain_map.has_obstacles());
         }
 
         Ok(())
