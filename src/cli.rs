@@ -3,6 +3,8 @@ use img2h3m::Config;
 use std::process;
 
 pub fn get_config() -> Config {
+    let transparent_color = [0, 0xFF, 0xFF];
+
     let matches = App::new(env!("CARGO_PKG_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
         .about(env!("CARGO_PKG_DESCRIPTION"))
@@ -36,6 +38,13 @@ pub fn get_config() -> Config {
                 .help("Create obstacles on the map \
                        (attention, this option will delete all the original objects and events on the input map)"),
         )
+        .arg(
+            Arg::with_name("transparent")
+                .short("t")
+                .help(
+                    &format!("Transparent mode: pixels with color 0x{:02X}{:02X}{:02X} are not processed",
+                    transparent_color[0], transparent_color[1], transparent_color[2])),
+        )
         .get_matches();
 
     if !matches.is_present("land image") && !matches.is_present("underground image") {
@@ -51,5 +60,10 @@ pub fn get_config() -> Config {
         map_path: matches.value_of("map").unwrap().to_string(),
         obstacles: matches.is_present("obstacles"),
         one_tile_water: !matches.is_present("base tiles"),
+        transparent_color: if matches.is_present("transparent") {
+            Some(transparent_color)
+        } else {
+            None
+        },
     }
 }

@@ -1,9 +1,8 @@
+use crate::common::RgbColor;
 use crate::h3m::{Surface, Terrain};
 use delta_e::DE2000;
 use image::Rgb;
 use strum::IntoEnumIterator;
-
-type RgbColor = [u8; 3];
 
 fn terrain_rgb_color(terrain: Terrain) -> RgbColor {
     match terrain {
