@@ -23,7 +23,7 @@ pub fn get_config() -> Config {
         .arg(
             Arg::with_name("map")
                 .short("m")
-                .help("Path to the existing h3m file for update it's minimap")
+                .help("Path to the existing h3m file for update it's map")
                 .takes_value(true)
                 .required(true),
         )
