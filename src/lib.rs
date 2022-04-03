@@ -1,6 +1,8 @@
+use common::RgbColor;
 pub use config::Config;
 use h3m::H3m;
 use image::io::Reader as ImageReader;
+use image::Rgb;
 use map_image::MapImage;
 use std::error::Error;
 use std::fs::File;
@@ -16,12 +18,23 @@ impl MapImage {
         map_size: usize,
         one_tile_water: bool,
         obstacles: bool,
+        transparent_color: Option<RgbColor>,
     ) -> Result<MapImage, Box<dyn Error>> {
         let mut map_image = MapImage::new(map_size, one_tile_water, obstacles);
         let img = ImageReader::open(image_path.into())?.decode()?.into_rgb8();
+        let is_transparent_color = |pixel: &Rgb<u8>| {
+            if transparent_color.is_none() {
+                false
+            } else {
+                Some(pixel.0) == transparent_color
+            }
+        };
 
         for (row_id, row) in img.rows().take(map_size).enumerate() {
             for (column_id, pixel) in row.take(map_size).enumerate() {
+                if is_transparent_color(pixel) {
+                    continue;
+                }
                 map_image.set_pixel(row_id, column_id, *pixel);
             }
         }
@@ -36,9 +49,15 @@ impl H3m {
         underground: bool,
         one_tile_water: bool,
         obstacles: bool,
+        transparent_color: Option<RgbColor>,
     ) -> Result<(), Box<dyn Error>> {
-        let mut map_image =
-            MapImage::from_image(image_path, self.map_size(), one_tile_water, obstacles)?;
+        let mut map_image = MapImage::from_image(
+            image_path,
+            self.map_size(),
+            one_tile_water,
+            obstacles,
+            transparent_color,
+        )?;
         map_image.fix();
         let surfaces = map_image.surfaces();
         self.set_surfaces(one_tile_water, obstacles, underground, &surfaces)?;
@@ -57,6 +76,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
             false,
             config.one_tile_water,
             config.obstacles,
+            config.transparent_color,
         )?;
     }
 
@@ -66,6 +86,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
             true,
             config.one_tile_water,
             config.obstacles,
+            config.transparent_color,
         )?;
     }
 
