@@ -24,7 +24,11 @@ impl MapImage {
         map_size: usize,
         map_image_params: &MapImageParams,
     ) -> Result<MapImage, Box<dyn Error>> {
-        let mut map_image = MapImage::new(map_size, map_image_params.one_tile_water, map_image_params.obstacles);
+        let mut map_image = MapImage::new(
+            map_size,
+            map_image_params.one_tile_water,
+            map_image_params.obstacles,
+        );
         let img = ImageReader::open(image_path.into())?.decode()?.into_rgb8();
         let is_transparent_color = |pixel: &Rgb<u8>| {
             if map_image_params.transparent_color.is_none() {
@@ -53,14 +57,15 @@ impl H3m {
         underground: bool,
         map_image_params: &MapImageParams,
     ) -> Result<(), Box<dyn Error>> {
-        let mut map_image = MapImage::from_image(
-            image_path,
-            self.map_size(),
-            map_image_params
-        )?;
+        let mut map_image = MapImage::from_image(image_path, self.map_size(), map_image_params)?;
         map_image.fix();
         let surfaces = map_image.surfaces();
-        self.set_surfaces(map_image_params.one_tile_water, map_image_params.obstacles, underground, &surfaces)?;
+        self.set_surfaces(
+            map_image_params.one_tile_water,
+            map_image_params.obstacles,
+            underground,
+            &surfaces,
+        )?;
 
         Ok(())
     }
@@ -77,19 +82,11 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     };
 
     if let Some(land_image_path) = config.land_image_path {
-        h3m.set_image(
-            land_image_path,
-            false,
-            &map_image_params,
-        )?;
+        h3m.set_image(land_image_path, false, &map_image_params)?;
     }
 
     if let Some(underground_image_path) = config.underground_image_path {
-        h3m.set_image(
-            underground_image_path,
-            true,
-            &map_image_params,
-        )?;
+        h3m.set_image(underground_image_path, true, &map_image_params)?;
     }
 
     let output_map_file = File::create(&config.map_path)?;

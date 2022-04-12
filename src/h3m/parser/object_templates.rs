@@ -97,9 +97,14 @@ pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
 
     let default_object_templates = [read_object_template(input)?, read_object_template(input)?];
 
+    let mut v = Vec::new();
+
     for _ in 0..(templates_count - DEFAULT_OBJECT_TEMPLATES_COUNT) {
-        read_object_template(input)?;
+        let object_template = read_object_template(input)?;
+        v.push(object_template)
     }
+
+    println!("{:?}", v);
 
     Ok(default_object_templates)
 }
