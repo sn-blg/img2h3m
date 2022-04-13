@@ -79,6 +79,13 @@ pub fn write_object_templates<W: Write>(
 const DEFAULT_OBJECT_TEMPLATES_COUNT: usize = 2;
 pub type DefaultObjectTemplates = [H3mObjectTemplate; DEFAULT_OBJECT_TEMPLATES_COUNT];
 
+pub fn is_valid_object_template(object_templates: &H3mObjectTemplate) -> bool {
+    match (object_templates.class, object_templates.subclass) {
+        (207, 0) => false,
+        _ => true,
+    }
+}
+
 pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
     input: &mut RS,
 ) -> H3mResult<DefaultObjectTemplates> {
@@ -101,7 +108,9 @@ pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
 
     for _ in 0..(templates_count - DEFAULT_OBJECT_TEMPLATES_COUNT) {
         let object_template = read_object_template(input)?;
-        v.push(object_template)
+        if is_valid_object_template(&object_template) {
+            v.push(object_template);
+        }
     }
 
     println!("{:?}", v);
