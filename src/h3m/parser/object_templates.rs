@@ -81,7 +81,9 @@ pub type DefaultObjectTemplates = [H3mObjectTemplate; DEFAULT_OBJECT_TEMPLATES_C
 
 pub fn is_valid_object_template(object_templates: &H3mObjectTemplate) -> bool {
     match (object_templates.class, object_templates.subclass) {
+        (206, 0) => false,
         (207, 0) => false,
+        (208, 0) => false,
         _ => true,
     }
 }
