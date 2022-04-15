@@ -84,6 +84,8 @@ pub fn is_valid_object_template(object_templates: &H3mObjectTemplate) -> bool {
         (206, 0) => false,
         (207, 0) => false,
         (208, 0) => false,
+        (209, 0) => false,
+        (210, 0) => false,
         (211, 0) => false,
         _ => true,
     }
