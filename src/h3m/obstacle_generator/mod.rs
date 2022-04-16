@@ -11,6 +11,7 @@ mod map_area;
 mod obstacle_template;
 mod obstacle_template_list;
 mod template_index_set;
+mod template_class;
 
 struct ObjectsData {
     templates: Vec<H3mObjectTemplate>,
