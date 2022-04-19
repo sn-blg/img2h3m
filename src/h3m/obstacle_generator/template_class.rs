@@ -15,6 +15,9 @@ pub enum TemplateClass {
     Palms, // !
     SandPit,
     YuccaTrees, //
+    DeadVegetation,
+    IceBlock,
+    SnowHills,
 }
 
 impl TemplateClass {
@@ -35,6 +38,9 @@ impl TemplateClass {
             (140, 2) => Some(TemplateClass::Palms),
             (149, 0) => Some(TemplateClass::SandPit),
             (204, 0) | (160, 0) => Some(TemplateClass::YuccaTrees),
+            (119, 0) => Some(TemplateClass::DeadVegetation),
+            (140, 3) => Some(TemplateClass::IceBlock),
+            (140, 5) => Some(TemplateClass::SnowHills),
             _ => None,
         }
     }
