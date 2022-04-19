@@ -1,5 +1,3 @@
-
-
 #[derive(Clone, Copy, PartialEq)]
 pub enum TemplateClass {
     OakTrees,
@@ -11,6 +9,12 @@ pub enum TemplateClass {
     Mountain,
     Rock,
     Stump,
+    Cactus,
+    SandDune,
+    BarchanDunes,
+    Palms, // !
+    SandPit,
+    YuccaTrees, //
 }
 
 impl TemplateClass {
@@ -25,6 +29,12 @@ impl TemplateClass {
             (134, 0) => Some(TemplateClass::Mountain),
             (147, 0) => Some(TemplateClass::Rock),
             (153, 0) => Some(TemplateClass::Stump),
+            (116, 0) => Some(TemplateClass::Cactus),
+            (148, 0) => Some(TemplateClass::SandDune),
+            (140, 6) => Some(TemplateClass::BarchanDunes),
+            (140, 2) => Some(TemplateClass::Palms),
+            (149, 0) => Some(TemplateClass::SandPit),
+            (204, 0) | (160, 0) => Some(TemplateClass::YuccaTrees),
             _ => None,
         }
     }

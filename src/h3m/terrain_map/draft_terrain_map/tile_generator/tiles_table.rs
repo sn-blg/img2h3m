@@ -1180,7 +1180,7 @@ impl TilesTable {
                 &old_common_ground_table,
             ),
             (
-                Terrain::Highland,
+                Terrain::Highlands,
                 &new_common_ground_table,
             ),
             (
