@@ -18,6 +18,8 @@ pub enum TemplateClass {
     DeadVegetation,
     IceBlock,
     SnowHills,
+    LavaLake,
+    Volcano,
 }
 
 impl TemplateClass {
@@ -41,6 +43,8 @@ impl TemplateClass {
             (119, 0) => Some(TemplateClass::DeadVegetation),
             (140, 3) => Some(TemplateClass::IceBlock),
             (140, 5) => Some(TemplateClass::SnowHills),
+            (128, 0) => Some(TemplateClass::LavaLake),
+            (158, 0) => Some(TemplateClass::Volcano),
             _ => None,
         }
     }
