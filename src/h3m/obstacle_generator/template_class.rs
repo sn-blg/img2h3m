@@ -20,6 +20,11 @@ pub enum TemplateClass {
     SnowHills,
     LavaLake,
     Volcano,
+    Waterfalls,
+    Spruces,
+    LimestoneLake,
+    TarPit,
+    Reef,
 }
 
 impl TemplateClass {
@@ -45,6 +50,11 @@ impl TemplateClass {
             (140, 5) => Some(TemplateClass::SnowHills),
             (128, 0) => Some(TemplateClass::LavaLake),
             (158, 0) => Some(TemplateClass::Volcano),
+            (139, 17) => Some(TemplateClass::Waterfalls),
+            (140, 7) => Some(TemplateClass::Spruces),
+            (140, 8) => Some(TemplateClass::LimestoneLake),
+            (154, 0) => Some(TemplateClass::TarPit),
+            (161, 0) => Some(TemplateClass::Reef),
             _ => None,
         }
     }
