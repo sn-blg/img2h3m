@@ -1,3 +1,4 @@
+use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
@@ -22,6 +23,14 @@ pub struct ObstacleTemplate {
     index: u32,
     terrain_group_mask: u16,
     frequency: usize,
+    template_class: TemplateClass,
+}
+
+fn template_class(h3m_template: &H3mObjectTemplate) -> TemplateClass {
+    TemplateClass::from_code(h3m_template.class, h3m_template.subclass).expect(&format!(
+        "Сouldn't define a class for the template '{:?}'",
+        h3m_template
+    ))
 }
 
 impl ObstacleTemplate {
@@ -29,12 +38,14 @@ impl ObstacleTemplate {
         let mask = h3m_template.shape_mask;
         let terrain_group_mask = ObstacleTemplate::calc_terrain_group_mask(&h3m_template);
         let frequency = ObstacleTemplate::calc_frequency(&h3m_template);
+        let template_class = template_class(&h3m_template);
         ObstacleTemplate {
             h3m_template,
             shape: make_shape(&mask),
             index: 0,
             terrain_group_mask,
             frequency,
+            template_class,
         }
     }
 
