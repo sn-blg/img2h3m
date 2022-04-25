@@ -10,7 +10,7 @@ mod common;
 mod map_area;
 mod obstacle_template;
 mod obstacle_template_list;
-mod template_class;
+pub mod template_class;
 mod template_index_set;
 
 struct ObjectsData {
