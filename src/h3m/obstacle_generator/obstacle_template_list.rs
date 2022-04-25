@@ -5398,6 +5398,28 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
+        H3mObjectTemplate {
+            filename: "avlmtdr6.def",
+            shape_mask: [255, 255, 255, 255, 63, 159],
+            visit_mask: [0, 0, 0, 0, 0, 0],
+            surface_type_mask: 3583,
+            surface_editor_group_mask: 1,
+            class: 134,
+            subclass: 0,
+            group: 0,
+            is_overlay: false,
+        },
+        H3mObjectTemplate {
+            filename: "avlmtdr4.def",
+            shape_mask: [255, 255, 255, 255, 31, 159],
+            visit_mask: [0, 0, 0, 0, 0, 0],
+            surface_type_mask: 3583,
+            surface_editor_group_mask: 1,
+            class: 134,
+            subclass: 0,
+            group: 0,
+            is_overlay: false,
+        },
     ]
     .into_iter()
     .map(|t| parser::H3mObjectTemplate {
