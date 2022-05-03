@@ -23,52 +23,43 @@ pub struct ObstacleTemplate {
     index: u32,
     terrain_group_mask: u16,
     frequency: usize,
-    template_class: TemplateClass,
 }
 
 fn template_class(h3m_template: &H3mObjectTemplate) -> TemplateClass {
-    TemplateClass::from_code(h3m_template.class, h3m_template.subclass).expect(&format!(
-        "Сouldn't define a class for the template '{:?}'",
-        h3m_template
-    ))
+    TemplateClass::from_code(h3m_template.class, h3m_template.subclass).unwrap_or_else(|| {
+        panic!(
+            "Сouldn't define a class for the template '{:?}'",
+            h3m_template
+        )
+    })
 }
 
 impl ObstacleTemplate {
     pub fn new(h3m_template: H3mObjectTemplate) -> ObstacleTemplate {
         let mask = h3m_template.shape_mask;
-        let terrain_group_mask = ObstacleTemplate::calc_terrain_group_mask(&h3m_template);
-        let frequency = ObstacleTemplate::calc_frequency(&h3m_template);
         let template_class = template_class(&h3m_template);
+        let terrain_group_mask =
+            ObstacleTemplate::fix_terrain_group_mask(template_class, &h3m_template);
         ObstacleTemplate {
             h3m_template,
             shape: make_shape(&mask),
             index: 0,
             terrain_group_mask,
-            frequency,
-            template_class,
+            frequency: 100,
         }
     }
 
-    fn calc_terrain_group_mask(h3m_template: &H3mObjectTemplate) -> u16 {
+    fn fix_terrain_group_mask(
+        template_class: TemplateClass,
+        h3m_template: &H3mObjectTemplate,
+    ) -> u16 {
         let mut terrain_group_mask = h3m_template.surface_editor_group_mask;
 
-        if is_palm_tree(h3m_template) {
+        if template_class == TemplateClass::Palms {
             terrain_group_mask &= !Terrain::Grass.group();
         }
 
         terrain_group_mask
-    }
-
-    fn calc_frequency(h3m_template: &H3mObjectTemplate) -> usize {
-        if is_lake(h3m_template) || is_crater(h3m_template) || is_uniq_volcano(h3m_template) {
-            10
-        } else if is_ice_block(h3m_template) {
-            5
-        } else if is_uniq_mountain(h3m_template) {
-            1
-        } else {
-            100
-        }
     }
 
     pub fn h3m_template(&self) -> &H3mObjectTemplate {
@@ -95,38 +86,4 @@ impl ObstacleTemplate {
     pub fn frequency(&self) -> usize {
         self.frequency
     }
-}
-
-fn is_palm_tree(h3m_template: &H3mObjectTemplate) -> bool {
-    h3m_template.class == 140 && h3m_template.subclass == 2
-}
-
-fn is_lake(h3m_template: &H3mObjectTemplate) -> bool {
-    if h3m_template.subclass == 0 {
-        h3m_template.class == 177
-            || h3m_template.class == 128
-            || h3m_template.class == 154
-            || h3m_template.class == 126
-            || h3m_template.class == 121
-    } else if h3m_template.subclass == 8 {
-        h3m_template.class == 140
-    } else {
-        false
-    }
-}
-
-fn is_ice_block(h3m_template: &H3mObjectTemplate) -> bool {
-    h3m_template.class == 140 && h3m_template.subclass == 3
-}
-
-fn is_crater(h3m_template: &H3mObjectTemplate) -> bool {
-    h3m_template.class == 118 && h3m_template.subclass == 0
-}
-
-fn is_uniq_mountain(h3m_template: &H3mObjectTemplate) -> bool {
-    h3m_template.filename == "AVLMTWL7.def" || h3m_template.filename == "AVLrws02.def"
-}
-
-fn is_uniq_volcano(h3m_template: &H3mObjectTemplate) -> bool {
-    h3m_template.filename == "AVLvol20.def" || h3m_template.filename == "AVLvol40.def"
 }

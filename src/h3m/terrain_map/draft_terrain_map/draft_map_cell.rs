@@ -23,11 +23,13 @@ impl DraftMapCell {
         MapCell::new(
             self.surface,
             self.tile
-                .expect(&format!(
-                    "Invalid tile at row: {}, column: {}.",
-                    self.position.row(),
-                    self.position.column()
-                ))
+                .unwrap_or_else(|| {
+                    panic!(
+                        "Invalid tile at row: {}, column: {}.",
+                        self.position.row(),
+                        self.position.column()
+                    )
+                })
                 .to_tile(),
         )
     }
