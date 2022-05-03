@@ -2,12 +2,13 @@ use super::obstacle_template::ObstacleTemplate;
 use crate::common::position::generic::Position;
 use crate::common::position::DeltaPos;
 use crate::h3m::result::*;
-use crate::h3m::terrain_map::TerrainMap;
+use crate::h3m::terrain_map::{TerrainMap, TerrainVisibleType, Tile};
 use std::cmp::min;
 
 #[derive(Clone, Copy)]
 struct AreaCell {
     position: Position<u8>,
+    tile: Option<Tile>,
     terrain_group: u16, // terrain editor group, 0 means no obstacles to place
 }
 
@@ -15,6 +16,7 @@ impl AreaCell {
     fn new(row: u8, column: u8) -> AreaCell {
         AreaCell {
             position: Position::new(row, column),
+            tile: None,
             terrain_group: 0,
         }
     }
@@ -41,6 +43,7 @@ impl MapArea {
                 let neighbour_index = neighbour_position.index(self.width);
                 let neighbour = &self.cells[neighbour_index];
                 obstacle.is_valid_terrain(neighbour.terrain_group)
+                    && obstacle.is_valid_tile(&neighbour.tile)
             } else {
                 false
             }
@@ -96,7 +99,15 @@ pub fn make_map_areas(
         let mut area_cell = AreaCell::new(row.try_into()?, column.try_into()?);
         if let Some(map_cell) = map_cell {
             if map_cell.surface().obstacle {
-                area_cell.terrain_group = map_cell.surface().terrain.group();
+                let tile = map_cell.tile();
+
+                let terrain = match tile.terrain_visible_type() {
+                    TerrainVisibleType::Diff(terrain) => terrain,
+                    _ => map_cell.surface().terrain,
+                };
+
+                area_cell.terrain_group = terrain.group();
+                area_cell.tile = Some(*tile);
             }
         }
 

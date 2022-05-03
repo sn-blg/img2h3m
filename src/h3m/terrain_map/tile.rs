@@ -30,7 +30,7 @@ impl Tile {
         }
     }
 
-    pub fn _terrain_visible_type(&self) -> TerrainVisibleType {
+    pub fn terrain_visible_type(&self) -> TerrainVisibleType {
         self.terrain_visible_type
     }
 
