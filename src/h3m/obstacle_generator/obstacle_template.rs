@@ -42,12 +42,14 @@ impl ObstacleTemplate {
         let template_class = template_class(&h3m_template);
         let terrain_group_mask = calc_terrain_group_mask(template_class, &h3m_template);
         let may_located_on_mixed_tiles = may_located_on_mixed_tiles(template_class, &h3m_template);
+        let shape = make_shape(&mask);
+        let frequency = std::cmp::min(shape.len(), 10);
         ObstacleTemplate {
             h3m_template,
-            shape: make_shape(&mask),
+            shape,
             index: 0,
             terrain_group_mask,
-            frequency: 100,
+            frequency,
             may_located_on_mixed_tiles,
         }
     }
@@ -101,11 +103,20 @@ fn may_located_on_mixed_tiles(
     template_class: TemplateClass,
     h3m_template: &H3mObjectTemplate,
 ) -> bool {
+    let filename = &h3m_template.filename[..];
+
     match template_class {
         TemplateClass::OakTrees
         | TemplateClass::PineTrees
         | TemplateClass::Trees
+        | TemplateClass::Spruces
+        | TemplateClass::Cactus
         | TemplateClass::DeadVegetation => true,
+
+        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"),
+
+        TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
+
         _ => false,
     }
 }
