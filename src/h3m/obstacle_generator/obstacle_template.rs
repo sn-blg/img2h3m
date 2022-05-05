@@ -108,14 +108,37 @@ fn may_located_on_mixed_tiles(
     match template_class {
         TemplateClass::OakTrees
         | TemplateClass::PineTrees
-        | TemplateClass::Trees
         | TemplateClass::Spruces
         | TemplateClass::Cactus
         | TemplateClass::DeadVegetation => true,
 
-        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"),
-
         TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
+        TemplateClass::Trees => {
+            !matches!(filename, "AVLwlw20.def" | "AVLwlw10.def" | "AVLwlw30.def")
+        }
+        TemplateClass::Palms => !matches!(
+            filename,
+            "AVLplm20.def"
+                | "AVLplm30.def"
+                | "AVLplm50.def"
+                | "AVLswmp0.def"
+                | "AVLswmp1.def"
+                | "AVLswmp2.def"
+                | "AVLswmp3.def"
+                | "AVLswmp4.def"
+                | "AVLswmp5.def"
+                | "AVLswmp6.def"
+                | "AVLswmp7.def"
+                | "avlswtr1.def"
+                | "avlswtr2.def"
+                | "avlswtr4.def"
+                | "avlswn02.def"
+                | "avlswtr3.def"
+                | "avlswtr5.def"
+                | "avlswtr8.def"
+        ),
+
+        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"),
 
         _ => false,
     }
