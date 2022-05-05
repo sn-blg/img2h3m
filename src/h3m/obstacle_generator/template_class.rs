@@ -12,9 +12,9 @@ pub enum TemplateClass {
     Cactus,
     SandDune,
     BarchanDunes,
-    Palms, // !
+    Palms,
     SandPit,
-    YuccaTrees, //
+    YuccaTrees,
     DeadVegetation,
     IceBlock,
     FrozenLake,

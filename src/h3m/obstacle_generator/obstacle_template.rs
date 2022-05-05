@@ -110,9 +110,13 @@ fn may_located_on_mixed_tiles(
         | TemplateClass::PineTrees
         | TemplateClass::Spruces
         | TemplateClass::Cactus
-        | TemplateClass::DeadVegetation => true,
+        | TemplateClass::Reef => true,
 
         TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
+        TemplateClass::DeadVegetation => !matches!(
+            filename,
+            "AVLdt1s0.def" | "AVLdt2s0.def" | "AVLdt3s0.def" | "swddtree.def" | "AVLswp60.def"
+        ),
         TemplateClass::Trees => {
             !matches!(filename, "AVLwlw20.def" | "AVLwlw10.def" | "AVLwlw30.def")
         }
@@ -138,7 +142,8 @@ fn may_located_on_mixed_tiles(
                 | "avlswtr8.def"
         ),
 
-        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"),
+        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"), // ????
+        TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
 
         _ => false,
     }
