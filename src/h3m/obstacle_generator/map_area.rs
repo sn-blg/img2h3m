@@ -103,6 +103,7 @@ pub fn make_map_areas(
 
                 let terrain = match tile.terrain_visible_type() {
                     TerrainVisibleType::Diff(terrain) => terrain,
+                    TerrainVisibleType::DiffMixed(terrain) => terrain,
                     _ => map_cell.surface().terrain,
                 };
 

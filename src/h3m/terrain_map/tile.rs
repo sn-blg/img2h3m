@@ -5,6 +5,7 @@ pub enum TerrainVisibleType {
     Same,
     Diff(Terrain),
     Mixed,
+    DiffMixed(Terrain),
 }
 
 #[derive(Clone, Copy, PartialEq)]

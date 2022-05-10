@@ -73,7 +73,10 @@ impl ObstacleTemplate {
 
     pub fn is_valid_tile(&self, tile: &Option<Tile>) -> bool {
         if let Some(tile) = tile {
-            if tile.terrain_visible_type() == TerrainVisibleType::Mixed {
+            if matches!(
+                tile.terrain_visible_type(),
+                TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
+            ) {
                 return self.may_located_on_mixed_tiles;
             }
         }

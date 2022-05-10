@@ -569,7 +569,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(75) } else { TileCodesSet::from_code(120) },
-                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::DiffMixed(Terrain::Dirt), TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Any,            Other(Sandy),   Any,
@@ -595,7 +595,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::from_code(76) } else { TileCodesSet::from_code(121) },
-                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, ""),
+                    (TerrainVisibleType::DiffMixed(Terrain::Sand), TileSymmetry::MainDiagonal, TileComposition::Main, ""),
                 ),
                 (
                     vec![[  Eq,             Eq,             Other(Sandy),
