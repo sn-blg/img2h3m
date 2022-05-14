@@ -1,6 +1,7 @@
 use super::tile::Tile;
 use crate::h3m::Surface;
 
+#[derive(Clone, Copy)]
 pub struct MapCell {
     surface: Surface,
     tile: Tile,
