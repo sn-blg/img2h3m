@@ -112,9 +112,19 @@ fn may_located_on_mixed_tiles(
         TemplateClass::OakTrees
         | TemplateClass::PineTrees
         | TemplateClass::Spruces
-        | TemplateClass::Cactus
-        | TemplateClass::Reef => true,
+        | TemplateClass::Cactus => true,
 
+        TemplateClass::Reef => !matches!(
+            filename,
+            "AVLref10.def"
+                | "avlrfx02.def"
+                | "AVLref60.def"
+                | "avlrfx05.def"
+                | "ZReef3.def"
+                | "ZReef4.def"
+                | "ZReef5.def"
+                | "avlrfx04.def"
+        ),
         TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
         TemplateClass::DeadVegetation => !matches!(
             filename,
