@@ -43,7 +43,7 @@ impl MapArea {
                 let neighbour_index = neighbour_position.index(self.width);
                 let neighbour = &self.cells[neighbour_index];
                 obstacle.is_valid_terrain(neighbour.terrain_group)
-                    && obstacle.is_valid_tile(&neighbour.tile)
+                    && obstacle.is_valid_tile(&neighbour.tile.unwrap())
             } else {
                 false
             }

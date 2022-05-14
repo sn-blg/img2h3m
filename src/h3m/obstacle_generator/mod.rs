@@ -82,8 +82,8 @@ impl ObstacleGenerator {
     ) -> H3mResult<()> {
         let obstacle = self.obstacle_template_list.template_mut(template_index);
 
-        if obstacle.index() == 0 {
-            obstacle.set_index_usize(self.objects_data.templates.len())?;
+        if obstacle.h3m_template_index() == 0 {
+            obstacle.set_h3m_template_index(self.objects_data.templates.len())?;
             self.objects_data
                 .templates
                 .push(obstacle.h3m_template().clone());
@@ -96,7 +96,7 @@ impl ObstacleGenerator {
                 position.column(),
                 position.row(),
                 underground,
-                obstacle.index(),
+                obstacle.h3m_template_index(),
             ));
 
         map_area.add_obstacle(position_index, obstacle);

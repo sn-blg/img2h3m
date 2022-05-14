@@ -20,8 +20,8 @@ fn make_shape(mask: &Mask) -> Vec<DeltaPos> {
 
 pub struct ObstacleTemplate {
     h3m_template: H3mObjectTemplate,
+    h3m_template_index: u32,
     shape: Vec<DeltaPos>,
-    index: u32,
     terrain_group_mask: u16,
     frequency: usize,
     may_located_on_mixed_tiles: bool,
@@ -47,7 +47,7 @@ impl ObstacleTemplate {
         ObstacleTemplate {
             h3m_template,
             shape,
-            index: 0,
+            h3m_template_index: 0,
             terrain_group_mask,
             frequency,
             may_located_on_mixed_tiles,
@@ -58,12 +58,12 @@ impl ObstacleTemplate {
         &self.h3m_template
     }
 
-    pub fn index(&self) -> u32 {
-        self.index
+    pub fn h3m_template_index(&self) -> u32 {
+        self.h3m_template_index
     }
 
-    pub fn set_index_usize(&mut self, index: usize) -> H3mResult<()> {
-        self.index = index.try_into()?;
+    pub fn set_h3m_template_index(&mut self, index: usize) -> H3mResult<()> {
+        self.h3m_template_index = index.try_into()?;
         Ok(())
     }
 
@@ -71,16 +71,15 @@ impl ObstacleTemplate {
         (terrain_group & self.terrain_group_mask) != 0
     }
 
-    pub fn is_valid_tile(&self, tile: &Option<Tile>) -> bool {
-        if let Some(tile) = tile {
-            if matches!(
-                tile.terrain_visible_type(),
-                TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
-            ) {
-                return self.may_located_on_mixed_tiles;
-            }
+    pub fn is_valid_tile(&self, tile: &Tile) -> bool {
+        if matches!(
+            tile.terrain_visible_type(),
+            TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
+        ) {
+            self.may_located_on_mixed_tiles
+        } else {
+            true
         }
-        true
     }
 
     pub fn shape(&self) -> &[DeltaPos] {
