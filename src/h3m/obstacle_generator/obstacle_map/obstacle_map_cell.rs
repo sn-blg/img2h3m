@@ -28,10 +28,10 @@ fn calc_terrain_group(map_cell: &Option<MapCell>) -> u16 {
 }
 
 impl ObstacleMapCell {
-    pub fn new(position: Position<u8>, map_cell: Option<MapCell>) -> ObstacleMapCell {
+    pub fn new(row: u8, column: u8, map_cell: Option<MapCell>) -> ObstacleMapCell {
         let terrain_group = calc_terrain_group(&map_cell);
         ObstacleMapCell {
-            position,
+            position: Position::new(row, column),
             map_cell,
             template_index: None,
             terrain_group,
