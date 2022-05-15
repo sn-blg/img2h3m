@@ -1,7 +1,7 @@
 use crate::h3m::parser::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
-use map_area::{make_map_areas, MapArea};
+use obstacle_map::ObstacleMap;
 use obstacle_template_list::ObstacleTemplateList;
 use rand::rngs::ThreadRng;
 use template_index_set::TemplateIndexSet;
@@ -47,21 +47,23 @@ impl ObstacleGenerator {
     }
 
     pub fn generate(&mut self, terrain_map: &TerrainMap) -> H3mResult<()> {
-        let map_areas = make_map_areas(terrain_map, terrain_map.size(), 36)?;
-        for area in map_areas {
-            self.generate_in_area(terrain_map.underground(), area)?;
-        }
+        let mut obstacle_map = ObstacleMap::new(terrain_map)?;
+        self.generate_in_area(terrain_map.underground(), &mut obstacle_map)?;
         Ok(())
     }
 
-    fn generate_in_area(&mut self, underground: bool, mut map_area: MapArea) -> H3mResult<()> {
+    fn generate_in_area(
+        &mut self,
+        underground: bool,
+        obstacle_map: &mut ObstacleMap,
+    ) -> H3mResult<()> {
         let mut template_index_set = TemplateIndexSet::new(&self.obstacle_template_list);
         while !template_index_set.is_empty() {
             let template_index = template_index_set.random_index(&mut self.rng);
-            let position_index = self.try_position_obstacle(template_index, &map_area);
+            let position_index = self.try_position_obstacle(template_index, obstacle_map);
             match position_index {
                 Some(position_index) => {
-                    self.add_obstacle(template_index, position_index, underground, &mut map_area)?
+                    self.add_obstacle(template_index, position_index, underground, obstacle_map)?
                 }
                 None => template_index_set.remove_index(template_index),
             }
@@ -69,9 +71,13 @@ impl ObstacleGenerator {
         Ok(())
     }
 
-    fn try_position_obstacle(&self, template_index: usize, map_area: &MapArea) -> Option<usize> {
+    fn try_position_obstacle(
+        &self,
+        template_index: usize,
+        obstacle_map: &ObstacleMap,
+    ) -> Option<usize> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        map_area.try_position_obstacle(obstacle)
+        obstacle_map.try_position_obstacle(obstacle)
     }
 
     fn add_obstacle(
@@ -79,7 +85,7 @@ impl ObstacleGenerator {
         template_index: usize,
         position_index: usize,
         underground: bool,
-        map_area: &mut MapArea,
+        obstacle_map: &mut ObstacleMap,
     ) -> H3mResult<()> {
         let obstacle = self.obstacle_template_list.template_mut(template_index);
 
@@ -90,7 +96,7 @@ impl ObstacleGenerator {
                 .push(obstacle.h3m_template().clone());
         }
 
-        let position = map_area.position(position_index);
+        let position = obstacle_map.position(position_index);
         self.objects_data
             .objects
             .push(H3mObject::without_properties(
@@ -100,7 +106,7 @@ impl ObstacleGenerator {
                 obstacle.h3m_template_index(),
             ));
 
-        map_area.add_obstacle(position_index, obstacle);
+        obstacle_map.add_obstacle(position_index, template_index, obstacle);
 
         Ok(())
     }

@@ -57,7 +57,7 @@ impl ObstacleMap {
                 let neighbour_index = neighbour_position.index(self.size);
                 let neighbour = &self.cells[neighbour_index];
                 obstacle.is_valid_terrain(neighbour.terrain_group())
-                    && obstacle.is_valid_tile(&neighbour.map_cell().unwrap().tile())
+                    && obstacle.is_valid_tile(neighbour.map_cell().unwrap().tile())
             } else {
                 false
             }
