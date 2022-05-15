@@ -1,3 +1,5 @@
+use super::obstacle_template::ObstacleTemplate;
+use crate::common::position::generic::Position;
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::{MapCell, TerrainMap};
 use obstacle_map_cell::ObstacleMapCell;
@@ -47,5 +49,46 @@ impl ObstacleMap {
         };
 
         Ok(ObstacleMap { size, cells })
+    }
+
+    pub fn try_position_obstacle(&self, obstacle: &ObstacleTemplate) -> Option<usize> {
+        let is_valid_neighbour = |neighbour_position: Option<Position<usize>>| {
+            if let Some(neighbour_position) = neighbour_position {
+                let neighbour_index = neighbour_position.index(self.size);
+                let neighbour = &self.cells[neighbour_index];
+                obstacle.is_valid_terrain(neighbour.terrain_group())
+                    && obstacle.is_valid_tile(&neighbour.map_cell().unwrap().tile())
+            } else {
+                false
+            }
+        };
+
+        'cell_traversal: for index in 0..self.cells.len() {
+            let position = Position::from_index(self.size, index);
+            for delta in obstacle.shape() {
+                if !is_valid_neighbour(position.checked_sub(delta)) {
+                    continue 'cell_traversal;
+                }
+            }
+            return Some(index);
+        }
+        None
+    }
+
+    pub fn add_obstacle(
+        &mut self,
+        index: usize,
+        template_index: usize,
+        obstacle: &ObstacleTemplate,
+    ) {
+        let position = Position::from_index(self.size, index);
+        for delta in obstacle.shape() {
+            let index = position.sub(delta).index(self.size);
+            self.cells[index].set_template(template_index);
+        }
+    }
+
+    pub fn position(&self, index: usize) -> Position<u8> {
+        self.cells[index].position()
     }
 }
