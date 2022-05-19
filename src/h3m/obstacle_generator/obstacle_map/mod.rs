@@ -2,8 +2,10 @@ use super::obstacle_template::ObstacleTemplate;
 use crate::common::position::generic::Position;
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::{MapCell, TerrainMap};
+pub use obstacle_map_area::*;
 use obstacle_map_cell::ObstacleMapCell;
 
+mod obstacle_map_area;
 mod obstacle_map_cell;
 
 impl ObstacleMapCell {
@@ -51,7 +53,11 @@ impl ObstacleMap {
         Ok(ObstacleMap { size, cells })
     }
 
-    pub fn try_position_obstacle(&self, obstacle: &ObstacleTemplate) -> Option<usize> {
+    pub fn try_position_obstacle(
+        &self,
+        area: &ObstacleMapArea,
+        obstacle: &ObstacleTemplate,
+    ) -> Option<usize> {
         let is_valid_neighbour = |neighbour_position: Option<Position<usize>>| {
             if let Some(neighbour_position) = neighbour_position {
                 let neighbour_index = neighbour_position.index(self.size);
@@ -63,7 +69,7 @@ impl ObstacleMap {
             }
         };
 
-        'cell_traversal: for index in 0..self.cells.len() {
+        'cell_traversal: for &index in area.indexes() {
             let position = Position::from_index(self.size, index);
             for delta in obstacle.shape() {
                 if !is_valid_neighbour(position.checked_sub(delta)) {

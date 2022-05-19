@@ -1,7 +1,7 @@
 use crate::h3m::parser::{DefaultObjectTemplates, H3mObject, H3mObjectTemplate};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
-use obstacle_map::ObstacleMap;
+use obstacle_map::{ObstacleMap, ObstacleMapArea};
 use obstacle_template_list::ObstacleTemplateList;
 use rand::rngs::ThreadRng;
 use template_index_set::TemplateIndexSet;
@@ -48,19 +48,24 @@ impl ObstacleGenerator {
 
     pub fn generate(&mut self, terrain_map: &TerrainMap) -> H3mResult<()> {
         let mut obstacle_map = ObstacleMap::new(terrain_map)?;
-        self.generate_in_area(terrain_map.underground(), &mut obstacle_map)?;
+        let map_size = terrain_map.size();
+        let areas = obstacle_map::make_areas(map_size, map_size, 36);
+        for area in areas.iter().rev() {
+            self.generate_in_area(terrain_map.underground(), area, &mut obstacle_map)?;
+        }
         Ok(())
     }
 
     fn generate_in_area(
         &mut self,
         underground: bool,
+        area: &ObstacleMapArea,
         obstacle_map: &mut ObstacleMap,
     ) -> H3mResult<()> {
         let mut template_index_set = TemplateIndexSet::new(&self.obstacle_template_list);
         while !template_index_set.is_empty() {
             let template_index = template_index_set.random_index(&mut self.rng);
-            let position_index = self.try_position_obstacle(template_index, obstacle_map);
+            let position_index = self.try_position_obstacle(template_index, area, obstacle_map);
             match position_index {
                 Some(position_index) => {
                     self.add_obstacle(template_index, position_index, underground, obstacle_map)?
@@ -74,10 +79,11 @@ impl ObstacleGenerator {
     fn try_position_obstacle(
         &self,
         template_index: usize,
+        area: &ObstacleMapArea,
         obstacle_map: &ObstacleMap,
     ) -> Option<usize> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        obstacle_map.try_position_obstacle(obstacle)
+        obstacle_map.try_position_obstacle(area, obstacle)
     }
 
     fn add_obstacle(
