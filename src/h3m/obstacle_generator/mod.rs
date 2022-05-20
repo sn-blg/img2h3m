@@ -7,7 +7,6 @@ use rand::rngs::ThreadRng;
 use template_index_set::TemplateIndexSet;
 
 mod common;
-mod map_area;
 mod obstacle_map;
 mod obstacle_template;
 mod obstacle_template_list;

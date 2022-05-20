@@ -55,7 +55,7 @@ impl ObstacleMapCell {
         &self.map_cell
     }
 
-    pub fn template_index(&self) -> Option<usize> {
+    pub fn _template_index(&self) -> Option<usize> {
         self.template_index
     }
 
