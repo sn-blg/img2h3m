@@ -103,4 +103,13 @@ impl ObstacleMap {
             .iter()
             .fold(0, |result, cell| result | cell.terrain_group())
     }
+
+    pub fn first_position_to_place_obstacle(&self) -> Option<Position<usize>> {
+        for (index, cell) in self.cells.iter().enumerate() {
+            if cell.terrain_group() != 0 {
+                return Some(Position::from_index(self.size, index));
+            }
+        }
+        None
+    }
 }

@@ -64,6 +64,15 @@ impl ObstacleGenerator {
                 &mut obstacle_map,
             )?;
         }
+
+        if let Some(position) = obstacle_map.first_position_to_place_obstacle() {
+            return Err(H3mError::Internal(InternalError::new(format!(
+                "failed to place obstacle in position (row: {}, column: {}).",
+                position.row(),
+                position.column()
+            ))));
+        }
+
         Ok(())
     }
 
