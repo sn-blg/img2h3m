@@ -2,13 +2,19 @@ use super::obstacle_template_list::ObstacleTemplateList;
 use crate::common::index_multiset::IndexMultiset;
 use rand::rngs::ThreadRng;
 
+#[derive(Clone)]
 pub struct TemplateIndexSet(IndexMultiset<usize>);
 
 impl TemplateIndexSet {
-    pub fn new(obstacle_template_list: &ObstacleTemplateList) -> TemplateIndexSet {
+    pub fn new(
+        generalized_terrain_group: u16,
+        obstacle_template_list: &ObstacleTemplateList,
+    ) -> TemplateIndexSet {
         let mut index_set = IndexMultiset::new();
         for (index, obstacle) in obstacle_template_list.iter().enumerate() {
-            index_set.add_index(index, obstacle.frequency());
+            if obstacle.is_valid_terrain(generalized_terrain_group) {
+                index_set.add_index(index, obstacle.frequency());
+            }
         }
         TemplateIndexSet(index_set)
     }

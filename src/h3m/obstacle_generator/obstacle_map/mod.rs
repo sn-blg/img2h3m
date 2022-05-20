@@ -97,4 +97,10 @@ impl ObstacleMap {
     pub fn position(&self, index: usize) -> Position<u8> {
         self.cells[index].position()
     }
+
+    pub fn generalized_terrain_group(&self) -> u16 {
+        self.cells
+            .iter()
+            .fold(0, |result, cell| result | cell.terrain_group())
+    }
 }
