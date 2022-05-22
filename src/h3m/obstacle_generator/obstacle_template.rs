@@ -25,6 +25,7 @@ pub struct ObstacleTemplate {
     terrain_group_mask: u16,
     frequency: usize,
     may_located_on_mixed_tiles: bool,
+    sparsity: usize, // the minimum square of the distance to the same obstacle
 }
 
 fn template_class(h3m_template: &H3mObjectTemplate) -> TemplateClass {
@@ -44,6 +45,7 @@ impl ObstacleTemplate {
         let may_located_on_mixed_tiles = may_located_on_mixed_tiles(template_class, &h3m_template);
         let shape = make_shape(&mask);
         let frequency = std::cmp::min(shape.len(), 10);
+        let sparsity = sparsity(template_class, &h3m_template);
         ObstacleTemplate {
             h3m_template,
             shape,
@@ -51,6 +53,7 @@ impl ObstacleTemplate {
             terrain_group_mask,
             frequency,
             may_located_on_mixed_tiles,
+            sparsity,
         }
     }
 
@@ -88,6 +91,10 @@ impl ObstacleTemplate {
 
     pub fn frequency(&self) -> usize {
         self.frequency
+    }
+
+    pub fn sparsity(&self) -> usize {
+        self.sparsity
     }
 }
 
@@ -158,5 +165,19 @@ fn may_located_on_mixed_tiles(
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
 
         _ => false,
+    }
+}
+
+fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> usize {
+    let filename = &h3m_template.filename[..];
+
+    match template_class {
+        TemplateClass::Lake
+        | TemplateClass::LavaLake
+        | TemplateClass::LimestoneLake
+        | TemplateClass::TarPit
+        | TemplateClass::FrozenLake => 64,
+
+        _ => 0,
     }
 }
