@@ -72,10 +72,11 @@ impl ObstacleMap {
                     .obstacle_positions
                     .min_distance_square(template_index, position);
 
-                obstacle.sparsity() <= min_distance_square
-            } else {
-                true
+                if let Some(min_distance_square) = min_distance_square {
+                    return obstacle.sparsity() <= min_distance_square;
+                }
             }
+            true
         };
 
         let is_valid_delta = |delta_position: Option<Position<usize>>| {

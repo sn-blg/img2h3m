@@ -178,6 +178,12 @@ fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> 
         | TemplateClass::TarPit
         | TemplateClass::FrozenLake => 64,
 
+        TemplateClass::Volcano => 64,
+
+        TemplateClass::Crater => 64,
+
+        TemplateClass::IceBlock => 64,
+
         _ => 0,
     }
 }
