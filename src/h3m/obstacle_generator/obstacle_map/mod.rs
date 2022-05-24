@@ -4,9 +4,11 @@ use crate::h3m::result::*;
 use crate::h3m::terrain_map::{MapCell, TerrainMap};
 pub use obstacle_map_area::*;
 use obstacle_map_cell::ObstacleMapCell;
+use obstacle_positions::ObstaclePositions;
 
 mod obstacle_map_area;
 mod obstacle_map_cell;
+mod obstacle_positions;
 
 impl ObstacleMapCell {
     fn from_map_cell(
@@ -27,6 +29,7 @@ impl ObstacleMapCell {
 pub struct ObstacleMap {
     size: usize,
     cells: Vec<ObstacleMapCell>,
+    obstacle_positions: ObstaclePositions,
 }
 
 impl ObstacleMap {
@@ -50,20 +53,39 @@ impl ObstacleMap {
             cells
         };
 
-        Ok(ObstacleMap { size, cells })
+        Ok(ObstacleMap {
+            size,
+            cells,
+            obstacle_positions: ObstaclePositions::new(),
+        })
     }
 
     pub fn try_position_obstacle(
         &self,
         area: &ObstacleMapArea,
+        template_index: usize,
         obstacle: &ObstacleTemplate,
     ) -> Option<usize> {
-        let is_valid_neighbour = |neighbour_position: Option<Position<usize>>| {
-            if let Some(neighbour_position) = neighbour_position {
-                let neighbour_index = neighbour_position.index(self.size);
-                let neighbour = &self.cells[neighbour_index];
-                obstacle.is_valid_terrain(neighbour.terrain_group())
-                    && obstacle.is_valid_tile(neighbour.map_cell().unwrap().tile())
+        let is_valid_sparsity = |position| {
+            if obstacle.sparsity() > 0 {
+                let min_distance_square = self
+                    .obstacle_positions
+                    .min_distance_square(template_index, position);
+
+                obstacle.sparsity() <= min_distance_square
+            } else {
+                true
+            }
+        };
+
+        let is_valid_delta = |delta_position: Option<Position<usize>>| {
+            if let Some(delta_position) = delta_position {
+                let delta_position_index = delta_position.index(self.size);
+                let delta_cell = &self.cells[delta_position_index];
+
+                obstacle.is_valid_terrain(delta_cell.terrain_group())
+                    && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile())
+                    && is_valid_sparsity(delta_position)
             } else {
                 false
             }
@@ -72,7 +94,7 @@ impl ObstacleMap {
         'cell_traversal: for &index in area.indexes() {
             let position = Position::from_index(self.size, index);
             for delta in obstacle.shape() {
-                if !is_valid_neighbour(position.checked_sub(delta)) {
+                if !is_valid_delta(position.checked_sub(delta)) {
                     continue 'cell_traversal;
                 }
             }
@@ -83,14 +105,18 @@ impl ObstacleMap {
 
     pub fn add_obstacle(
         &mut self,
-        index: usize,
+        position_index: usize,
         template_index: usize,
         obstacle: &ObstacleTemplate,
     ) {
-        let position = Position::from_index(self.size, index);
+        let position = Position::from_index(self.size, position_index);
         for delta in obstacle.shape() {
-            let index = position.sub(delta).index(self.size);
-            self.cells[index].set_template(template_index);
+            let delta_position = position.sub(delta);
+            let delta_position_index = delta_position.index(self.size);
+            self.cells[delta_position_index].set_template(template_index);
+            if obstacle.sparsity() > 0 {
+                self.obstacle_positions.add(template_index, delta_position);
+            }
         }
     }
 

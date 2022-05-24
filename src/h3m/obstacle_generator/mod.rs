@@ -102,7 +102,7 @@ impl ObstacleGenerator {
         obstacle_map: &ObstacleMap,
     ) -> Option<usize> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        obstacle_map.try_position_obstacle(area, obstacle)
+        obstacle_map.try_position_obstacle(area, template_index, obstacle)
     }
 
     fn add_obstacle(
