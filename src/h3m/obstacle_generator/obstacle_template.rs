@@ -161,7 +161,7 @@ fn may_located_on_mixed_tiles(
                 | "avlswtr8.def"
         ),
 
-        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"), // ????
+        //TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"), // ????
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
 
         _ => false,
@@ -176,13 +176,15 @@ fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> 
         | TemplateClass::LavaLake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 64,
+        | TemplateClass::FrozenLake => 64, // 100
 
         TemplateClass::Volcano => 64,
 
         TemplateClass::Crater => 64,
 
         TemplateClass::IceBlock => 64,
+
+        TemplateClass::Rock => 36,
 
         _ => 0,
     }

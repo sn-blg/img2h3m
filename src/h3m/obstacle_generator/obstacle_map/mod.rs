@@ -6,6 +6,7 @@ pub use obstacle_map_area::*;
 use obstacle_map_cell::ObstacleMapCell;
 use obstacle_positions::ObstaclePositions;
 
+mod areas_layout;
 mod obstacle_map_area;
 mod obstacle_map_cell;
 mod obstacle_positions;
@@ -56,7 +57,7 @@ impl ObstacleMap {
         Ok(ObstacleMap {
             size,
             cells,
-            obstacle_positions: ObstaclePositions::new(),
+            obstacle_positions: ObstaclePositions::new(size),
         })
     }
 
@@ -115,8 +116,11 @@ impl ObstacleMap {
             let delta_position = position.sub(delta);
             let delta_position_index = delta_position.index(self.size);
             self.cells[delta_position_index].set_template(template_index);
-            if obstacle.sparsity() > 0 {
-                self.obstacle_positions.add(template_index, delta_position);
+
+            let sparsity = obstacle.sparsity();
+            if sparsity > 0 {
+                self.obstacle_positions
+                    .add(template_index, sparsity, delta_position);
             }
         }
     }

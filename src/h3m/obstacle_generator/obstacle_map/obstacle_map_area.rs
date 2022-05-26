@@ -1,3 +1,6 @@
+use super::areas_layout::AreasLayout;
+use crate::common::position::Position;
+
 #[derive(Clone)]
 pub struct ObstacleMapArea(Vec<usize>);
 
@@ -12,22 +15,14 @@ impl ObstacleMapArea {
 }
 
 pub fn make_areas(map_size: usize, area_width: usize, area_height: usize) -> Vec<ObstacleMapArea> {
-    let ceil = |a: usize, b: usize| (a as f64 / b as f64).ceil() as usize;
+    let areas_layout = AreasLayout::new(map_size, area_width, area_height);
+    let mut areas = vec![ObstacleMapArea::new(); areas_layout.areas_count()];
 
-    let areas_at_row = ceil(map_size, area_width);
-    let areas_count = areas_at_row * ceil(map_size, area_height);
-
-    let mut areas = vec![ObstacleMapArea::new(); areas_count];
-
-    for map_index in 0..(map_size * map_size) {
-        let row = map_index / map_size;
-        let column = map_index % map_size;
-
-        let area_index = (row / area_height) * areas_at_row + (column / area_width);
-
-        areas[area_index].0.push(map_index);
+    for cell_index in 0..(map_size * map_size) {
+        let cell_position = Position::from_index(map_size, cell_index);
+        let area_index = areas_layout.area_index(cell_position);
+        areas[area_index].0.push(cell_index);
     }
-
     areas
 }
 
