@@ -76,7 +76,7 @@ impl ObstacleMap {
                     && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile())
                     && self
                         .sparsity_validator
-                        .is_valid(template_index, delta_position)
+                        .verify_position(template_index, delta_position)
             } else {
                 false
             }
@@ -106,8 +106,11 @@ impl ObstacleMap {
             let delta_position_index = delta_position.index(self.size);
             self.cells[delta_position_index].set_template(template_index);
 
-            self.sparsity_validator
-                .add(template_index, obstacle.sparsity(), delta_position);
+            self.sparsity_validator.add_position(
+                template_index,
+                obstacle.sparsity(),
+                delta_position,
+            );
         }
     }
 

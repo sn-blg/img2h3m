@@ -6,6 +6,8 @@ pub struct AreasLayout {
     area_height: usize,
 
     areas_at_row: usize,
+    areas_at_column: usize,
+
     areas_count: usize,
 }
 
@@ -14,12 +16,15 @@ impl AreasLayout {
         let ceil_usize = |a: usize, b: usize| (a as f64 / b as f64).ceil() as usize;
 
         let areas_at_row = ceil_usize(map_size, area_width);
-        let areas_count = areas_at_row * ceil_usize(map_size, area_height);
+        let areas_at_column = ceil_usize(map_size, area_height);
+
+        let areas_count = areas_at_row * areas_at_column;
 
         AreasLayout {
             area_width,
             area_height,
             areas_at_row,
+            areas_at_column,
             areas_count,
         }
     }
@@ -30,6 +35,14 @@ impl AreasLayout {
 
     pub fn area_height(&self) -> usize {
         self.area_height
+    }
+
+    pub fn areas_at_row(&self) -> usize {
+        self.areas_at_row
+    }
+
+    pub fn areas_at_column(&self) -> usize {
+        self.areas_at_column
     }
 
     pub fn areas_count(&self) -> usize {
@@ -56,6 +69,14 @@ impl SquareAreasLayout {
     pub fn area_side(&self) -> usize {
         assert!(self.0.area_width() == self.0.area_height());
         self.0.area_width()
+    }
+
+    pub fn areas_at_row(&self) -> usize {
+        self.0.areas_at_row()
+    }
+
+    pub fn areas_at_column(&self) -> usize {
+        self.0.areas_at_column()
     }
 
     pub fn areas_count(&self) -> usize {

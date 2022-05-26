@@ -1,5 +1,5 @@
 use super::areas_layout::SquareAreasLayout;
-use crate::common::position::generic::Position;
+use crate::common::position::generic::{Position, SignedDeltaPos};
 use std::collections::HashMap;
 
 fn delta_square(a: usize, b: usize) -> usize {
@@ -37,7 +37,7 @@ impl Areas {
         }
     }
 
-    fn add(&mut self, position: Position<usize>) {
+    fn add_position(&mut self, position: Position<usize>) {
         let area_index = self.layout.area_index(position);
         self.data[area_index].positions.push(position);
     }
@@ -56,7 +56,12 @@ impl SparsityValidator {
         }
     }
 
-    pub fn add(&mut self, template_index: usize, sparsity: usize, position: Position<usize>) {
+    pub fn add_position(
+        &mut self,
+        template_index: usize,
+        sparsity: usize,
+        position: Position<usize>,
+    ) {
         if sparsity > 0 {
             let areas = self
                 .data
@@ -65,37 +70,61 @@ impl SparsityValidator {
 
             assert!(areas.layout.area_side() == sparsity);
 
-            areas.add(position);
+            areas.add_position(position);
         }
     }
 
-    pub fn is_valid(&self, template_index: usize, position: Position<usize>) -> bool {
+    pub fn verify_position(&self, template_index: usize, position: Position<usize>) -> bool {
         if let Some(areas) = self.data.get(&template_index) {
-            let sparsity = areas.layout.area_side();
-            assert!(sparsity > 0);
+            self.verify_in_areas(position, areas)
+        } else {
+            true
+        }
+    }
 
-            let min_distance_square = self.min_distance_square(template_index, position);
+    fn verify_in_areas(&self, position: Position<usize>, areas: &Areas) -> bool {
+        let sparsity = areas.layout.area_side();
+        assert!(sparsity > 0);
 
-            if let Some(min_distance_square) = min_distance_square {
-                return sparsity <= min_distance_square;
+        let areas_at_row = areas.layout.areas_at_row();
+        let areas_at_column = areas.layout.areas_at_column();
+
+        let central_area_index = areas.layout.area_index(position);
+        let central_area_position = Position::from_index(areas_at_row, central_area_index);
+
+        for (delta_row, delta_column) in [
+            (0, 0),
+            (-1, 0),
+            (0, -1),
+            (0, 1),
+            (1, 0),
+            (-1, -1),
+            (-1, 1),
+            (1, -1),
+            (1, 1),
+        ] {
+            let area_position = central_area_position.checked_apply(
+                areas_at_row,
+                areas_at_column,
+                &SignedDeltaPos::new(delta_row, delta_column),
+            );
+            if let Some(area_position) = area_position {
+                let area_index = area_position.index(areas_at_row);
+                if !self.verify_in_area(sparsity, position, &areas.data[area_index]) {
+                    return false;
+                }
             }
         }
         true
     }
 
-    fn min_distance_square(
-        &self,
-        template_index: usize,
-        position: Position<usize>,
-    ) -> Option<usize> {
-        // todo:
-        None
-        /*
-        self.0
-            .get(&template_index)?
-            .iter()
-            .map(|p| distance_square(p, &position))
-            .min()
-            */
+    fn verify_in_area(&self, sparsity: usize, position: Position<usize>, area: &Area) -> bool {
+        for area_position in area.positions.iter() {
+            let distance_square = distance_square(area_position, &position);
+            if distance_square < sparsity {
+                return false;
+            }
+        }
+        true
     }
 }
