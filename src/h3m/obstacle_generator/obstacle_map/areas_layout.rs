@@ -24,6 +24,14 @@ impl AreasLayout {
         }
     }
 
+    pub fn area_width(&self) -> usize {
+        self.area_width
+    }
+
+    pub fn area_height(&self) -> usize {
+        self.area_height
+    }
+
     pub fn areas_count(&self) -> usize {
         self.areas_count
     }
@@ -34,5 +42,27 @@ impl AreasLayout {
 
         assert!(index < self.areas_count);
         index
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct SquareAreasLayout(AreasLayout);
+
+impl SquareAreasLayout {
+    pub fn new(map_size: usize, area_side: usize) -> SquareAreasLayout {
+        SquareAreasLayout(AreasLayout::new(map_size, area_side, area_side))
+    }
+
+    pub fn area_side(&self) -> usize {
+        assert!(self.0.area_width() == self.0.area_height());
+        self.0.area_width()
+    }
+
+    pub fn areas_count(&self) -> usize {
+        self.0.areas_count()
+    }
+
+    pub fn area_index(&self, position: Position<usize>) -> usize {
+        self.0.area_index(position)
     }
 }

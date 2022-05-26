@@ -1,4 +1,4 @@
-use super::areas_layout::AreasLayout;
+use super::areas_layout::SquareAreasLayout;
 use crate::common::position::generic::Position;
 use std::collections::HashMap;
 
@@ -24,13 +24,13 @@ impl Area {
 }
 
 struct Areas {
-    layout: AreasLayout,
+    layout: SquareAreasLayout,
     data: Vec<Area>,
 }
 
 impl Areas {
-    fn new(sparsity: usize, map_size: usize) -> Areas {
-        let layout = AreasLayout::new(map_size, sparsity, sparsity);
+    fn new(area_side: usize, map_size: usize) -> Areas {
+        let layout = SquareAreasLayout::new(map_size, area_side);
         Areas {
             layout,
             data: vec![Area::new(); layout.areas_count()],
@@ -43,27 +43,47 @@ impl Areas {
     }
 }
 
-pub struct ObstaclePositions {
+pub struct SparsityValidator {
     map_size: usize,
     data: HashMap<usize, Areas>,
 }
 
-impl ObstaclePositions {
-    pub fn new(map_size: usize) -> ObstaclePositions {
-        ObstaclePositions {
+impl SparsityValidator {
+    pub fn new(map_size: usize) -> SparsityValidator {
+        SparsityValidator {
             map_size,
             data: HashMap::new(),
         }
     }
 
     pub fn add(&mut self, template_index: usize, sparsity: usize, position: Position<usize>) {
-        self.data
-            .entry(template_index)
-            .or_insert(Areas::new(sparsity, self.map_size))
-            .add(position);
+        if sparsity > 0 {
+            let areas = self
+                .data
+                .entry(template_index)
+                .or_insert(Areas::new(sparsity, self.map_size));
+
+            assert!(areas.layout.area_side() == sparsity);
+
+            areas.add(position);
+        }
     }
 
-    pub fn min_distance_square(
+    pub fn is_valid(&self, template_index: usize, position: Position<usize>) -> bool {
+        if let Some(areas) = self.data.get(&template_index) {
+            let sparsity = areas.layout.area_side();
+            assert!(sparsity > 0);
+
+            let min_distance_square = self.min_distance_square(template_index, position);
+
+            if let Some(min_distance_square) = min_distance_square {
+                return sparsity <= min_distance_square;
+            }
+        }
+        true
+    }
+
+    fn min_distance_square(
         &self,
         template_index: usize,
         position: Position<usize>,

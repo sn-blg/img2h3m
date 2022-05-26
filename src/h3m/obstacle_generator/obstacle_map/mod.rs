@@ -4,12 +4,12 @@ use crate::h3m::result::*;
 use crate::h3m::terrain_map::{MapCell, TerrainMap};
 pub use obstacle_map_area::*;
 use obstacle_map_cell::ObstacleMapCell;
-use obstacle_positions::ObstaclePositions;
+use sparsity_validator::SparsityValidator;
 
 mod areas_layout;
 mod obstacle_map_area;
 mod obstacle_map_cell;
-mod obstacle_positions;
+mod sparsity_validator;
 
 impl ObstacleMapCell {
     fn from_map_cell(
@@ -30,7 +30,7 @@ impl ObstacleMapCell {
 pub struct ObstacleMap {
     size: usize,
     cells: Vec<ObstacleMapCell>,
-    obstacle_positions: ObstaclePositions,
+    sparsity_validator: SparsityValidator,
 }
 
 impl ObstacleMap {
@@ -57,7 +57,7 @@ impl ObstacleMap {
         Ok(ObstacleMap {
             size,
             cells,
-            obstacle_positions: ObstaclePositions::new(size),
+            sparsity_validator: SparsityValidator::new(size),
         })
     }
 
@@ -67,19 +67,6 @@ impl ObstacleMap {
         template_index: usize,
         obstacle: &ObstacleTemplate,
     ) -> Option<usize> {
-        let is_valid_sparsity = |position| {
-            if obstacle.sparsity() > 0 {
-                let min_distance_square = self
-                    .obstacle_positions
-                    .min_distance_square(template_index, position);
-
-                if let Some(min_distance_square) = min_distance_square {
-                    return obstacle.sparsity() <= min_distance_square;
-                }
-            }
-            true
-        };
-
         let is_valid_delta = |delta_position: Option<Position<usize>>| {
             if let Some(delta_position) = delta_position {
                 let delta_position_index = delta_position.index(self.size);
@@ -87,7 +74,9 @@ impl ObstacleMap {
 
                 obstacle.is_valid_terrain(delta_cell.terrain_group())
                     && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile())
-                    && is_valid_sparsity(delta_position)
+                    && self
+                        .sparsity_validator
+                        .is_valid(template_index, delta_position)
             } else {
                 false
             }
@@ -117,11 +106,8 @@ impl ObstacleMap {
             let delta_position_index = delta_position.index(self.size);
             self.cells[delta_position_index].set_template(template_index);
 
-            let sparsity = obstacle.sparsity();
-            if sparsity > 0 {
-                self.obstacle_positions
-                    .add(template_index, sparsity, delta_position);
-            }
+            self.sparsity_validator
+                .add(template_index, obstacle.sparsity(), delta_position);
         }
     }
 
