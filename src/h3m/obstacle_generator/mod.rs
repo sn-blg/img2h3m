@@ -10,6 +10,7 @@ mod common;
 mod obstacle_map;
 mod obstacle_template;
 mod obstacle_template_list;
+mod sparsity;
 pub mod template_class;
 mod template_index_set;
 
@@ -96,13 +97,13 @@ impl ObstacleGenerator {
     }
 
     fn try_position_obstacle(
-        &self,
+        &mut self,
         template_index: usize,
         area: &ObstacleMapArea,
         obstacle_map: &ObstacleMap,
     ) -> Option<usize> {
         let obstacle = self.obstacle_template_list.template(template_index);
-        obstacle_map.try_position_obstacle(area, template_index, obstacle)
+        obstacle_map.try_position_obstacle(area, template_index, obstacle, &mut self.rng)
     }
 
     fn add_obstacle(

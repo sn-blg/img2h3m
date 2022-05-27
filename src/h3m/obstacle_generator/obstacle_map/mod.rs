@@ -4,6 +4,7 @@ use crate::h3m::result::*;
 use crate::h3m::terrain_map::{MapCell, TerrainMap};
 pub use obstacle_map_area::*;
 use obstacle_map_cell::ObstacleMapCell;
+use rand::{rngs::ThreadRng, Rng};
 use sparsity_validator::SparsityValidator;
 
 mod areas_layout;
@@ -66,7 +67,10 @@ impl ObstacleMap {
         area: &ObstacleMapArea,
         template_index: usize,
         obstacle: &ObstacleTemplate,
+        rng: &mut ThreadRng,
     ) -> Option<usize> {
+        let sparsity = rng.gen_range(obstacle.sparsity().min()..=obstacle.sparsity().max());
+
         let is_valid_delta = |delta_position: Option<Position<usize>>| {
             if let Some(delta_position) = delta_position {
                 let delta_position_index = delta_position.index(self.size);
@@ -74,9 +78,11 @@ impl ObstacleMap {
 
                 obstacle.is_valid_terrain(delta_cell.terrain_group())
                     && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile())
-                    && self
-                        .sparsity_validator
-                        .verify_position(template_index, delta_position)
+                    && self.sparsity_validator.verify_position(
+                        template_index,
+                        sparsity,
+                        delta_position,
+                    )
             } else {
                 false
             }
@@ -108,7 +114,7 @@ impl ObstacleMap {
 
             self.sparsity_validator.add_position(
                 template_index,
-                obstacle.sparsity(),
+                obstacle.sparsity().max(),
                 delta_position,
             );
         }

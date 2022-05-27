@@ -1,3 +1,4 @@
+use super::sparsity::Sparsity;
 use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
@@ -25,7 +26,7 @@ pub struct ObstacleTemplate {
     terrain_group_mask: u16,
     frequency: usize,
     may_located_on_mixed_tiles: bool,
-    sparsity: usize, // the minimum square of the distance to the same obstacle
+    sparsity: Sparsity,
 }
 
 fn template_class(h3m_template: &H3mObjectTemplate) -> TemplateClass {
@@ -93,7 +94,7 @@ impl ObstacleTemplate {
         self.frequency
     }
 
-    pub fn sparsity(&self) -> usize {
+    pub fn sparsity(&self) -> Sparsity {
         self.sparsity
     }
 }
@@ -161,31 +162,44 @@ fn may_located_on_mixed_tiles(
                 | "avlswtr8.def"
         ),
 
-        //TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"), // ????
+        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"), // ????
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
 
         _ => false,
     }
 }
 
-fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> usize {
+fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> Sparsity {
     let filename = &h3m_template.filename[..];
 
-    match template_class {
+    Sparsity::new(match template_class {
         TemplateClass::Lake
         | TemplateClass::LavaLake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 64, // 100
+        | TemplateClass::FrozenLake => 10..=14,
 
-        TemplateClass::Volcano => 64,
+        TemplateClass::IceBlock => 10..=12,
 
-        TemplateClass::Crater => 64,
+        TemplateClass::Volcano => 8..=10,
 
-        TemplateClass::IceBlock => 64,
+        TemplateClass::Crater => 8..=10,
 
-        TemplateClass::Rock => 36,
+        TemplateClass::Rock => 6..=8,
 
-        _ => 0,
-    }
+        TemplateClass::Mound => 6..=8,
+
+        TemplateClass::Stump => 4..=6,
+
+        TemplateClass::Mountain => 0..=0,
+
+        TemplateClass::OakTrees
+        | TemplateClass::PineTrees
+        | TemplateClass::Trees
+        | TemplateClass::Palms
+        | TemplateClass::DeadVegetation
+        | TemplateClass::Spruces => 0..=0,
+
+        _ => 0..=0,
+    })
 }

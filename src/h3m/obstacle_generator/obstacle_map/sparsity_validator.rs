@@ -59,32 +59,48 @@ impl SparsityValidator {
     pub fn add_position(
         &mut self,
         template_index: usize,
-        sparsity: usize,
+        max_sparsity: usize,
         position: Position<usize>,
     ) {
-        if sparsity > 0 {
+        if max_sparsity > 0 {
+            let max_sparsity_square = usize::pow(max_sparsity, 2);
+
             let areas = self
                 .data
                 .entry(template_index)
-                .or_insert(Areas::new(sparsity, self.map_size));
+                .or_insert(Areas::new(max_sparsity_square, self.map_size));
 
-            assert!(areas.layout.area_side() == sparsity);
+            assert!(areas.layout.area_side() == max_sparsity_square);
 
             areas.add_position(position);
         }
     }
 
-    pub fn verify_position(&self, template_index: usize, position: Position<usize>) -> bool {
-        if let Some(areas) = self.data.get(&template_index) {
-            self.verify_in_areas(position, areas)
-        } else {
+    pub fn verify_position(
+        &self,
+        template_index: usize,
+        sparsity: usize,
+        position: Position<usize>,
+    ) -> bool {
+        if sparsity == 0 {
             true
+        } else {
+            if let Some(areas) = self.data.get(&template_index) {
+                self.verify_in_areas(usize::pow(sparsity, 2), position, areas)
+            } else {
+                true
+            }
         }
     }
 
-    fn verify_in_areas(&self, position: Position<usize>, areas: &Areas) -> bool {
-        let sparsity = areas.layout.area_side();
-        assert!(sparsity > 0);
+    fn verify_in_areas(
+        &self,
+        sparsity_square: usize,
+        position: Position<usize>,
+        areas: &Areas,
+    ) -> bool {
+        assert!(sparsity_square > 0);
+        assert!(sparsity_square <= areas.layout.area_side());
 
         let areas_at_row = areas.layout.areas_at_row();
         let areas_at_column = areas.layout.areas_at_column();
@@ -110,7 +126,7 @@ impl SparsityValidator {
             );
             if let Some(area_position) = area_position {
                 let area_index = area_position.index(areas_at_row);
-                if !self.verify_in_area(sparsity, position, &areas.data[area_index]) {
+                if !self.verify_in_area(sparsity_square, position, &areas.data[area_index]) {
                     return false;
                 }
             }
@@ -118,10 +134,15 @@ impl SparsityValidator {
         true
     }
 
-    fn verify_in_area(&self, sparsity: usize, position: Position<usize>, area: &Area) -> bool {
+    fn verify_in_area(
+        &self,
+        sparsity_square: usize,
+        position: Position<usize>,
+        area: &Area,
+    ) -> bool {
         for area_position in area.positions.iter() {
             let distance_square = distance_square(area_position, &position);
-            if distance_square < sparsity {
+            if distance_square < sparsity_square {
                 return false;
             }
         }
