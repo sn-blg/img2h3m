@@ -149,3 +149,47 @@ impl SparsityValidator {
         true
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unit_size_sparsity_test() {
+        let map_size = 5;
+
+        let mut sparsity_validator = SparsityValidator::new(map_size);
+
+        let template_index = 42;
+        let max_sparsity = 1;
+        let sparsity = 1;
+
+        let map_len = map_size.pow(2);
+
+        for index in 0..map_len {
+            let position = Position::from_index(map_size, index);
+
+            assert!(sparsity_validator.verify_position(template_index, sparsity, position));
+            sparsity_validator.add_position(template_index, max_sparsity, position);
+        }
+
+        let data = &sparsity_validator.data;
+        assert_eq!(data.keys().len(), 1);
+        assert!(data.contains_key(&template_index));
+
+        let areas = data.get(&template_index).unwrap();
+
+        assert_eq!(areas.layout.area_side(), max_sparsity);
+        assert_eq!(areas.layout.areas_at_row(), map_size);
+        assert_eq!(areas.layout.areas_at_column(), map_size);
+        assert_eq!(areas.layout.areas_count(), map_len);
+
+        assert_eq!(areas.data.len(), map_len);
+        for (index, area) in areas.data.iter().enumerate() {
+            assert_eq!(area.positions.len(), 1);
+
+            let position = area.positions[0];
+            assert_eq!(index, position.index(map_size));
+        }
+    }
+}
