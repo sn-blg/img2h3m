@@ -3,7 +3,7 @@ use std::cmp::PartialOrd;
 use std::fmt::Debug;
 use std::ops::{Add, Div, Mul, Rem, Sub};
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Position<T: Clone + Copy + Unsigned> {
     row: T,
     column: T,

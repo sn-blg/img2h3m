@@ -3,7 +3,7 @@ use crate::common::position::generic::{Position, SignedDeltaPos};
 use std::collections::HashMap;
 
 fn delta_square(a: usize, b: usize) -> usize {
-    usize::pow(if a > b { a - b } else { b - a }, 2)
+    (if a > b { a - b } else { b - a }).pow(2)
 }
 
 fn distance_square(a: &Position<usize>, b: &Position<usize>) -> usize {
@@ -62,18 +62,21 @@ impl SparsityValidator {
         max_sparsity: usize,
         position: Position<usize>,
     ) {
-        if max_sparsity > 0 {
-            let max_sparsity_square = usize::pow(max_sparsity, 2);
-
-            let areas = self
-                .data
-                .entry(template_index)
-                .or_insert(Areas::new(max_sparsity_square, self.map_size));
-
-            assert!(areas.layout.area_side() == max_sparsity_square);
-
-            areas.add_position(position);
+        if max_sparsity < 2 {
+            return;
         }
+
+        let area_side = (max_sparsity as f64).sqrt().ceil() as usize;
+        assert!(area_side >= 2);
+
+        let areas = self
+            .data
+            .entry(template_index)
+            .or_insert(Areas::new(area_side, self.map_size));
+
+        assert!(areas.layout.area_side() == area_side);
+
+        areas.add_position(position);
     }
 
     pub fn verify_position(
@@ -82,25 +85,20 @@ impl SparsityValidator {
         sparsity: usize,
         position: Position<usize>,
     ) -> bool {
-        if sparsity == 0 {
+        if sparsity < 2 {
             true
         } else {
             if let Some(areas) = self.data.get(&template_index) {
-                self.verify_in_areas(usize::pow(sparsity, 2), position, areas)
+                self.verify_in_areas(sparsity, position, areas)
             } else {
                 true
             }
         }
     }
 
-    fn verify_in_areas(
-        &self,
-        sparsity_square: usize,
-        position: Position<usize>,
-        areas: &Areas,
-    ) -> bool {
-        assert!(sparsity_square > 0);
-        assert!(sparsity_square <= areas.layout.area_side());
+    fn verify_in_areas(&self, sparsity: usize, position: Position<usize>, areas: &Areas) -> bool {
+        assert!(sparsity >= 2);
+        assert!(sparsity <= areas.layout.area_side().pow(2));
 
         let areas_at_row = areas.layout.areas_at_row();
         let areas_at_column = areas.layout.areas_at_column();
@@ -126,7 +124,7 @@ impl SparsityValidator {
             );
             if let Some(area_position) = area_position {
                 let area_index = area_position.index(areas_at_row);
-                if !self.verify_in_area(sparsity_square, position, &areas.data[area_index]) {
+                if !self.verify_in_area(sparsity, position, &areas.data[area_index]) {
                     return false;
                 }
             }
@@ -134,15 +132,10 @@ impl SparsityValidator {
         true
     }
 
-    fn verify_in_area(
-        &self,
-        sparsity_square: usize,
-        position: Position<usize>,
-        area: &Area,
-    ) -> bool {
+    fn verify_in_area(&self, sparsity: usize, position: Position<usize>, area: &Area) -> bool {
         for area_position in area.positions.iter() {
             let distance_square = distance_square(area_position, &position);
-            if distance_square < sparsity_square {
+            if distance_square < sparsity {
                 return false;
             }
         }
@@ -162,7 +155,7 @@ mod tests {
 
         let template_index = 42;
         let max_sparsity = 1;
-        let sparsity = 1;
+        let sparsity = max_sparsity;
 
         let map_len = map_size.pow(2);
 
@@ -174,22 +167,53 @@ mod tests {
         }
 
         let data = &sparsity_validator.data;
+        assert_eq!(data.keys().len(), 0);
+    }
+
+    #[test]
+    fn sparsity_test() {
+        let map_size = 5;
+
+        let mut sparsity_validator = SparsityValidator::new(map_size);
+
+        let template_index = 42;
+        let max_sparsity = 2;
+        let sparsity = max_sparsity;
+
+        let map_len = map_size.pow(2);
+
+        for index in 0..map_len {
+            let position = Position::from_index(map_size, index);
+
+            let is_valid = sparsity_validator.verify_position(template_index, sparsity, position);
+            assert_eq!(is_valid, index % 2 == 0);
+
+            if is_valid {
+                sparsity_validator.add_position(template_index, max_sparsity, position);
+            }
+        }
+
+        let data = &sparsity_validator.data;
         assert_eq!(data.keys().len(), 1);
         assert!(data.contains_key(&template_index));
 
         let areas = data.get(&template_index).unwrap();
 
-        assert_eq!(areas.layout.area_side(), max_sparsity);
-        assert_eq!(areas.layout.areas_at_row(), map_size);
-        assert_eq!(areas.layout.areas_at_column(), map_size);
-        assert_eq!(areas.layout.areas_count(), map_len);
+        assert_eq!(areas.layout.area_side(), 2);
+        assert_eq!(areas.layout.areas_at_row(), 3);
+        assert_eq!(areas.layout.areas_at_column(), 3);
+        assert_eq!(areas.layout.areas_count(), 9);
 
-        assert_eq!(areas.data.len(), map_len);
-        for (index, area) in areas.data.iter().enumerate() {
-            assert_eq!(area.positions.len(), 1);
+        assert_eq!(areas.data.len(), 9);
 
-            let position = area.positions[0];
-            assert_eq!(index, position.index(map_size));
-        }
+        assert_eq!(areas.data[0].positions, [Position::new(0, 0), Position::new(1, 1)]);
+        assert_eq!(areas.data[1].positions, [Position::new(0, 2), Position::new(1, 3)]);
+        assert_eq!(areas.data[2].positions, [Position::new(0, 4)]);
+        assert_eq!(areas.data[3].positions, [Position::new(2, 0), Position::new(3, 1)]);
+        assert_eq!(areas.data[4].positions, [Position::new(2, 2), Position::new(3, 3)]);
+        assert_eq!(areas.data[5].positions, [Position::new(2, 4)]);
+        assert_eq!(areas.data[6].positions, [Position::new(4, 0)]);
+        assert_eq!(areas.data[7].positions, [Position::new(4, 2)]);
+        assert_eq!(areas.data[8].positions, [Position::new(4, 4)]);
     }
 }

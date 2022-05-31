@@ -26,7 +26,7 @@ pub struct ObstacleTemplate {
     terrain_group_mask: u16,
     frequency: usize,
     may_located_on_mixed_tiles: bool,
-    sparsity: Sparsity,
+    sparsity: Sparsity, // limit: square of the distance to the same obstacle
 }
 
 fn template_class(h3m_template: &H3mObjectTemplate) -> TemplateClass {
@@ -177,19 +177,19 @@ fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> 
         | TemplateClass::LavaLake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 10..=14,
+        | TemplateClass::FrozenLake => 100..=196,
 
-        TemplateClass::IceBlock => 10..=12,
+        TemplateClass::IceBlock => 100..=144,
 
-        TemplateClass::Volcano => 8..=10,
+        TemplateClass::Volcano => 64..=100,
 
-        TemplateClass::Crater => 8..=10,
+        TemplateClass::Crater => 64..=100,
 
-        TemplateClass::Rock => 6..=8,
+        TemplateClass::Rock => 36..=64,
 
-        TemplateClass::Mound => 6..=8,
+        TemplateClass::Mound => 36..=64,
 
-        TemplateClass::Stump => 4..=6,
+        TemplateClass::Stump => 16..=36,
 
         TemplateClass::Mountain => 0..=0,
 
