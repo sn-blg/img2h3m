@@ -158,7 +158,6 @@ mod tests {
         let sparsity = max_sparsity;
 
         let map_len = map_size.pow(2);
-
         for index in 0..map_len {
             let position = Position::from_index(map_size, index);
 
@@ -171,7 +170,7 @@ mod tests {
     }
 
     #[test]
-    fn sparsity_test() {
+    fn areas_test() {
         let map_size = 5;
 
         let mut sparsity_validator = SparsityValidator::new(map_size);
@@ -181,7 +180,6 @@ mod tests {
         let sparsity = max_sparsity;
 
         let map_len = map_size.pow(2);
-
         for index in 0..map_len {
             let position = Position::from_index(map_size, index);
 
@@ -206,14 +204,53 @@ mod tests {
 
         assert_eq!(areas.data.len(), 9);
 
-        assert_eq!(areas.data[0].positions, [Position::new(0, 0), Position::new(1, 1)]);
-        assert_eq!(areas.data[1].positions, [Position::new(0, 2), Position::new(1, 3)]);
+        assert_eq!(
+            areas.data[0].positions,
+            [Position::new(0, 0), Position::new(1, 1)]
+        );
+        assert_eq!(
+            areas.data[1].positions,
+            [Position::new(0, 2), Position::new(1, 3)]
+        );
         assert_eq!(areas.data[2].positions, [Position::new(0, 4)]);
-        assert_eq!(areas.data[3].positions, [Position::new(2, 0), Position::new(3, 1)]);
-        assert_eq!(areas.data[4].positions, [Position::new(2, 2), Position::new(3, 3)]);
+        assert_eq!(
+            areas.data[3].positions,
+            [Position::new(2, 0), Position::new(3, 1)]
+        );
+        assert_eq!(
+            areas.data[4].positions,
+            [Position::new(2, 2), Position::new(3, 3)]
+        );
         assert_eq!(areas.data[5].positions, [Position::new(2, 4)]);
         assert_eq!(areas.data[6].positions, [Position::new(4, 0)]);
         assert_eq!(areas.data[7].positions, [Position::new(4, 2)]);
         assert_eq!(areas.data[8].positions, [Position::new(4, 4)]);
+    }
+
+    #[test]
+    fn points_distance_test() {
+        let map_size = 5;
+
+        let mut sparsity_validator = SparsityValidator::new(map_size);
+
+        let template_index = 42;
+        let max_sparsity = 4;
+        let sparsity = max_sparsity;
+
+        let position_0 = Position::new(2, 2);
+        assert!(sparsity_validator.verify_position(template_index, sparsity, position_0));
+        sparsity_validator.add_position(template_index, max_sparsity, position_0);
+
+        let map_len = map_size.pow(2);
+        for index in 0..map_len {
+            let position = Position::from_index(map_size, index);
+            let distance_square = distance_square(&position_0, &position);
+
+            let is_valid_position = distance_square >= sparsity;
+            assert_eq!(
+                is_valid_position,
+                sparsity_validator.verify_position(template_index, sparsity, position)
+            );
+        }
     }
 }
