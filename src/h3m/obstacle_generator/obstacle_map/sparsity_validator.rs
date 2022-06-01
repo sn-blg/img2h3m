@@ -204,27 +204,17 @@ mod tests {
 
         assert_eq!(areas.data.len(), 9);
 
-        assert_eq!(
-            areas.data[0].positions,
-            [Position::new(0, 0), Position::new(1, 1)]
-        );
-        assert_eq!(
-            areas.data[1].positions,
-            [Position::new(0, 2), Position::new(1, 3)]
-        );
-        assert_eq!(areas.data[2].positions, [Position::new(0, 4)]);
-        assert_eq!(
-            areas.data[3].positions,
-            [Position::new(2, 0), Position::new(3, 1)]
-        );
-        assert_eq!(
-            areas.data[4].positions,
-            [Position::new(2, 2), Position::new(3, 3)]
-        );
-        assert_eq!(areas.data[5].positions, [Position::new(2, 4)]);
-        assert_eq!(areas.data[6].positions, [Position::new(4, 0)]);
-        assert_eq!(areas.data[7].positions, [Position::new(4, 2)]);
-        assert_eq!(areas.data[8].positions, [Position::new(4, 4)]);
+        let p = Position::new;
+
+        assert_eq!(areas.data[0].positions, [p(0, 0), p(1, 1)]);
+        assert_eq!(areas.data[1].positions, [p(0, 2), p(1, 3)]);
+        assert_eq!(areas.data[2].positions, [p(0, 4)]);
+        assert_eq!(areas.data[3].positions, [p(2, 0), p(3, 1)]);
+        assert_eq!(areas.data[4].positions, [p(2, 2), p(3, 3)]);
+        assert_eq!(areas.data[5].positions, [p(2, 4)]);
+        assert_eq!(areas.data[6].positions, [p(4, 0)]);
+        assert_eq!(areas.data[7].positions, [p(4, 2)]);
+        assert_eq!(areas.data[8].positions, [p(4, 4)]);
     }
 
     #[test]
