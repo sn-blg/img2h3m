@@ -46,7 +46,7 @@ impl ObstacleTemplate {
         let may_located_on_mixed_tiles = may_located_on_mixed_tiles(template_class, &h3m_template);
         let shape = make_shape(&mask);
         let frequency = std::cmp::min(shape.len(), 10);
-        let sparsity = sparsity(template_class, &h3m_template);
+        let sparsity = sparsity(template_class, shape.len(), &h3m_template);
         ObstacleTemplate {
             h3m_template,
             shape,
@@ -169,8 +169,20 @@ fn may_located_on_mixed_tiles(
     }
 }
 
-fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> Sparsity {
+fn sparsity(
+    template_class: TemplateClass,
+    surface_area: usize,
+    h3m_template: &H3mObjectTemplate,
+) -> Sparsity {
     let filename = &h3m_template.filename[..];
+
+    let forest_sparsity = |surface_area| {
+        if surface_area < 2 {
+            2..=9
+        } else {
+            0..=0
+        }
+    };
 
     Sparsity::new(match template_class {
         TemplateClass::Lake
@@ -185,20 +197,32 @@ fn sparsity(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> 
 
         TemplateClass::Crater => 64..=100,
 
-        TemplateClass::Rock => 36..=64,
+        TemplateClass::Rock => match filename {
+            "AVLrws02.def" => 289..=625,
+            _ => 36..=64,
+        },
 
         TemplateClass::Mound => 36..=64,
 
         TemplateClass::Stump => 16..=36,
 
-        TemplateClass::Mountain => 0..=0,
+        TemplateClass::Mountain => match filename {
+            "AVLMTWL7.def" => 225..=625,
+            _ => 0..=0,
+        },
+
+        TemplateClass::Trees => match filename {
+            "AVLwlw10.def" => 100..=196,
+            "AVLwlw20.def" => 64..=100,
+            "AVLwlw30.def" => 16..=36,
+            _ => forest_sparsity(surface_area),
+        },
 
         TemplateClass::OakTrees
         | TemplateClass::PineTrees
-        | TemplateClass::Trees
         | TemplateClass::Palms
         | TemplateClass::DeadVegetation
-        | TemplateClass::Spruces => 0..=0,
+        | TemplateClass::Spruces => forest_sparsity(surface_area),
 
         _ => 0..=0,
     })

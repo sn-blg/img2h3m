@@ -31,6 +31,7 @@ impl ObstacleMapCell {
 pub struct ObstacleMap {
     size: usize,
     cells: Vec<ObstacleMapCell>,
+    sparsity_penalty: usize,
     sparsity_validator: SparsityValidator,
 }
 
@@ -58,8 +59,13 @@ impl ObstacleMap {
         Ok(ObstacleMap {
             size,
             cells,
+            sparsity_penalty: 0,
             sparsity_validator: SparsityValidator::new(size),
         })
+    }
+
+    pub fn set_sparsity_penalty(&mut self, sparsity_penalty: usize) {
+        self.sparsity_penalty = sparsity_penalty;
     }
 
     pub fn try_position_obstacle(
@@ -69,7 +75,17 @@ impl ObstacleMap {
         obstacle: &ObstacleTemplate,
         rng: &mut ThreadRng,
     ) -> Option<usize> {
-        let sparsity = rng.gen_range(obstacle.sparsity().min()..=obstacle.sparsity().max());
+        let apply_sparsity_penalty = |sparsity| {
+            if sparsity >= self.sparsity_penalty {
+                sparsity - self.sparsity_penalty
+            } else {
+                0
+            }
+        };
+        let sparsity = rng.gen_range(
+            apply_sparsity_penalty(obstacle.sparsity().min())
+                ..=apply_sparsity_penalty(obstacle.sparsity().max()),
+        );
 
         let is_valid_delta = |delta_position: Option<Position<usize>>| {
             if let Some(delta_position) = delta_position {

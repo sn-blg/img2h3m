@@ -56,13 +56,20 @@ impl ObstacleGenerator {
 
         let map_size = terrain_map.size();
         let areas = obstacle_map::make_areas(map_size, map_size, 36);
-        for area in areas.iter().rev() {
-            self.generate_in_area(
-                terrain_map.underground(),
-                template_index_set.clone(),
-                area,
-                &mut obstacle_map,
-            )?;
+
+        for sparsity_penalty in 0..=4 {
+            obstacle_map.set_sparsity_penalty(sparsity_penalty);
+            for area in areas.iter().rev() {
+                self.generate_in_area(
+                    terrain_map.underground(),
+                    template_index_set.clone(),
+                    area,
+                    &mut obstacle_map,
+                )?;
+            }
+            if obstacle_map.first_position_to_place_obstacle().is_none() {
+                break;
+            }
         }
 
         if let Some(position) = obstacle_map.first_position_to_place_obstacle() {
