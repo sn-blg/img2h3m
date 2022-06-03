@@ -72,7 +72,7 @@ impl SparsityValidator {
         let areas = self
             .data
             .entry(template_index)
-            .or_insert(Areas::new(area_side, self.map_size));
+            .or_insert_with(|| Areas::new(area_side, self.map_size));
 
         assert!(areas.layout.area_side() == area_side);
 
@@ -87,12 +87,10 @@ impl SparsityValidator {
     ) -> bool {
         if sparsity == 0 {
             true
+        } else if let Some(areas) = self.data.get(&template_index) {
+            self.verify_in_areas(sparsity, position, areas)
         } else {
-            if let Some(areas) = self.data.get(&template_index) {
-                self.verify_in_areas(sparsity, position, areas)
-            } else {
-                true
-            }
+            true
         }
     }
 

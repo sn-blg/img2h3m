@@ -202,7 +202,7 @@ fn sparsity(
             _ => 36..=64,
         },
 
-        TemplateClass::Mound => 36..=64,
+        TemplateClass::Mound | TemplateClass::SandDune | TemplateClass::SnowHills => 36..=64,
 
         TemplateClass::Stump => 16..=36,
 
@@ -211,6 +211,8 @@ fn sparsity(
             _ => 0..=0,
         },
 
+        TemplateClass::BarchanDunes => 0..=0,
+
         TemplateClass::Trees => match filename {
             "AVLwlw10.def" => 100..=196,
             "AVLwlw20.def" => 64..=100,
@@ -218,12 +220,29 @@ fn sparsity(
             _ => forest_sparsity(surface_area),
         },
 
-        TemplateClass::OakTrees
-        | TemplateClass::PineTrees
-        | TemplateClass::Palms
-        | TemplateClass::DeadVegetation
-        | TemplateClass::Spruces => forest_sparsity(surface_area),
+        TemplateClass::Cactus | TemplateClass::YuccaTrees => 2..=9,
 
-        _ => 0..=0,
+        TemplateClass::SandPit => 100..=144,
+
+        TemplateClass::OakTrees | TemplateClass::PineTrees | TemplateClass::Spruces => {
+            forest_sparsity(surface_area)
+        }
+
+        TemplateClass::Palms => match filename {
+            "AVLswmp1.def" | "AVLplm20.def" | "AVLplm30.def" | "AVLswmp0.def" => 16..=36,
+            _ => forest_sparsity(surface_area),
+        },
+
+        TemplateClass::DeadVegetation => match filename {
+            "AVLdt3s0.def" => 100..=196,
+            "AVLdt1s0.def" | "AVLdt2s0.def" | "swddtree.def" | "AVLswp60.def" => 100..=144,
+            _ => forest_sparsity(surface_area),
+        },
+
+        TemplateClass::Waterfalls => 144..=225,
+
+        TemplateClass::Reef => 9..=16,
+
+        TemplateClass::Mandrake => 2..=9,
     })
 }

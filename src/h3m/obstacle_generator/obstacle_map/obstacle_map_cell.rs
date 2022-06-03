@@ -55,10 +55,6 @@ impl ObstacleMapCell {
         &self.map_cell
     }
 
-    pub fn _template_index(&self) -> Option<usize> {
-        self.template_index
-    }
-
     pub fn terrain_group(&self) -> u16 {
         self.terrain_group
     }
