@@ -202,7 +202,9 @@ fn sparsity(
             _ => 36..=64,
         },
 
-        TemplateClass::Mound | TemplateClass::SandDune | TemplateClass::SnowHills => 36..=64,
+        TemplateClass::Mound | TemplateClass::SandDune => 36..=64,
+
+        TemplateClass::SnowHills => 100..=144,
 
         TemplateClass::Stump => 16..=36,
 
