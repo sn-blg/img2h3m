@@ -104,14 +104,29 @@ impl ObstacleMap {
             }
         };
 
-        'cell_traversal: for &index in area.indexes() {
+        let is_valid_index = |index| {
             let position = Position::from_index(self.size, index);
             for delta in obstacle.shape() {
                 if !is_valid_delta(position.checked_sub(delta)) {
-                    continue 'cell_traversal;
+                    return false;
                 }
             }
-            return Some(index);
+            true
+        };
+
+        let direct_traversal = rng.gen_bool(1.0 / 2.0);
+        if direct_traversal {
+            for &index in area.indexes() {
+                if is_valid_index(index) {
+                    return Some(index);
+                }
+            }
+        } else {
+            for &index in area.indexes().iter().rev() {
+                if is_valid_index(index) {
+                    return Some(index);
+                }
+            }
         }
         None
     }

@@ -45,8 +45,14 @@ impl ObstacleTemplate {
         let terrain_group_mask = calc_terrain_group_mask(template_class, &h3m_template);
         let may_located_on_mixed_tiles = may_located_on_mixed_tiles(template_class, &h3m_template);
         let shape = make_shape(&mask);
-        let frequency = std::cmp::min(shape.len(), 10);
+        let frequency = frequency(
+            template_class,
+            shape.len(),
+            may_located_on_mixed_tiles,
+            &h3m_template,
+        );
         let sparsity = sparsity(template_class, shape.len(), &h3m_template);
+
         ObstacleTemplate {
             h3m_template,
             shape,
@@ -247,4 +253,35 @@ fn sparsity(
 
         TemplateClass::Mandrake => 2..=9,
     })
+}
+
+fn frequency(
+    template_class: TemplateClass,
+    surface_area: usize,
+    may_located_on_mixed_tiles: bool,
+    h3m_template: &H3mObjectTemplate,
+) -> usize {
+    let filename = &h3m_template.filename[..];
+
+    let mut frequency = match template_class {
+        TemplateClass::Lake
+        | TemplateClass::LavaLake
+        | TemplateClass::LimestoneLake
+        | TemplateClass::TarPit
+        | TemplateClass::FrozenLake => 2,
+
+        TemplateClass::IceBlock => 1,
+
+        TemplateClass::Crater => 1,
+
+        TemplateClass::Waterfalls => 2,
+
+        _ => surface_area,
+    };
+
+    if may_located_on_mixed_tiles {
+        frequency += 0;
+    }
+    frequency
+    //std::cmp::max(std::cmp::min(frequency, 20), 1)
 }
