@@ -112,6 +112,33 @@ fn calc_terrain_group_mask(template_class: TemplateClass, h3m_template: &H3mObje
         terrain_group_mask &= !Terrain::Grass.group();
     }
 
+    if template_class == TemplateClass::OakTrees {
+        terrain_group_mask &= !Terrain::Dirt.group();
+        terrain_group_mask &= !Terrain::Swamp.group();
+    }
+
+    let filename = &h3m_template.filename[..];
+
+    if template_class == TemplateClass::DeadVegetation
+        && matches!(
+            filename,
+            "AVLdead2.def"
+                | "AVLdead3.def"
+                | "AVLdead4.def"
+                | "AVLdead5.def"
+                | "AVLdead6.def"
+                | "AVLdead7.def"
+        )
+    {
+        terrain_group_mask &= !Terrain::Swamp.group();
+    }
+
+    if template_class == TemplateClass::Lake
+        && matches!(filename, "AVLlk1g0.def" | "AVLlk2g0.def" | "AVLlk3g0.def")
+    {
+        terrain_group_mask |= Terrain::Swamp.group();
+    }
+
     terrain_group_mask
 }
 
@@ -219,7 +246,7 @@ fn sparsity(
             _ => 0..=0,
         },
 
-        TemplateClass::BarchanDunes => 0..=0,
+        TemplateClass::BarchanDunes => 16..=36,
 
         TemplateClass::Trees => match filename {
             "AVLwlw10.def" => 100..=196,
@@ -243,7 +270,9 @@ fn sparsity(
 
         TemplateClass::DeadVegetation => match filename {
             "AVLdt3s0.def" => 100..=196,
-            "AVLdt1s0.def" | "AVLdt2s0.def" | "swddtree.def" | "AVLswp60.def" => 100..=144,
+            "AVLdt1s0.def" | "AVLdt2s0.def" | "swddtree.def" | "AVLswp60.def" | "AVLswp70.def" => {
+                100..=144
+            }
             _ => forest_sparsity(surface_area),
         },
 
@@ -264,8 +293,9 @@ fn frequency(
     let filename = &h3m_template.filename[..];
 
     let mut frequency = match template_class {
-        TemplateClass::Lake
-        | TemplateClass::LavaLake
+        TemplateClass::Lake => 3,
+
+        TemplateClass::LavaLake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
         | TemplateClass::FrozenLake => 2,
@@ -276,12 +306,38 @@ fn frequency(
 
         TemplateClass::Waterfalls => 2,
 
+        TemplateClass::SnowHills => 1,
+
+        TemplateClass::BarchanDunes => 4,
+
+        TemplateClass::Palms => match filename {
+            "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
+            | "avlspl14.def" => 1,
+
+            "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
+            | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
+            | "avlswtr8.def" | "avlswtr3.def" | "avlswtr9.def" | "avlswtr0.def"
+            | "avlswt00.def" => surface_area + (surface_area / 3),
+
+            _ => surface_area,
+        },
+
+        TemplateClass::Mountain => match filename {
+            "AVLmtsn1.def" | "AVLmtsn2.def" | "AVLmtsn3.def" | "AVLmtsn4.def" | "AVLmtsn5.def"
+            | "AVLmtsn6.def" => surface_area * 2,
+
+            "AVLmtsw1.def" | "AVLmtsw2.def" | "AVLmtsw3.def" | "AVLmtsw4.def" | "AVLmtsw5.def"
+            | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
+            | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area / 2,
+
+            _ => surface_area,
+        },
+
         _ => surface_area,
     };
 
     if may_located_on_mixed_tiles {
         frequency += 0;
     }
-    frequency
-    //std::cmp::max(std::cmp::min(frequency, 20), 1)
+    std::cmp::max(frequency, 1)
 }
