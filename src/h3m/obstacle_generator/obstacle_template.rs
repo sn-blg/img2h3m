@@ -195,7 +195,7 @@ fn may_located_on_mixed_tiles(
                 | "avlswtr8.def"
         ),
 
-        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr03u0.def" | "AVLr16u0.def"), // ????
+        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr16u0.def"),
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
 
         _ => false,
@@ -224,7 +224,7 @@ fn sparsity(
         | TemplateClass::TarPit
         | TemplateClass::FrozenLake => 100..=196,
 
-        TemplateClass::IceBlock => 100..=144,
+        TemplateClass::IceBlock => 100..=196,
 
         TemplateClass::Volcano => 64..=100,
 
@@ -239,14 +239,20 @@ fn sparsity(
 
         TemplateClass::SnowHills => 100..=144,
 
-        TemplateClass::Stump => 16..=36,
+        TemplateClass::Stump => 64..=100,
 
         TemplateClass::Mountain => match filename {
             "AVLMTWL7.def" => 225..=625,
-            _ => 0..=0,
+            _ => {
+                if surface_area <= 4 {
+                    25..=36
+                } else {
+                    0..=0
+                }
+            }
         },
 
-        TemplateClass::BarchanDunes => 16..=36,
+        TemplateClass::BarchanDunes => 25..=49,
 
         TemplateClass::Trees => match filename {
             "AVLwlw10.def" => 100..=196,
@@ -293,12 +299,14 @@ fn frequency(
     let filename = &h3m_template.filename[..];
 
     let mut frequency = match template_class {
-        TemplateClass::Lake => 3,
+        TemplateClass::LavaLake => 1,
 
-        TemplateClass::LavaLake
-        | TemplateClass::LimestoneLake
-        | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 2,
+        TemplateClass::FrozenLake | TemplateClass::LimestoneLake | TemplateClass::TarPit => 2,
+
+        TemplateClass::Lake => match filename {
+            "AVLlk1r.def" => 1,
+            _ => 3,
+        },
 
         TemplateClass::IceBlock => 1,
 
@@ -329,6 +337,21 @@ fn frequency(
             "AVLmtsw1.def" | "AVLmtsw2.def" | "AVLmtsw3.def" | "AVLmtsw4.def" | "AVLmtsw5.def"
             | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
             | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area / 2,
+
+            _ => surface_area,
+        },
+
+        TemplateClass::DeadVegetation => {
+            if h3m_template.surface_editor_group_mask == Terrain::Snow.group() {
+                surface_area
+            } else {
+                std::cmp::min(surface_area, 2)
+            }
+        }
+
+        TemplateClass::Trees => match filename {
+            "AVLtrRo8.def" | "AVLtrRo9.def" | "AVLtrRo5.def" | "AVLtrRo4.def" | "AVLtrRo1.def"
+            | "AVLtrRo0.def" | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area, 3),
 
             _ => surface_area,
         },
