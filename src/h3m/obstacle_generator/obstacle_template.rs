@@ -226,7 +226,11 @@ fn sparsity(
             _ => 36..=64,
         },
 
-        TemplateClass::Crater => 64..=100,
+        TemplateClass::Crater => match filename {
+            "AVLctrd0.def" | "AVLctds0.def" | "AVLctrg0.def" | "AVLctsn0.def" | "AVLctrs0.def"
+            | "AVLctrr0.def" | "AVLctrl0.def" | "AVLcthl0.def" => 289..=625,
+            _ => 64..=100,
+        },
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 289..=625,
