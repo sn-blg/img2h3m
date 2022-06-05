@@ -20,7 +20,9 @@ impl<T: Clone + Copy + Unsigned + Eq + Hash> IndexMultiset<T> {
     }
 
     pub fn add_index(&mut self, index: T, frequency: usize) {
-        self.inner.insert_many(index, frequency);
+        if frequency > 0 {
+            self.inner.insert_many(index, frequency);
+        }
     }
 
     pub fn random_index(&self, rng: &mut ThreadRng) -> Option<T> {

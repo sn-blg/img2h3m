@@ -45,12 +45,7 @@ impl ObstacleTemplate {
         let terrain_group_mask = calc_terrain_group_mask(template_class, &h3m_template);
         let may_located_on_mixed_tiles = may_located_on_mixed_tiles(template_class, &h3m_template);
         let shape = make_shape(&mask);
-        let frequency = frequency(
-            template_class,
-            shape.len(),
-            may_located_on_mixed_tiles,
-            &h3m_template,
-        );
+        let frequency = frequency(template_class, shape.len(), &h3m_template);
         let sparsity = sparsity(template_class, shape.len(), &h3m_template);
 
         ObstacleTemplate {
@@ -226,7 +221,10 @@ fn sparsity(
 
         TemplateClass::IceBlock => 100..=196,
 
-        TemplateClass::Volcano => 64..=100,
+        TemplateClass::Volcano => match filename {
+            "AVLvol20.def" => 225..=625,
+            _ => 36..=64,
+        },
 
         TemplateClass::Crater => 64..=100,
 
@@ -246,6 +244,8 @@ fn sparsity(
             _ => {
                 if surface_area <= 4 {
                     25..=36
+                } else if surface_area == 5 {
+                    16..=25
                 } else {
                     0..=0
                 }
@@ -293,12 +293,11 @@ fn sparsity(
 fn frequency(
     template_class: TemplateClass,
     surface_area: usize,
-    may_located_on_mixed_tiles: bool,
     h3m_template: &H3mObjectTemplate,
 ) -> usize {
     let filename = &h3m_template.filename[..];
 
-    let mut frequency = match template_class {
+    match template_class {
         TemplateClass::LavaLake => 1,
 
         TemplateClass::FrozenLake | TemplateClass::LimestoneLake | TemplateClass::TarPit => 2,
@@ -356,11 +355,16 @@ fn frequency(
             _ => surface_area,
         },
 
-        _ => surface_area,
-    };
+        TemplateClass::Volcano => match filename {
+            "AVLvol20.def" | "AVLvol40.def" => 1,
+            _ => surface_area,
+        },
 
-    if may_located_on_mixed_tiles {
-        frequency += 0;
+        TemplateClass::Rock => match filename {
+            "AVLrws02.def" => 0,
+            _ => surface_area,
+        },
+
+        _ => surface_area,
     }
-    std::cmp::max(frequency, 1)
 }
