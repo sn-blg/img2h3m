@@ -55,7 +55,7 @@ impl ObstacleGenerator {
         );
 
         let map_size = terrain_map.size();
-        let areas = obstacle_map::make_areas(map_size, map_size, 18);
+        let areas = obstacle_map::make_areas(map_size, 36, 36);
 
         for sparsity_penalty in 0..=16 {
             obstacle_map.set_sparsity_penalty(sparsity_penalty);

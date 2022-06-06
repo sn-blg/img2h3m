@@ -114,20 +114,12 @@ impl ObstacleMap {
             true
         };
 
-        let direct_traversal = rng.gen_bool(1.0 / 2.0);
-        if direct_traversal {
-            for &index in area.indexes() {
-                if is_valid_index(index) {
-                    return Some(index);
-                }
-            }
-        } else {
-            for &index in area.indexes().iter().rev() {
-                if is_valid_index(index) {
-                    return Some(index);
-                }
+        for &index in area.indexes().iter().rev() {
+            if is_valid_index(index) {
+                return Some(index);
             }
         }
+
         None
     }
 

@@ -207,6 +207,8 @@ fn sparsity(
     let forest_sparsity = |surface_area| {
         if surface_area < 2 {
             2..=9
+        } else if surface_area == 2 {
+            2..=6
         } else {
             0..=0
         }
@@ -256,7 +258,10 @@ fn sparsity(
             }
         },
 
-        TemplateClass::BarchanDunes => 25..=49,
+        TemplateClass::BarchanDunes => match filename {
+            "AVLmtdn1.def" | "AVLmtdn2.def" => 100..=196,
+            _ => 25..=49,
+        },
 
         TemplateClass::Trees => match filename {
             "AVLwlw10.def" => 100..=196,
@@ -265,7 +270,12 @@ fn sparsity(
             _ => forest_sparsity(surface_area),
         },
 
-        TemplateClass::Cactus | TemplateClass::YuccaTrees => 2..=9,
+        TemplateClass::Cactus => match filename {
+            "AVLwct08.def" => 4..=64,
+            _ => 2..=9,
+        },
+
+        TemplateClass::YuccaTrees => 2..=9,
 
         TemplateClass::SandPit => 100..=144,
 
@@ -319,7 +329,10 @@ fn frequency(
 
         TemplateClass::SnowHills => 1,
 
-        TemplateClass::BarchanDunes => 4,
+        TemplateClass::BarchanDunes => match filename {
+            "AVLmtdn1.def" | "AVLmtdn2.def" => 3,
+            _ => 4,
+        },
 
         TemplateClass::Palms => match filename {
             "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
@@ -368,6 +381,8 @@ fn frequency(
             "AVLrws02.def" => 0,
             _ => surface_area,
         },
+
+        TemplateClass::SandPit => 1,
 
         _ => surface_area,
     }
