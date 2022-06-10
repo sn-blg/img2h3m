@@ -312,7 +312,10 @@ fn frequency(
     let filename = &h3m_template.filename[..];
 
     match template_class {
-        TemplateClass::LavaLake => 1,
+        TemplateClass::LavaLake => match filename {
+            "AVLllk10.def" | "AVLllk20.def" => 0,
+            _ => 1,
+        },
 
         TemplateClass::FrozenLake | TemplateClass::LimestoneLake | TemplateClass::TarPit => 2,
 
@@ -336,7 +339,7 @@ fn frequency(
 
         TemplateClass::Palms => match filename {
             "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
-            | "avlspl14.def" => 1,
+            | "avlspl14.def" => 2,
 
             "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
             | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
