@@ -5,6 +5,7 @@ use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
 use crate::h3m::terrain_map::{TerrainVisibleType, Tile};
 use crate::h3m::Terrain;
+use std::cmp::Ordering;
 
 fn make_shape(mask: &Mask) -> Vec<DeltaPos> {
     let mut shape = Vec::new();
@@ -204,14 +205,10 @@ fn sparsity(
 ) -> Sparsity {
     let filename = &h3m_template.filename[..];
 
-    let forest_sparsity = |surface_area| {
-        if surface_area < 2 {
-            2..=9
-        } else if surface_area == 2 {
-            2..=6
-        } else {
-            0..=0
-        }
+    let forest_sparsity = |surface_area: usize| match surface_area.cmp(&2) {
+        Ordering::Less => 2..=9,
+        Ordering::Greater => 0..=0,
+        Ordering::Equal => 2..=6,
     };
 
     Sparsity::new(match template_class {

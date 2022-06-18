@@ -9,8 +9,23 @@ pub enum TerrainVisibleType {
 }
 
 #[derive(Clone, Copy, PartialEq)]
+pub enum Orientation {
+    Vertical,
+    Horizontal,
+}
+
+#[derive(Clone, Copy, PartialEq)]
+pub enum TileType {
+    HalfDiff(Orientation, Terrain),
+    HalfDiff2(Orientation, Terrain, Terrain),
+    Solid,
+    Undefined,
+}
+
+#[derive(Clone, Copy, PartialEq)]
 pub struct Tile {
     terrain_visible_type: TerrainVisibleType,
+    tile_type: TileType,
     code: u8,
     vertical_mirroring: bool,
     horizontal_mirroring: bool,
@@ -19,12 +34,30 @@ pub struct Tile {
 impl Tile {
     pub fn new(
         terrain_visible_type: TerrainVisibleType,
+        tile_type: TileType,
         code: u8,
         vertical_mirroring: bool,
         horizontal_mirroring: bool,
     ) -> Tile {
+        assert!(
+            if tile_type == TileType::Solid {
+                matches!(
+                    terrain_visible_type,
+                    TerrainVisibleType::Same | TerrainVisibleType::Diff(_)
+                )
+            } else {
+                matches!(
+                    terrain_visible_type,
+                    TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
+                )
+            },
+            "invalid tile type, tile code: {}",
+            code
+        );
+
         Tile {
             terrain_visible_type,
+            tile_type,
             code,
             vertical_mirroring,
             horizontal_mirroring,

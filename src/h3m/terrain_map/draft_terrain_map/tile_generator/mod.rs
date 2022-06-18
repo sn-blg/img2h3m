@@ -40,9 +40,10 @@ fn is_terrain_relation_matched(
             .unwrap_or(neighbour.surface.terrain);
         match relation {
             TerrainRelation::Same | TerrainRelation::Eq => neighbour_terrain == terrain,
-            TerrainRelation::SameNamed(names) => {
+            TerrainRelation::SameTyped(tile_types) => {
                 if let Some(neighbour_tile) = neighbour.tile {
-                    (neighbour_terrain == terrain) && (names.contains(&neighbour_tile.name()))
+                    (neighbour_terrain == terrain)
+                        && (tile_types.contains(&neighbour_tile.tile_type()))
                 } else {
                     false
                 }

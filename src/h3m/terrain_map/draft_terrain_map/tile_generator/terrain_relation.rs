@@ -1,4 +1,5 @@
 use super::common::NEIGHBORHOOD_SIZE;
+use super::draft_tile::TileType;
 use crate::h3m::Terrain;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -19,8 +20,8 @@ impl Terrain {
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TerrainRelation {
-    Same,                               // Some neighbour == central terrain
-    SameNamed(&'static [&'static str]), // Some neighbour == central terrain and neighbour tail name == any name in [str]
+    Same,                           // Some neighbour == central terrain
+    SameTyped(&'static [TileType]), // Some neighbour == central terrain and neighbour tail type == any name in [TileType]
 
     Other(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainCategory
     OtherAny,               // Some neighbour != central terrain

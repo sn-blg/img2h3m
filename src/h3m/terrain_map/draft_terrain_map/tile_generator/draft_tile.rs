@@ -1,8 +1,8 @@
 use super::common::NEIGHBORHOOD_SIZE;
 use super::tiles_table::TilesGroupInfo;
 use super::Neighborhood;
-pub use crate::h3m::terrain_map::tile::TerrainVisibleType;
 use crate::h3m::terrain_map::tile::Tile;
+pub use crate::h3m::terrain_map::tile::{Orientation, TerrainVisibleType, TileType};
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TileComposition {
@@ -19,7 +19,7 @@ fn neighborhood_groups(neighborhood: &Neighborhood) -> NeighborhoodGroups {
 #[derive(Clone, Copy, PartialEq)]
 pub struct DraftTile {
     composition: TileComposition,
-    name: &'static str,
+    tile_type: TileType,
     terrain_visible_type: TerrainVisibleType,
     code: u8,
     vertical_mirroring: bool,
@@ -39,7 +39,7 @@ impl DraftTile {
     ) -> DraftTile {
         DraftTile {
             composition,
-            name: tiles_group_info.name(),
+            tile_type: tiles_group_info.tile_type(),
             terrain_visible_type: tiles_group_info.terrain_visible_type(),
             code,
             vertical_mirroring,
@@ -53,8 +53,8 @@ impl DraftTile {
         self.composition
     }
 
-    pub fn name(&self) -> &'static str {
-        self.name
+    pub fn tile_type(&self) -> TileType {
+        self.tile_type
     }
 
     pub fn terrain_visible_type(&self) -> TerrainVisibleType {
@@ -88,6 +88,7 @@ impl DraftTile {
     pub fn to_tile(self) -> Tile {
         Tile::new(
             self.terrain_visible_type,
+            self.tile_type,
             self.code,
             self.vertical_mirroring,
             self.horizontal_mirroring,
@@ -106,7 +107,7 @@ impl Default for DraftTile {
     fn default() -> Self {
         DraftTile {
             composition: TileComposition::Main,
-            name: "",
+            tile_type: TileType::Undefined,
             terrain_visible_type: TerrainVisibleType::Mixed,
             code: 0,
             vertical_mirroring: false,
