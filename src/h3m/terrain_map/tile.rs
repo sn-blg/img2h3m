@@ -18,6 +18,7 @@ pub enum Orientation {
 pub enum TileType {
     HalfDiff(Orientation, Terrain),
     HalfDiff2(Orientation, Terrain, Terrain),
+    WideObliqueAngle(Terrain),
     Solid,
     Undefined,
 }
@@ -66,6 +67,10 @@ impl Tile {
 
     pub fn terrain_visible_type(&self) -> TerrainVisibleType {
         self.terrain_visible_type
+    }
+
+    pub fn tile_type(&self) -> TileType {
+        self.tile_type
     }
 
     pub fn code(&self) -> u8 {

@@ -1,5 +1,5 @@
 use super::obstacle_template::ObstacleTemplate;
-use crate::common::position::generic::Position;
+use crate::common::position::generic::{DeltaPos, Position};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::{MapCell, TerrainMap};
 pub use obstacle_map_area::*;
@@ -87,13 +87,14 @@ impl ObstacleMap {
                 ..=apply_sparsity_penalty(obstacle.sparsity().max()),
         );
 
-        let is_valid_delta = |delta_position: Option<Position<usize>>| {
+        let is_valid_delta = |position: &Position<usize>, delta: &DeltaPos<usize>| {
+            let delta_position = position.checked_sub(delta);
             if let Some(delta_position) = delta_position {
                 let delta_position_index = delta_position.index(self.size);
                 let delta_cell = &self.cells[delta_position_index];
 
                 obstacle.is_valid_terrain(delta_cell.terrain_group())
-                    && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile())
+                    && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile(), delta)
                     && self.sparsity_validator.verify_position(
                         template_index,
                         sparsity,
@@ -107,7 +108,7 @@ impl ObstacleMap {
         let is_valid_index = |index| {
             let position = Position::from_index(self.size, index);
             for delta in obstacle.shape() {
-                if !is_valid_delta(position.checked_sub(delta)) {
+                if !is_valid_delta(&position, delta) {
                     return false;
                 }
             }

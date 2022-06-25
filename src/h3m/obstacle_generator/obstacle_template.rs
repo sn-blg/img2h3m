@@ -3,7 +3,7 @@ use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::result::H3mResult;
-use crate::h3m::terrain_map::{TerrainVisibleType, Tile};
+use crate::h3m::terrain_map::{TerrainVisibleType, Tile, TileType};
 use crate::h3m::Terrain;
 use std::cmp::Ordering;
 
@@ -77,14 +77,38 @@ impl ObstacleTemplate {
         (terrain_group & self.terrain_group_mask) != 0
     }
 
-    pub fn is_valid_tile(&self, tile: &Tile) -> bool {
+    pub fn is_valid_tile(&self, tile: &Tile, delta_pos: &DeltaPos) -> bool {
         if matches!(
             tile.terrain_visible_type(),
             TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
         ) {
-            self.may_located_on_mixed_tiles
+            self.is_valid_mixed_tile(tile, delta_pos)
         } else {
             true
+        }
+    }
+
+    fn is_valid_mixed_tile(&self, tile: &Tile, delta_pos: &DeltaPos) -> bool {
+        assert!(matches!(
+            tile.terrain_visible_type(),
+            TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
+        ));
+
+        let filename = &self.h3m_template.filename[..];
+
+        match filename {
+            "AVLrk3w0.def" => match (
+                delta_pos.row(),
+                delta_pos.column(),
+                tile.vertical_mirroring(),
+                tile.horizontal_mirroring(),
+                tile.tile_type(),
+            ) {
+                (_, _, vertical_mirroring, _, TileType::WideObliqueAngle(_)) => !vertical_mirroring,
+                _ => self.may_located_on_mixed_tiles,
+            },
+
+            _ => self.may_located_on_mixed_tiles,
         }
     }
 
@@ -150,17 +174,6 @@ fn may_located_on_mixed_tiles(
         | TemplateClass::Spruces
         | TemplateClass::Cactus => true,
 
-        TemplateClass::Reef => !matches!(
-            filename,
-            "AVLref10.def"
-                | "avlrfx02.def"
-                | "AVLref60.def"
-                | "avlrfx05.def"
-                | "ZReef3.def"
-                | "ZReef4.def"
-                | "ZReef5.def"
-                | "avlrfx04.def"
-        ),
         TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
         TemplateClass::DeadVegetation => !matches!(
             filename,
@@ -191,7 +204,7 @@ fn may_located_on_mixed_tiles(
                 | "avlswtr8.def"
         ),
 
-        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr16u0.def"),
+        TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr16u0.def" | "AVLrk3w0.def"),
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
 
         _ => false,
@@ -233,6 +246,7 @@ fn sparsity(
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 289..=625,
+            "AVLrk3w0.def" => 14..=18,
             _ => 36..=64,
         },
 

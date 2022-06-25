@@ -760,7 +760,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(16..=17),
-                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::Undefined),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
             ),
             (
                 vec![[  Eq,             Eq,         Eq,
