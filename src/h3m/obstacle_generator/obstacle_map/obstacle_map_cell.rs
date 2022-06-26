@@ -2,12 +2,15 @@ use crate::common::position::generic::Position;
 use crate::h3m::terrain_map::MapCell;
 use crate::h3m::terrain_map::TerrainVisibleType;
 
+pub type NeighborhoodSameRelation = [bool; 8];
+
 #[derive(Clone, Copy)]
 pub struct ObstacleMapCell {
     position: Position<u8>,
     map_cell: Option<MapCell>,
     template_index: Option<usize>,
     terrain_group: u16, // terrain editor group, 0 means no obstacles to place
+    neighborhood_same_relation: NeighborhoodSameRelation,
 }
 
 fn calc_terrain_group(map_cell: &Option<MapCell>) -> u16 {
@@ -28,13 +31,19 @@ fn calc_terrain_group(map_cell: &Option<MapCell>) -> u16 {
 }
 
 impl ObstacleMapCell {
-    pub fn new(row: u8, column: u8, map_cell: Option<MapCell>) -> ObstacleMapCell {
+    pub fn new(
+        row: u8,
+        column: u8,
+        map_cell: Option<MapCell>,
+        neighborhood_same_relation: NeighborhoodSameRelation,
+    ) -> ObstacleMapCell {
         let terrain_group = calc_terrain_group(&map_cell);
         ObstacleMapCell {
             position: Position::new(row, column),
             map_cell,
             template_index: None,
             terrain_group,
+            neighborhood_same_relation,
         }
     }
 
@@ -57,5 +66,9 @@ impl ObstacleMapCell {
 
     pub fn terrain_group(&self) -> u16 {
         self.terrain_group
+    }
+
+    pub fn neighborhood_same_relation(&self) -> &NeighborhoodSameRelation {
+        &self.neighborhood_same_relation
     }
 }

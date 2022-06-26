@@ -1,3 +1,4 @@
+use super::obstacle_map::NeighborhoodSameRelation;
 use super::sparsity::Sparsity;
 use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
@@ -77,18 +78,28 @@ impl ObstacleTemplate {
         (terrain_group & self.terrain_group_mask) != 0
     }
 
-    pub fn is_valid_tile(&self, tile: &Tile, delta_pos: &DeltaPos) -> bool {
+    pub fn is_valid_tile(
+        &self,
+        tile: &Tile,
+        delta_pos: &DeltaPos,
+        neighborhood_same_relation: &NeighborhoodSameRelation,
+    ) -> bool {
         if matches!(
             tile.terrain_visible_type(),
             TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
         ) {
-            self.is_valid_mixed_tile(tile, delta_pos)
+            self.is_valid_mixed_tile(tile, delta_pos, neighborhood_same_relation)
         } else {
             true
         }
     }
 
-    fn is_valid_mixed_tile(&self, tile: &Tile, delta_pos: &DeltaPos) -> bool {
+    fn is_valid_mixed_tile(
+        &self,
+        tile: &Tile,
+        delta_pos: &DeltaPos,
+        neighborhood_same_relation: &NeighborhoodSameRelation,
+    ) -> bool {
         assert!(matches!(
             tile.terrain_visible_type(),
             TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
@@ -96,19 +107,19 @@ impl ObstacleTemplate {
 
         let filename = &self.h3m_template.filename[..];
 
-        match filename {
-            "AVLrk3w0.def" => match (
-                delta_pos.row(),
-                delta_pos.column(),
-                tile.vertical_mirroring(),
-                tile.horizontal_mirroring(),
-                tile.tile_type(),
-            ) {
-                (_, _, vertical_mirroring, _, TileType::WideObliqueAngle(_)) => !vertical_mirroring,
-                _ => self.may_located_on_mixed_tiles,
-            },
+        if filename == "avlrfx04.def" && !neighborhood_same_relation[3] {
+            return false;
+        }
 
-            _ => self.may_located_on_mixed_tiles,
+        if let TileType::WideObliqueAngle(_) = tile.tile_type() {
+            match filename {
+                "AVLrk3w0.def" => !tile.vertical_mirroring(),
+                "avlrfx04.def" => !tile.vertical_mirroring() && tile.horizontal_mirroring(),
+                "avlrfx01.def" => tile.horizontal_mirroring(),
+                _ => self.may_located_on_mixed_tiles,
+            }
+        } else {
+            self.may_located_on_mixed_tiles
         }
     }
 
@@ -206,6 +217,7 @@ fn may_located_on_mixed_tiles(
 
         TemplateClass::Rock => matches!(filename, "AVLrk5d0.def" | "AVLr16u0.def" | "AVLrk3w0.def"),
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
+        TemplateClass::Reef => matches!(filename, "avlrfx04.def" | "avlrfx01.def"),
 
         _ => false,
     }

@@ -1,8 +1,9 @@
 use super::obstacle_template::ObstacleTemplate;
-use crate::common::position::generic::{DeltaPos, Position};
+use crate::common::position::generic::{DeltaPos, Position, SignedDeltaPos};
 use crate::h3m::result::*;
-use crate::h3m::terrain_map::{MapCell, TerrainMap};
+use crate::h3m::terrain_map::TerrainMap;
 pub use obstacle_map_area::*;
+pub use obstacle_map_cell::NeighborhoodSameRelation;
 use obstacle_map_cell::ObstacleMapCell;
 use rand::{rngs::ThreadRng, Rng};
 use sparsity_validator::SparsityValidator;
@@ -13,17 +14,47 @@ mod obstacle_map_cell;
 mod sparsity_validator;
 
 impl ObstacleMapCell {
-    fn from_map_cell(
-        index: usize,
-        size: usize,
-        map_cell: &Option<MapCell>,
-    ) -> H3mResult<ObstacleMapCell> {
+    fn from_map_cell_index(index: usize, terrain_map: &TerrainMap) -> H3mResult<ObstacleMapCell> {
+        let size = terrain_map.size();
         let row = index / size;
         let column = index % size;
+        let map_cell_position = Position::new(row, column);
+        let map_cell = terrain_map.cells()[index];
+
+        let neighbour_same_relation_getter = |delta_row: i32, delta_column: i32| -> bool {
+            let neighbour_position = map_cell_position.checked_apply(
+                size,
+                size,
+                &SignedDeltaPos::new(delta_row, delta_column),
+            );
+            let neighbour_position = match neighbour_position {
+                Some(neighbour_position) => neighbour_position,
+                None => return true,
+            };
+
+            let neighbour = terrain_map.cells()[neighbour_position.index(size)];
+            match (map_cell, neighbour) {
+                (Some(map_cell), Some(neighbour)) => {
+                    map_cell.surface().terrain == neighbour.surface().terrain
+                }
+                _ => true,
+            }
+        };
+
         Ok(ObstacleMapCell::new(
             row.try_into()?,
             column.try_into()?,
-            *map_cell,
+            map_cell,
+            [
+                neighbour_same_relation_getter(-1, -1),
+                neighbour_same_relation_getter(-1, 0),
+                neighbour_same_relation_getter(-1, 1),
+                neighbour_same_relation_getter(0, -1),
+                neighbour_same_relation_getter(0, 1),
+                neighbour_same_relation_getter(1, -1),
+                neighbour_same_relation_getter(1, 0),
+                neighbour_same_relation_getter(1, 1),
+            ],
         ))
     }
 }
@@ -50,8 +81,8 @@ impl ObstacleMap {
 
         let cells = {
             let mut cells = Vec::new();
-            for (index, map_cell) in terrain_map.cells().iter().enumerate() {
-                cells.push(ObstacleMapCell::from_map_cell(index, size, map_cell)?);
+            for index in 0..map_len {
+                cells.push(ObstacleMapCell::from_map_cell_index(index, terrain_map)?);
             }
             cells
         };
@@ -94,7 +125,11 @@ impl ObstacleMap {
                 let delta_cell = &self.cells[delta_position_index];
 
                 obstacle.is_valid_terrain(delta_cell.terrain_group())
-                    && obstacle.is_valid_tile(delta_cell.map_cell().unwrap().tile(), delta)
+                    && obstacle.is_valid_tile(
+                        delta_cell.map_cell().unwrap().tile(),
+                        delta,
+                        delta_cell.neighborhood_same_relation(),
+                    )
                     && self.sparsity_validator.verify_position(
                         template_index,
                         sparsity,
