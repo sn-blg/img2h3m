@@ -9,7 +9,7 @@ impl ObstacleTemplateList {
         ObstacleTemplateList(
             h3m_obstacle_templates()
                 .into_iter()
-                .map(ObstacleTemplate::new)
+                .map(ObstacleTemplate::from_h3m_template)
                 .collect(),
         )
     }
