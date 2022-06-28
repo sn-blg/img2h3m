@@ -230,7 +230,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(16..=17),
-                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::Undefined),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
             ),
             (
                 vec![[  EqOr(Dirty),    EqOr(Dirty),    EqOr(Dirty),
@@ -343,7 +343,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(16..=17) } else { TileCodesSet::new(28..=30) },
-                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::Undefined),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Dirt)),
                 ),
                 (
                     vec![[  Eq,             Eq,             Eq,
@@ -405,7 +405,7 @@ impl TilesTable {
                         ],
                     ],
                     if is_old { TileCodesSet::new(36..=37) } else { TileCodesSet::new(62..=64) },
-                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::Undefined),
+                    (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
                 ),
                 (
                     vec![[  Eq,             Eq,             Eq,
@@ -1063,7 +1063,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(32..=33),
-                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::Undefined),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
             ),
             (
                 vec![[  Any,            OtherAny,       Any,
@@ -1076,7 +1076,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(34..=35),
-                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, TileType::Undefined),
+                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
             ),
             (
                 vec![[  Any,            Eq,             Eq,
@@ -1089,7 +1089,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(36..=37),
-                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, TileType::Undefined),
+                (TerrainVisibleType::Mixed, TileSymmetry::SideDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
             ),
             (
                 vec![[  Eq,             Eq,             Any,
@@ -1102,7 +1102,7 @@ impl TilesTable {
                     ],
                 ],
                 TileCodesSet::new(38..=39),
-                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::Undefined),
+                (TerrainVisibleType::Mixed, TileSymmetry::MainDiagonal, TileComposition::Main, TileType::WideObliqueAngle(Terrain::Sand)),
             ),
             (
                 vec![[  Eq,             Eq,             Eq,
