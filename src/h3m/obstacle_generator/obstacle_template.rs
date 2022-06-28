@@ -5,7 +5,7 @@ use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::H3mObjectTemplate;
 use crate::h3m::result::H3mResult;
-use crate::h3m::terrain_map::{TerrainVisibleType, Tile, TileType};
+use crate::h3m::terrain_map::{TerrainVisibleType, Tile, TileType, Orientation};
 use crate::h3m::Terrain;
 
 pub struct ObstacleTemplate {
@@ -91,9 +91,9 @@ impl ObstacleTemplate {
 
         let neighborhood_same_relation = obstacle_map_cell.neighborhood_same_relation();
 
-        //if self.template_class == TemplateClass::Mountain {
-        //    return neighborhood_same_relation[3] && neighborhood_same_relation[6];
-        //}
+        if self.template_class == TemplateClass::Mountain {
+            return self.is_valid_mountain_mixed_tile(tile, delta_pos, neighborhood_same_relation);
+        }
 
         match map_cell.surface().terrain {
             Terrain::Snow => self.may_located_on_mixed_tiles,
@@ -101,6 +101,42 @@ impl ObstacleTemplate {
                 self.is_valid_water_mixed_tile(tile, delta_pos, neighborhood_same_relation)
             }
             _ => self.may_located_on_mixed_tiles,
+        }
+    }
+
+    fn is_valid_mountain_mixed_tile(
+        &self,
+        tile: &Tile,
+        delta_pos: &DeltaPos,
+        neighborhood_same_relation: &NeighborhoodSameRelation,
+    ) -> bool {
+        let filename = &self.h3m_template.filename[..];
+
+        match filename {
+            "avlmtdr7.def" => true,
+            "avlmtdr3.def" => return neighborhood_same_relation[6],
+            "avlmtdr4.def" => {
+                return neighborhood_same_relation[3]
+                    && neighborhood_same_relation[5]
+                    && neighborhood_same_relation[6]
+            }
+            "avlmtdr1.def" => {
+                return neighborhood_same_relation[4]
+                    && neighborhood_same_relation[6]
+                    && neighborhood_same_relation[7]
+            }
+            "avlmtdr2.def" | "avlmtdr6.def" | "avlmtdr5.def" | "avlmtdr8.def" => {
+                return neighborhood_same_relation[3]
+                    && neighborhood_same_relation[4]
+                    && neighborhood_same_relation[5]
+                    && neighborhood_same_relation[6]
+                    && neighborhood_same_relation[7]
+            }
+            _ => if let TileType::HalfDiff(Orientation::Horizontal, _) = tile.tile_type() {
+                !tile.vertical_mirroring()
+            } else {
+                self.may_located_on_mixed_tiles
+            }
         }
     }
 
