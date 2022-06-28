@@ -256,7 +256,9 @@ fn frequency(
             _ => 1,
         },
 
-        TemplateClass::FrozenLake | TemplateClass::LimestoneLake | TemplateClass::TarPit => 2,
+        TemplateClass::FrozenLake => 2,
+
+        TemplateClass::LimestoneLake | TemplateClass::TarPit => 1,
 
         TemplateClass::Lake => match filename {
             "AVLlk1r.def" => 1,

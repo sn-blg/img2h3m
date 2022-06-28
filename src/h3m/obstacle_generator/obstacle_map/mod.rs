@@ -4,7 +4,7 @@ use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
 pub use obstacle_map_area::*;
 pub use obstacle_map_cell::NeighborhoodSameRelation;
-use obstacle_map_cell::ObstacleMapCell;
+pub use obstacle_map_cell::ObstacleMapCell;
 use rand::{rngs::ThreadRng, Rng};
 use sparsity_validator::SparsityValidator;
 
@@ -124,12 +124,7 @@ impl ObstacleMap {
                 let delta_position_index = delta_position.index(self.size);
                 let delta_cell = &self.cells[delta_position_index];
 
-                obstacle.is_valid_terrain(delta_cell.terrain_group())
-                    && obstacle.is_valid_tile(
-                        delta_cell.map_cell().unwrap().tile(),
-                        delta,
-                        delta_cell.neighborhood_same_relation(),
-                    )
+                obstacle.is_valid_cell(delta_cell, delta)
                     && self.sparsity_validator.verify_position(
                         template_index,
                         sparsity,
