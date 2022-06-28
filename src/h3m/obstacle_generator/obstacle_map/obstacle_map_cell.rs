@@ -1,6 +1,7 @@
 use crate::common::position::generic::Position;
 use crate::h3m::terrain_map::MapCell;
 use crate::h3m::terrain_map::TerrainVisibleType;
+use crate::h3m::Terrain;
 
 pub type NeighborhoodSameRelation = [bool; 8];
 
@@ -13,18 +14,18 @@ pub struct ObstacleMapCell {
     neighborhood_same_relation: NeighborhoodSameRelation,
 }
 
+pub fn calc_terrain(map_cell: &MapCell) -> Terrain {
+    match map_cell.tile().terrain_visible_type() {
+        TerrainVisibleType::Diff(terrain) => terrain,
+        TerrainVisibleType::DiffMixed(terrain) => terrain,
+        _ => map_cell.surface().terrain,
+    }
+}
+
 fn calc_terrain_group(map_cell: &Option<MapCell>) -> u16 {
     if let Some(map_cell) = map_cell {
         if map_cell.surface().obstacle {
-            let tile = map_cell.tile();
-
-            let terrain = match tile.terrain_visible_type() {
-                TerrainVisibleType::Diff(terrain) => terrain,
-                TerrainVisibleType::DiffMixed(terrain) => terrain,
-                _ => map_cell.surface().terrain,
-            };
-
-            return terrain.group();
+            return calc_terrain(map_cell).group();
         }
     }
     0

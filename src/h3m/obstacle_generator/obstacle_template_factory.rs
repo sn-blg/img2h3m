@@ -40,6 +40,7 @@ impl ObstacleTemplate {
 
         ObstacleTemplate::new(
             h3m_template,
+            template_class,
             shape,
             terrain_group_mask,
             frequency,

@@ -1,6 +1,7 @@
 use super::obstacle_map::NeighborhoodSameRelation;
 use super::obstacle_map::ObstacleMapCell;
 use super::sparsity::Sparsity;
+use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::H3mObjectTemplate;
 use crate::h3m::result::H3mResult;
@@ -9,6 +10,7 @@ use crate::h3m::Terrain;
 
 pub struct ObstacleTemplate {
     h3m_template: H3mObjectTemplate,
+    template_class: TemplateClass,
     h3m_template_index: u32,
     shape: Vec<DeltaPos>,
     terrain_group_mask: u16,
@@ -20,6 +22,7 @@ pub struct ObstacleTemplate {
 impl ObstacleTemplate {
     pub fn new(
         h3m_template: H3mObjectTemplate,
+        template_class: TemplateClass,
         shape: Vec<DeltaPos>,
         terrain_group_mask: u16,
         frequency: usize,
@@ -28,8 +31,9 @@ impl ObstacleTemplate {
     ) -> ObstacleTemplate {
         ObstacleTemplate {
             h3m_template,
-            shape,
+            template_class,
             h3m_template_index: 0,
+            shape,
             terrain_group_mask,
             frequency,
             may_located_on_mixed_tiles,
@@ -86,6 +90,10 @@ impl ObstacleTemplate {
         }
 
         let neighborhood_same_relation = obstacle_map_cell.neighborhood_same_relation();
+
+        //if self.template_class == TemplateClass::Mountain {
+        //    return neighborhood_same_relation[3] && neighborhood_same_relation[6];
+        //}
 
         match map_cell.surface().terrain {
             Terrain::Snow => self.may_located_on_mixed_tiles,
