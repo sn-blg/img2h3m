@@ -155,10 +155,11 @@ fn sparsity(
 
     Sparsity::new(match template_class {
         TemplateClass::Lake
-        | TemplateClass::LavaLake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
         | TemplateClass::FrozenLake => 100..=196,
+
+        TemplateClass::LavaLake => 144..=324,
 
         TemplateClass::IceBlock => 100..=196,
 

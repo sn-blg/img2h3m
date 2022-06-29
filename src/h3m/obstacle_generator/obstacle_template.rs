@@ -5,7 +5,7 @@ use super::template_class::TemplateClass;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::H3mObjectTemplate;
 use crate::h3m::result::H3mResult;
-use crate::h3m::terrain_map::{TerrainVisibleType, Tile, TileType, Orientation};
+use crate::h3m::terrain_map::{Orientation, TerrainVisibleType, Tile, TileType};
 use crate::h3m::Terrain;
 
 pub struct ObstacleTemplate {
@@ -114,28 +114,31 @@ impl ObstacleTemplate {
 
         match filename {
             "avlmtdr7.def" => true,
-            "avlmtdr3.def" => return neighborhood_same_relation[6],
+            "avlmtdr3.def" => neighborhood_same_relation[6],
             "avlmtdr4.def" => {
-                return neighborhood_same_relation[3]
+                neighborhood_same_relation[3]
                     && neighborhood_same_relation[5]
                     && neighborhood_same_relation[6]
             }
-            "avlmtdr1.def" => {
-                return neighborhood_same_relation[4]
+            "avlmtdr1.def" | "AVLmtsn2.def" | "AVLmtsw1.def" | "AVLmtsw4.def" => {
+                neighborhood_same_relation[4]
                     && neighborhood_same_relation[6]
                     && neighborhood_same_relation[7]
             }
-            "avlmtdr2.def" | "avlmtdr6.def" | "avlmtdr5.def" | "avlmtdr8.def" => {
-                return neighborhood_same_relation[3]
+            "avlmtdr2.def" | "avlmtdr6.def" | "avlmtdr5.def" | "avlmtdr8.def" | "AVLmtsn4.def"
+            | "AVLmtsn5.def" | "AVLmtsn6.def" | "AVLmtsn1.def" | "AVLmtsn3.def" => {
+                neighborhood_same_relation[3]
                     && neighborhood_same_relation[4]
                     && neighborhood_same_relation[5]
                     && neighborhood_same_relation[6]
                     && neighborhood_same_relation[7]
             }
-            _ => if let TileType::HalfDiff(Orientation::Horizontal, _) = tile.tile_type() {
-                !tile.vertical_mirroring()
-            } else {
-                self.may_located_on_mixed_tiles
+            _ => {
+                if let TileType::HalfDiff(Orientation::Horizontal, _) = tile.tile_type() {
+                    !tile.vertical_mirroring()
+                } else {
+                    self.may_located_on_mixed_tiles
+                }
             }
         }
     }

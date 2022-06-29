@@ -2,7 +2,7 @@ use crate::h3m::result::*;
 use crate::h3m::Surface;
 use draft_terrain_map::DraftTerrainMap;
 pub use map_cell::MapCell;
-pub use tile::{TerrainVisibleType, Tile, TileType, Orientation};
+pub use tile::{Orientation, TerrainVisibleType, Tile, TileType};
 
 mod draft_terrain_map;
 mod map_cell;
