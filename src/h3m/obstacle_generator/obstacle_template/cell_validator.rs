@@ -27,17 +27,26 @@ impl ObstacleTemplate {
 
         let neighborhood_same_relation = obstacle_map_cell.neighborhood_same_relation();
 
-        if self.template_class == TemplateClass::Mountain {
-            return self.is_valid_mountain_mixed_tile(map_cell, neighborhood_same_relation);
+        if match self.template_class {
+            TemplateClass::Mountain => {
+                self.is_valid_mountain_mixed_tile(map_cell, neighborhood_same_relation)
+            }
+            _ => self.may_located_on_mixed_tiles,
+        } {
+            return true;
         }
 
-        match map_cell.surface().terrain {
+        if match map_cell.surface().terrain {
             Terrain::Snow => self.may_located_on_mixed_tiles,
             Terrain::Water => {
                 self.is_valid_water_mixed_tile(tile, delta_pos, neighborhood_same_relation)
             }
             _ => self.may_located_on_mixed_tiles,
+        } {
+            return true;
         }
+
+        self.may_located_on_mixed_tiles
     }
 
     fn is_valid_mountain_mixed_tile(
@@ -93,6 +102,34 @@ impl ObstacleTemplate {
                     return same_bottom();
                 }
                 "avlmtrf2.def" | "avlmtrf1.def" | "avlmtrf5.def" => {
+                    return same_left_bottom();
+                }
+                _ => (),
+            },
+
+            Terrain::Subterranean => {
+                if matches!(tile.tile_type(), TileType::HalfDiff(_, Terrain::Sand)) {
+                    return true;
+                } else {
+                    match self.filename() {
+                        "AVLmtsb5.def" | "AVLmtsb4.def" => return true,
+                        "AVLmtsb0.def" => {
+                            return same_right_bottom();
+                        }
+                        "AVLmtsb2.def" => {
+                            return same_left_bottom();
+                        }
+                        _ => (),
+                    }
+                }
+            }
+
+            Terrain::Lava => match self.filename() {
+                "AVLmtvo5.def" => return false,
+                "AVLmtvo1.def" | "AVLmtvo2.def" => {
+                    return same_right_bottom();
+                },
+                "AVLmtvo3.def" => {
                     return same_left_bottom();
                 }
                 _ => (),
