@@ -1,10 +1,80 @@
-use super::obstacle_template::ObstacleTemplate;
 use super::sparsity::Sparsity;
 use super::template_class::TemplateClass;
+use super::ObstacleTemplate;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::Terrain;
 use std::cmp::Ordering;
+
+pub struct ObstacleTemplateCreateParams {
+    pub filename: &'static str,
+    pub shape_mask: [u8; 6],
+    pub visit_mask: [u8; 6],
+    pub surface_type_mask: u16,
+    pub surface_editor_group_mask: u16,
+    pub class: u32,
+    pub subclass: u32,
+    pub group: u8,
+    pub is_overlay: bool,
+}
+
+impl H3mObjectTemplate {
+    fn from_create_params(create_params: &ObstacleTemplateCreateParams) -> H3mObjectTemplate {
+        H3mObjectTemplate {
+            filename: String::from(create_params.filename),
+            shape_mask: create_params.shape_mask,
+            visit_mask: create_params.visit_mask,
+            surface_type_mask: create_params.surface_type_mask,
+            surface_editor_group_mask: create_params.surface_editor_group_mask,
+            class: create_params.class,
+            subclass: create_params.subclass,
+            group: create_params.group,
+            is_overlay: create_params.is_overlay,
+        }
+    }
+}
+
+impl ObstacleTemplate {
+    pub fn new(create_params: &ObstacleTemplateCreateParams) -> ObstacleTemplate {
+        let template_class = template_class(
+            create_params.class,
+            create_params.subclass,
+            create_params.filename,
+        );
+
+        let terrain_group_mask = calc_terrain_group_mask(
+            template_class,
+            create_params.surface_editor_group_mask,
+            create_params.filename,
+        );
+
+        let may_located_on_mixed_tiles =
+            may_located_on_mixed_tiles(template_class, create_params.filename);
+
+        let shape = make_shape(&create_params.shape_mask);
+
+        let frequency = frequency(
+            template_class,
+            shape.len(),
+            create_params.surface_editor_group_mask,
+            create_params.filename,
+        );
+
+        let sparsity = sparsity(template_class, shape.len(), create_params.filename);
+
+        ObstacleTemplate {
+            h3m_template: H3mObjectTemplate::from_create_params(create_params),
+            filename: create_params.filename,
+            template_class,
+            h3m_template_index: 0,
+            shape,
+            terrain_group_mask,
+            frequency,
+            may_located_on_mixed_tiles,
+            sparsity,
+        }
+    }
+}
 
 fn make_shape(mask: &Mask) -> Vec<DeltaPos> {
     let mut shape = Vec::new();
@@ -19,50 +89,24 @@ fn make_shape(mask: &Mask) -> Vec<DeltaPos> {
     shape
 }
 
-fn template_class(h3m_template: &H3mObjectTemplate) -> TemplateClass {
-    TemplateClass::from_code(h3m_template.class, h3m_template.subclass).unwrap_or_else(|| {
-        panic!(
-            "Сouldn't define a class for the template '{:?}'",
-            h3m_template
-        )
-    })
+fn template_class(class: u32, subclass: u32, filename: &'static str) -> TemplateClass {
+    TemplateClass::from_code(class, subclass)
+        .unwrap_or_else(|| panic!("Сouldn't define a class for the template '{:?}'", filename))
 }
 
-impl ObstacleTemplate {
-    pub fn from_h3m_template(h3m_template: H3mObjectTemplate) -> ObstacleTemplate {
-        let mask = h3m_template.shape_mask;
-        let template_class = template_class(&h3m_template);
-        let terrain_group_mask = calc_terrain_group_mask(template_class, &h3m_template);
-        let may_located_on_mixed_tiles = may_located_on_mixed_tiles(template_class, &h3m_template);
-        let shape = make_shape(&mask);
-        let frequency = frequency(template_class, shape.len(), &h3m_template);
-        let sparsity = sparsity(template_class, shape.len(), &h3m_template);
-
-        ObstacleTemplate::new(
-            h3m_template,
-            template_class,
-            shape,
-            terrain_group_mask,
-            frequency,
-            may_located_on_mixed_tiles,
-            sparsity,
-        )
-    }
-}
-
-fn calc_terrain_group_mask(template_class: TemplateClass, h3m_template: &H3mObjectTemplate) -> u16 {
-    let mut terrain_group_mask = h3m_template.surface_editor_group_mask;
-
+fn calc_terrain_group_mask(
+    template_class: TemplateClass,
+    mut surface_editor_group_mask: u16,
+    filename: &'static str,
+) -> u16 {
     if template_class == TemplateClass::Palms {
-        terrain_group_mask &= !Terrain::Grass.group();
+        surface_editor_group_mask &= !Terrain::Grass.group();
     }
 
     if template_class == TemplateClass::OakTrees {
-        terrain_group_mask &= !Terrain::Dirt.group();
-        terrain_group_mask &= !Terrain::Swamp.group();
+        surface_editor_group_mask &= !Terrain::Dirt.group();
+        surface_editor_group_mask &= !Terrain::Swamp.group();
     }
-
-    let filename = &h3m_template.filename[..];
 
     if template_class == TemplateClass::DeadVegetation
         && matches!(
@@ -75,24 +119,19 @@ fn calc_terrain_group_mask(template_class: TemplateClass, h3m_template: &H3mObje
                 | "AVLdead7.def"
         )
     {
-        terrain_group_mask &= !Terrain::Swamp.group();
+        surface_editor_group_mask &= !Terrain::Swamp.group();
     }
 
     if template_class == TemplateClass::Lake
         && matches!(filename, "AVLlk1g0.def" | "AVLlk2g0.def" | "AVLlk3g0.def")
     {
-        terrain_group_mask |= Terrain::Swamp.group();
+        surface_editor_group_mask |= Terrain::Swamp.group();
     }
 
-    terrain_group_mask
+    surface_editor_group_mask
 }
 
-fn may_located_on_mixed_tiles(
-    template_class: TemplateClass,
-    h3m_template: &H3mObjectTemplate,
-) -> bool {
-    let filename = &h3m_template.filename[..];
-
+fn may_located_on_mixed_tiles(template_class: TemplateClass, filename: &'static str) -> bool {
     match template_class {
         TemplateClass::OakTrees
         | TemplateClass::PineTrees
@@ -143,10 +182,8 @@ fn may_located_on_mixed_tiles(
 fn sparsity(
     template_class: TemplateClass,
     surface_area: usize,
-    h3m_template: &H3mObjectTemplate,
+    filename: &'static str,
 ) -> Sparsity {
-    let filename = &h3m_template.filename[..];
-
     let forest_sparsity = |surface_area: usize| match surface_area.cmp(&2) {
         Ordering::Less => 2..=9,
         Ordering::Greater => 0..=0,
@@ -248,10 +285,9 @@ fn sparsity(
 fn frequency(
     template_class: TemplateClass,
     surface_area: usize,
-    h3m_template: &H3mObjectTemplate,
+    surface_editor_group_mask: u16,
+    filename: &'static str,
 ) -> usize {
-    let filename = &h3m_template.filename[..];
-
     match template_class {
         TemplateClass::LavaLake => match filename {
             "AVLllk10.def" | "AVLllk20.def" => 0,
@@ -304,7 +340,7 @@ fn frequency(
         },
 
         TemplateClass::DeadVegetation => {
-            if h3m_template.surface_editor_group_mask == Terrain::Snow.group() {
+            if surface_editor_group_mask == Terrain::Snow.group() {
                 surface_area
             } else {
                 std::cmp::min(surface_area, 2)

@@ -1,5 +1,4 @@
-use super::obstacle_template::ObstacleTemplate;
-use crate::h3m::parser;
+use super::obstacle_template::{ObstacleTemplate, ObstacleTemplateCreateParams};
 use std::slice::Iter;
 
 pub struct ObstacleTemplateList(Vec<ObstacleTemplate>);
@@ -9,7 +8,7 @@ impl ObstacleTemplateList {
         ObstacleTemplateList(
             h3m_obstacle_templates()
                 .into_iter()
-                .map(ObstacleTemplate::from_h3m_template)
+                .map(|t| ObstacleTemplate::new(&t))
                 .collect(),
         )
     }
@@ -27,21 +26,9 @@ impl ObstacleTemplateList {
     }
 }
 
-fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
-    struct H3mObjectTemplate {
-        pub filename: &'static str,
-        pub shape_mask: [u8; 6],
-        pub visit_mask: [u8; 6],
-        pub surface_type_mask: u16,
-        pub surface_editor_group_mask: u16,
-        pub class: u32,
-        pub subclass: u32,
-        pub group: u8,
-        pub is_overlay: bool,
-    }
-
+fn h3m_obstacle_templates() -> Vec<ObstacleTemplateCreateParams> {
     [
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlautr0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -52,7 +39,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlautr1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -63,7 +50,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlautr8.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -74,7 +61,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlautr9.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -85,7 +72,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLAUTR2.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -96,7 +83,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLAUTR3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -107,7 +94,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLAUTR4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -118,7 +105,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLAUTR5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -129,7 +116,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLautr6.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -140,7 +127,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLautr7.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -151,7 +138,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -162,7 +149,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -173,7 +160,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -184,7 +171,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -195,7 +182,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR8.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -206,7 +193,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR9.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -217,7 +204,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR2.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -228,7 +215,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -239,7 +226,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -250,7 +237,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLpntr6.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -261,7 +248,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct1d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -272,7 +259,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct2d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -283,7 +270,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct3d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -294,7 +281,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct4d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -305,7 +292,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct5d0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -316,7 +303,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctrd0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -327,7 +314,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd1d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -338,7 +325,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd2d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -349,7 +336,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AvLRD01.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -360,7 +347,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AvLRD02.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -371,7 +358,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF03.def",
             shape_mask: [255, 255, 255, 255, 191, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -382,7 +369,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo10.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -393,7 +380,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF02.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -404,7 +391,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF01.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -415,7 +402,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF06.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -426,7 +413,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF07.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -437,7 +424,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF05.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -448,7 +435,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo12.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -459,7 +446,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo13.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -470,7 +457,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo05.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -481,7 +468,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -492,7 +479,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo07.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -503,7 +490,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo09.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -514,7 +501,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtr2d0.def",
             shape_mask: [255, 255, 255, 255, 255, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -525,7 +512,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtr3d0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -536,7 +523,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtr1d0.def",
             shape_mask: [255, 255, 255, 255, 255, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -547,7 +534,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AvLStm3.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -558,7 +545,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AvLStm2.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -569,7 +556,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AvLStm1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -580,7 +567,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrk5d0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -591,7 +578,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLpntr7.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -602,7 +589,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLPNTR3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -613,7 +600,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -624,7 +611,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr7.def",
             shape_mask: [255, 255, 255, 255, 199, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -635,7 +622,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr8.def",
             shape_mask: [255, 255, 255, 255, 31, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -646,7 +633,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -657,7 +644,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk3d0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -668,7 +655,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk2d0.def",
             shape_mask: [255, 255, 255, 255, 15, 15],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -679,7 +666,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk1d0.def",
             shape_mask: [255, 255, 255, 1, 1, 241],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -690,7 +677,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF04.def",
             shape_mask: [255, 255, 255, 255, 191, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -701,7 +688,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMXF08.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -712,7 +699,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca010.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -723,7 +710,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca020.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -734,7 +721,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca030.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -745,7 +732,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca040.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -756,7 +743,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca050.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -767,7 +754,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca060.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -778,7 +765,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca070.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -789,7 +776,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca080.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -800,7 +787,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca090.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -811,7 +798,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca100.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -822,7 +809,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVcact04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -833,7 +820,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVcact03.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -844,7 +831,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVcact02.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -855,7 +842,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVcact01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -866,7 +853,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca110.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -877,7 +864,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca120.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -888,7 +875,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca130.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -899,7 +886,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctds0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -910,7 +897,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdun10.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -921,7 +908,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdun20.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -932,7 +919,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdun30.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -943,7 +930,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtdn1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -954,7 +941,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtdn2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -965,7 +952,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtdn3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -976,7 +963,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtdn4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -987,7 +974,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtdn5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -998,7 +985,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtdn6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1009,7 +996,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtds1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1020,7 +1007,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtds2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1031,7 +1018,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtds3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1042,7 +1029,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtds6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1053,7 +1040,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtds5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1064,7 +1051,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtds4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1075,7 +1062,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1086,7 +1073,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl02.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1097,7 +1084,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1108,7 +1095,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl03.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1119,7 +1106,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl05.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1130,7 +1117,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl06.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1141,7 +1128,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl07.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1152,7 +1139,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl08.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1163,7 +1150,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl09.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1174,7 +1161,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl10.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1185,7 +1172,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl11.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1196,7 +1183,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl12.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1207,7 +1194,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl13.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1218,7 +1205,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlspl14.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1229,7 +1216,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLspit0.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1240,7 +1227,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLyuc60.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1251,7 +1238,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLyuc30.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1262,7 +1249,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLyuc50.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1273,7 +1260,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLyuc40.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1284,7 +1271,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLyuc10.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1295,7 +1282,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLyuc20.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1306,7 +1293,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct1g0.def",
             shape_mask: [255, 255, 255, 255, 15, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1317,7 +1304,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct2g0.def",
             shape_mask: [255, 255, 255, 31, 31, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1328,7 +1315,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct3g0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1339,7 +1326,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct5g0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1350,7 +1337,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk1g0.def",
             shape_mask: [255, 255, 255, 7, 7, 143],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1361,7 +1348,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk2g0.def",
             shape_mask: [255, 255, 255, 255, 15, 15],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1372,7 +1359,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk3g0.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1383,7 +1370,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd1g0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1394,7 +1381,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd2g0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1405,7 +1392,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctrg0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1416,7 +1403,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgn0.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1427,7 +1414,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgn1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1438,7 +1425,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgn2.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1449,7 +1436,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgn3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1460,7 +1447,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgn4.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1471,7 +1458,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgn5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1482,7 +1469,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgr1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1493,7 +1480,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgr2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1504,7 +1491,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgr3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1515,7 +1502,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgr4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1526,7 +1513,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "grsmnt00.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1537,7 +1524,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "grsmnt05.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1548,7 +1535,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "grsmnt04.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1559,7 +1546,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "grsmnt03.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1570,7 +1557,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "grsmnt02.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1581,7 +1568,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "grsmnt01.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1592,7 +1579,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgr6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1603,7 +1590,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtgr5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1614,7 +1601,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1625,7 +1612,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1636,7 +1623,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR2.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1647,7 +1634,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1658,7 +1645,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR4.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1669,7 +1656,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1680,7 +1667,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSPTR6.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1691,7 +1678,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsptr7.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1702,7 +1689,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsptr8.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1713,7 +1700,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwlw10.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1724,7 +1711,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwlw20.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1735,7 +1722,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwlw30.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1746,7 +1733,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd1sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1757,7 +1744,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd2sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1768,7 +1755,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd3sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1779,7 +1766,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd4sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1790,7 +1777,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd5sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1801,7 +1788,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd6sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1812,7 +1799,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd7sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1823,7 +1810,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd8sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1834,7 +1821,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLd9sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1845,7 +1832,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1856,7 +1843,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1867,7 +1854,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn2.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1878,7 +1865,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1889,7 +1876,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1900,7 +1887,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn7.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1911,7 +1898,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn6.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1922,7 +1909,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLflk10.def",
             shape_mask: [255, 255, 255, 255, 7, 7],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1933,7 +1920,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsn1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1944,7 +1931,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsn2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1955,7 +1942,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsn4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1966,7 +1953,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsn5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1977,7 +1964,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsn6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1988,7 +1975,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLp1sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -1999,7 +1986,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr2sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2010,7 +1997,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLp2sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2021,7 +2008,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPIceCr1.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2032,7 +2019,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPIceCr2.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2043,7 +2030,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPIceCr3.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2054,7 +2041,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2065,7 +2052,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2076,7 +2063,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR8.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2087,7 +2074,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR9.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2098,7 +2085,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR2.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2109,7 +2096,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2120,7 +2107,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2131,7 +2118,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLSNTR5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2142,7 +2129,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsntr6.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2153,7 +2140,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsntr7.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2164,7 +2151,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlxsn01.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2175,7 +2162,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlxsn02.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2186,7 +2173,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlxsn03.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2197,7 +2184,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsn3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2208,7 +2195,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLddsn5.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2219,7 +2206,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctrs0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2230,7 +2217,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2241,7 +2228,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2252,7 +2239,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead8.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2263,7 +2250,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead9.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2274,7 +2261,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead2.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2285,7 +2272,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2296,7 +2283,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2307,7 +2294,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead5.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2318,7 +2305,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead6.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2329,7 +2316,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead7.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2340,7 +2327,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdt1s0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2351,7 +2338,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdt2s0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2362,7 +2349,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdt3s0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2373,7 +2360,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "swddtree.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2384,7 +2371,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk1s0.def",
             shape_mask: [255, 255, 255, 131, 131, 135],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2395,7 +2382,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk2s0.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2406,7 +2393,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk3s0.def",
             shape_mask: [255, 255, 255, 159, 159, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2417,7 +2404,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLman10.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2428,7 +2415,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLman20.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2439,7 +2426,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLman30.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2450,7 +2437,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLman40.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2461,7 +2448,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLman50.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2472,7 +2459,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsw1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2483,7 +2470,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsw2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2494,7 +2481,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsw3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2505,7 +2492,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsw5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2516,7 +2503,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsw6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2527,7 +2514,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "mntswp02.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2538,7 +2525,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "mntswp03.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2549,7 +2536,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "mntswp04.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2560,7 +2547,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "mntswp05.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2571,7 +2558,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "mntswp06.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2582,7 +2569,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "mntswp01.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2593,7 +2580,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsw4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2604,7 +2591,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLplm10.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2615,7 +2602,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLplm20.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2626,7 +2613,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLplm30.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2637,7 +2624,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLplm40.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2648,7 +2635,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLplm50.def",
             shape_mask: [255, 255, 255, 255, 255, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2659,7 +2646,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2670,7 +2657,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2681,7 +2668,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp2.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2692,7 +2679,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2703,7 +2690,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2714,7 +2701,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp5.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2725,7 +2712,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp6.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2736,7 +2723,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswmp7.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2747,7 +2734,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswp50.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2758,7 +2745,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswp60.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2769,7 +2756,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLswp70.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2780,7 +2767,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr7.def",
             shape_mask: [255, 255, 255, 255, 191, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2791,7 +2778,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr1.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2802,7 +2789,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr2.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2813,7 +2800,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr4.def",
             shape_mask: [255, 255, 255, 159, 31, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2824,7 +2811,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswn02.def",
             shape_mask: [255, 255, 255, 159, 143, 223],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2835,7 +2822,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr5.def",
             shape_mask: [255, 255, 255, 255, 207, 167],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2846,7 +2833,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswn03.def",
             shape_mask: [255, 255, 191, 191, 191, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2857,7 +2844,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr6.def",
             shape_mask: [255, 255, 255, 255, 191, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2868,7 +2855,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswn01.def",
             shape_mask: [255, 255, 255, 255, 191, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2879,7 +2866,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr8.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2890,7 +2877,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2901,7 +2888,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr9.def",
             shape_mask: [255, 255, 255, 255, 39, 143],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2912,7 +2899,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswtr0.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2923,7 +2910,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt00.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2934,7 +2921,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPMTREE1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2945,7 +2932,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPMTREE2.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2956,7 +2943,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPMTREE3.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2967,7 +2954,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPMTREE4.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2978,7 +2965,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPMTREE5.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -2989,7 +2976,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPMTREE6.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3000,7 +2987,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3011,7 +2998,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt02.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3022,7 +3009,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt03.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3033,7 +3020,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3044,7 +3031,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt05.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3055,7 +3042,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt06.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3066,7 +3053,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt07.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3077,7 +3064,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt08.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3088,7 +3075,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt09.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3099,7 +3086,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt10.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3110,7 +3097,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt11.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3121,7 +3108,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt12.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3132,7 +3119,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt13.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3143,7 +3130,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt14.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3154,7 +3141,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt15.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3165,7 +3152,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt16.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3176,7 +3163,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt17.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3187,7 +3174,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt18.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3198,7 +3185,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlswt19.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3209,7 +3196,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlbuzr0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3220,7 +3207,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca1r0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3231,7 +3218,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLca2r0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3242,7 +3229,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct1r0.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3253,7 +3240,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct2r0.def",
             shape_mask: [255, 255, 255, 63, 63, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3264,7 +3251,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct3r0.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3275,7 +3262,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct4r0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3286,7 +3273,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct5r0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3297,7 +3284,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct6r0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3308,7 +3295,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct7r0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3319,7 +3306,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct8r0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3330,7 +3317,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct9r0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3341,7 +3328,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctrr0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3352,7 +3339,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk1r.def",
             shape_mask: [255, 255, 255, 255, 159, 15],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3363,7 +3350,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd1r0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3374,7 +3361,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd2r0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3385,7 +3372,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmd3r0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3396,7 +3383,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtrf1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3407,7 +3394,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtrf2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3418,7 +3405,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtrf3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3429,7 +3416,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtrf4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3440,7 +3427,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtrf5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3451,7 +3438,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtrf6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3462,7 +3449,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLroug0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3473,7 +3460,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLroug1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3484,7 +3471,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLroug2.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3495,7 +3482,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo00.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3506,7 +3493,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3517,7 +3504,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo02.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3528,7 +3515,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo03.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3539,7 +3526,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo06.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3550,7 +3537,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo08.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3561,7 +3548,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo0.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3572,7 +3559,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtRo11.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3583,7 +3570,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo1.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3594,7 +3581,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo2.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3605,7 +3592,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3616,7 +3603,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3627,7 +3614,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo5.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3638,7 +3625,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo6.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3649,7 +3636,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo9.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3660,7 +3647,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo8.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3671,7 +3658,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLtrRo7.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3682,7 +3669,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct1u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3693,7 +3680,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct2u0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3704,7 +3691,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct3u0.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3715,7 +3702,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct4u0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3726,7 +3713,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct5u0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3737,7 +3724,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk1u0.def",
             shape_mask: [255, 255, 255, 3, 1, 129],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3748,7 +3735,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk2u0.def",
             shape_mask: [255, 255, 255, 255, 15, 15],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3759,7 +3746,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLllk10.def",
             shape_mask: [255, 255, 255, 255, 31, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3770,7 +3757,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLllk20.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3781,7 +3768,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsb0.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3792,7 +3779,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsb1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3803,7 +3790,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsb2.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3814,7 +3801,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsb3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3825,7 +3812,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsb4.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3836,7 +3823,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtsb5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3847,7 +3834,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr01u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3858,7 +3845,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr02u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3869,7 +3856,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr03u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3880,7 +3867,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr04u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3891,7 +3878,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr05u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3902,7 +3889,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr07u0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3913,7 +3900,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr12u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3924,7 +3911,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr06u0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3935,7 +3922,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr11u0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3946,7 +3933,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr16u0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3957,7 +3944,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLstg40.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3968,7 +3955,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLstg50.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3979,7 +3966,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLstg60.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -3990,7 +3977,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlk3u0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4001,7 +3988,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLc10l0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4012,7 +3999,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLc11l0.def",
             shape_mask: [255, 255, 255, 255, 63, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4023,7 +4010,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLc12l0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4034,7 +4021,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLc13l0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4045,7 +4032,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLc14l0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4056,7 +4043,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct1l0.def",
             shape_mask: [255, 255, 255, 255, 15, 15],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4067,7 +4054,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct2l0.def",
             shape_mask: [255, 255, 63, 63, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4078,7 +4065,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct3l0.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4089,7 +4076,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct4l0.def",
             shape_mask: [255, 255, 255, 255, 63, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4100,7 +4087,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct5l0.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4111,7 +4098,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct6l0.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4122,7 +4109,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct7l0.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4133,7 +4120,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct8l0.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4144,7 +4131,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLct9l0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4155,7 +4142,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctrl0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4166,7 +4153,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLlav10.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4177,7 +4164,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtvo1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4188,7 +4175,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtvo2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4199,7 +4186,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtvo3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4210,7 +4197,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtvo4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4221,7 +4208,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLvol40.def",
             shape_mask: [255, 255, 255, 255, 191, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4232,7 +4219,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLvol50.def",
             shape_mask: [255, 255, 255, 255, 143, 143],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4243,7 +4230,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtvo5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4254,7 +4241,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLvol30.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4265,7 +4252,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLvol20.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4276,7 +4263,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLvol60.def",
             shape_mask: [255, 255, 255, 255, 31, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4287,7 +4274,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLmtvo6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4298,7 +4285,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLcthl0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4309,7 +4296,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMHS00.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4320,7 +4307,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMHS01.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4331,7 +4318,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMHS02.def",
             shape_mask: [255, 255, 255, 255, 143, 207],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4342,7 +4329,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMHS03.def",
             shape_mask: [255, 255, 255, 255, 143, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4353,7 +4340,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMHS05.def",
             shape_mask: [255, 255, 255, 255, 207, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4364,7 +4351,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwtf00.def",
             shape_mask: [255, 255, 255, 159, 143, 255],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4375,7 +4362,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwtf01.def",
             shape_mask: [255, 255, 255, 143, 143, 255],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4386,7 +4373,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwtf02.def",
             shape_mask: [255, 255, 255, 143, 143, 255],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4397,7 +4384,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlhll00.def",
             shape_mask: [255, 255, 255, 3, 1, 131],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4408,7 +4395,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlhll01.def",
             shape_mask: [255, 255, 255, 7, 7, 135],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4419,7 +4406,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlhll02.def",
             shape_mask: [255, 255, 255, 255, 7, 7],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4430,7 +4417,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlhll03.def",
             shape_mask: [255, 255, 255, 255, 31, 255],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4441,7 +4428,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMHS04.def",
             shape_mask: [255, 255, 255, 255, 159, 207],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4452,7 +4439,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN03.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4463,7 +4450,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN00.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4474,7 +4461,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4485,7 +4472,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN02.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4496,7 +4483,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4507,7 +4494,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN05.def",
             shape_mask: [255, 255, 255, 255, 255, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4518,7 +4505,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN13.def",
             shape_mask: [255, 255, 255, 255, 255, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4529,7 +4516,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN06.def",
             shape_mask: [255, 255, 255, 255, 191, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4540,7 +4527,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN07.def",
             shape_mask: [255, 255, 255, 255, 159, 207],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4551,7 +4538,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN08.def",
             shape_mask: [255, 255, 255, 255, 159, 207],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4562,7 +4549,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN09.def",
             shape_mask: [255, 255, 255, 255, 207, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4573,7 +4560,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN10.def",
             shape_mask: [255, 255, 255, 255, 207, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4584,7 +4571,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN11.def",
             shape_mask: [255, 255, 255, 207, 143, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4595,7 +4582,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLHPN12.def",
             shape_mask: [255, 255, 255, 159, 143, 207],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4606,7 +4593,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVlrhl01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4617,7 +4604,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVlrhl02.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4628,7 +4615,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVlrhl03.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4639,7 +4626,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4650,7 +4637,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct02.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4661,7 +4648,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct03.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4672,7 +4659,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4683,7 +4670,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct05.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4694,7 +4681,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct06.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4705,7 +4692,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct07.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4716,7 +4703,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct08.def",
             shape_mask: [255, 255, 255, 255, 255, 191],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4727,7 +4714,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct09.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4738,7 +4725,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwct10.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4749,7 +4736,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwcr01.def",
             shape_mask: [255, 255, 255, 255, 15, 15],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4760,7 +4747,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwcr02.def",
             shape_mask: [255, 255, 255, 255, 135, 135],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4771,7 +4758,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwcr03.def",
             shape_mask: [255, 255, 159, 159, 159, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4782,7 +4769,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL1.def",
             shape_mask: [255, 255, 255, 135, 7, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4793,7 +4780,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL2.def",
             shape_mask: [255, 255, 255, 15, 7, 199],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4804,7 +4791,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL3.def",
             shape_mask: [255, 255, 255, 255, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4815,7 +4802,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4826,7 +4813,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL5.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4837,7 +4824,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4848,7 +4835,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLMTWL7.def",
             shape_mask: [255, 255, 255, 255, 255, 95],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4859,7 +4846,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwll00.def",
             shape_mask: [255, 255, 255, 255, 199, 135],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4870,7 +4857,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwll01.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4881,7 +4868,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwll02.def",
             shape_mask: [255, 255, 255, 255, 255, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4892,7 +4879,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwloi1.def",
             shape_mask: [255, 255, 255, 255, 135, 135],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4903,7 +4890,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwloi2.def",
             shape_mask: [255, 255, 255, 255, 143, 255],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4914,7 +4901,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwloi3.def",
             shape_mask: [255, 255, 255, 255, 131, 195],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4925,7 +4912,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwloi4.def",
             shape_mask: [255, 255, 255, 255, 159, 255],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4936,7 +4923,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLwloi5.def",
             shape_mask: [255, 255, 255, 255, 131, 131],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4947,7 +4934,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4958,7 +4945,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead1.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4969,7 +4956,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead8.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4980,7 +4967,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead2.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -4991,7 +4978,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead3.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5002,7 +4989,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead9.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5013,7 +5000,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead7.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5024,7 +5011,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead4.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5035,7 +5022,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrws02.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5046,7 +5033,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLref10.def",
             shape_mask: [255, 255, 255, 63, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5057,7 +5044,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLref20.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5068,7 +5055,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlrfx03.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5079,7 +5066,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlrfx02.def",
             shape_mask: [255, 255, 255, 255, 159, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5090,7 +5077,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLref30.def",
             shape_mask: [255, 255, 255, 255, 63, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5101,7 +5088,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLref40.def",
             shape_mask: [255, 255, 255, 255, 127, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5112,7 +5099,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLref50.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5123,7 +5110,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrk1w0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5134,7 +5121,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrfx08.def",
             shape_mask: [255, 255, 255, 255, 159, 207],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5145,7 +5132,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlrfx01.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5156,7 +5143,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrk4w0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5167,7 +5154,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrk3w0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5178,7 +5165,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLref60.def",
             shape_mask: [255, 255, 255, 255, 127, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5189,7 +5176,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlrfx05.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5200,7 +5187,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlrfx04.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5211,7 +5198,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrk2w0.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5222,7 +5209,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlrfx06.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5233,7 +5220,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "ZReef1.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5244,7 +5231,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "ZReef3.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5255,7 +5242,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "ZReef5.def",
             shape_mask: [255, 255, 255, 255, 191, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5266,7 +5253,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "ZReef4.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5277,7 +5264,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "ZReef2.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5288,7 +5275,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLrfx07.def",
             shape_mask: [255, 255, 255, 255, 207, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5299,7 +5286,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLctsn0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5310,7 +5297,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLflk20.def",
             shape_mask: [255, 255, 255, 255, 255, 31],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5321,7 +5308,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLflk30.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5332,7 +5319,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "TPIceCr4.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5343,7 +5330,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsnh03.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5354,7 +5341,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsnh01.def",
             shape_mask: [255, 255, 255, 255, 255, 127],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5365,7 +5352,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsnh04.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5376,7 +5363,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLsnh02.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5387,7 +5374,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: true,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLr6sn0.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5398,7 +5385,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr6.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5409,7 +5396,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "avlmtdr4.def",
             shape_mask: [255, 255, 255, 255, 31, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5420,7 +5407,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLvol10.def",
             shape_mask: [255, 255, 255, 255, 255, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5431,7 +5418,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead5.def",
             shape_mask: [255, 255, 255, 255, 63, 159],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5442,7 +5429,7 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
             group: 0,
             is_overlay: false,
         },
-        H3mObjectTemplate {
+        ObstacleTemplateCreateParams {
             filename: "AVLdead6.def",
             shape_mask: [255, 255, 255, 159, 31, 63],
             visit_mask: [0, 0, 0, 0, 0, 0],
@@ -5455,16 +5442,5 @@ fn h3m_obstacle_templates() -> Vec<parser::H3mObjectTemplate> {
         },
     ]
     .into_iter()
-    .map(|t| parser::H3mObjectTemplate {
-        filename: String::from(t.filename),
-        shape_mask: t.shape_mask,
-        visit_mask: t.visit_mask,
-        surface_type_mask: t.surface_type_mask,
-        surface_editor_group_mask: t.surface_editor_group_mask,
-        class: t.class,
-        subclass: t.subclass,
-        group: t.group,
-        is_overlay: t.is_overlay,
-    })
     .collect()
 }

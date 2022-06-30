@@ -3,8 +3,6 @@ use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 use std::io::{Read, Seek, Write};
 
-use crate::h3m::obstacle_generator::template_class::TemplateClass;
-
 pub type Mask = [u8; 6];
 
 #[derive(Debug, Clone)]
@@ -81,10 +79,6 @@ pub fn write_object_templates<W: Write>(
 const DEFAULT_OBJECT_TEMPLATES_COUNT: usize = 2;
 pub type DefaultObjectTemplates = [H3mObjectTemplate; DEFAULT_OBJECT_TEMPLATES_COUNT];
 
-pub fn is_valid_object_template(h3m_template: &H3mObjectTemplate) -> bool {
-    TemplateClass::from_code(h3m_template.class, h3m_template.subclass).is_some()
-}
-
 pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
     input: &mut RS,
 ) -> H3mResult<DefaultObjectTemplates> {
@@ -107,9 +101,7 @@ pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
 
     for _ in 0..(templates_count - DEFAULT_OBJECT_TEMPLATES_COUNT) {
         let object_template = read_object_template(input)?;
-        if is_valid_object_template(&object_template) {
-            v.push(object_template);
-        }
+        v.push(object_template);
     }
 
     println!("{:?}", v);
