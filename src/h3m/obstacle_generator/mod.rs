@@ -68,6 +68,7 @@ impl ObstacleGenerator {
             if obstacle_map.first_position_to_place_obstacle().is_none() {
                 break;
             }
+            println!("next iter!");
         }
 
         if let Some(position) = obstacle_map.first_position_to_place_obstacle() {
