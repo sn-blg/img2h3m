@@ -25,13 +25,17 @@ impl ObstacleTemplate {
             return true;
         }
 
+        if self.may_located_on_mixed_tiles {
+            return true;
+        }
+
         let neighborhood_same_relation = obstacle_map_cell.neighborhood_same_relation();
 
         if match self.template_class {
-            TemplateClass::Mountain | TemplateClass::Volcano => {
+            TemplateClass::Mountain | TemplateClass::Volcano | TemplateClass::Waterfalls => {
                 self.is_valid_mountain_mixed_tile(map_cell, neighborhood_same_relation)
             }
-            _ => self.may_located_on_mixed_tiles,
+            _ => false,
         } {
             return true;
         }
@@ -41,12 +45,12 @@ impl ObstacleTemplate {
             Terrain::Water => {
                 self.is_valid_water_mixed_tile(tile, delta_pos, neighborhood_same_relation)
             }
-            _ => self.may_located_on_mixed_tiles,
+            _ => false,
         } {
             return true;
         }
 
-        self.may_located_on_mixed_tiles
+        false
     }
 
     fn is_valid_mountain_mixed_tile(
@@ -147,6 +151,19 @@ impl ObstacleTemplate {
                         if !tile.horizontal_mirroring() {
                             return true;
                         }
+                    }
+                }
+                _ => (),
+            },
+
+            Terrain::Wasteland => match self.filename() {
+                "AVLMTWL3.def" | "AVLMTWL7.def" => return false,
+                "AVLMTWL5.def" | "AVLMTWL6.def" => {
+                    if matches!(
+                        tile.tile_type(),
+                        TileType::HalfDiff(Orientation::Vertical, _)
+                    ) {
+                        return true;
                     }
                 }
                 _ => (),

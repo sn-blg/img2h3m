@@ -173,8 +173,7 @@ fn may_located_on_mixed_tiles(template_class: TemplateClass, filename: &'static 
             "AVLrk5d0.def" | "AVLr16u0.def" | "AVLrk3w0.def" | "AVLrk4w0.def"
         ),
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
-        TemplateClass::Reef => matches!(filename, "avlrfx04.def" | "avlrfx01.def"),
-
+        //TemplateClass::Reef => matches!(filename, "avlrfx04.def" | "avlrfx01.def"),
         _ => false,
     }
 }
