@@ -138,6 +138,11 @@ fn may_located_on_mixed_tiles(template_class: TemplateClass, filename: &'static 
         | TemplateClass::Spruces
         | TemplateClass::Cactus => true,
 
+        TemplateClass::Mountain | TemplateClass::Volcano | TemplateClass::Waterfalls => true,
+
+        TemplateClass::Rock => !matches!(filename, "AVLrfx08.def" | "AVLrfx07.def"),
+        TemplateClass::Reef => !matches!(filename, "avlrfx05.def" | "ZReef4.def" | "ZReef5.def"),
+
         TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
         TemplateClass::DeadVegetation => !matches!(
             filename,
@@ -168,12 +173,7 @@ fn may_located_on_mixed_tiles(template_class: TemplateClass, filename: &'static 
                 | "avlswtr8.def"
         ),
 
-        TemplateClass::Rock => matches!(
-            filename,
-            "AVLrk5d0.def" | "AVLr16u0.def" | "AVLrk3w0.def" | "AVLrk4w0.def"
-        ),
         TemplateClass::YuccaTrees => matches!(filename, "AVLyuc50.def" | "AVLyuc30.def"),
-        //TemplateClass::Reef => matches!(filename, "avlrfx04.def" | "avlrfx01.def"),
         _ => false,
     }
 }

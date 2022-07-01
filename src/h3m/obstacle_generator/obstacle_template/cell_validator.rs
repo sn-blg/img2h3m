@@ -25,32 +25,30 @@ impl ObstacleTemplate {
             return true;
         }
 
-        if self.may_located_on_mixed_tiles {
-            return true;
+        if !self.may_located_on_mixed_tiles {
+            return false;
         }
 
         let neighborhood_same_relation = obstacle_map_cell.neighborhood_same_relation();
 
-        if match self.template_class {
+        if !match self.template_class {
             TemplateClass::Mountain | TemplateClass::Volcano | TemplateClass::Waterfalls => {
                 self.is_valid_mountain_mixed_tile(map_cell, neighborhood_same_relation)
             }
-            _ => false,
+            _ => true,
         } {
-            return true;
+            return false;
         }
 
-        if match map_cell.surface().terrain {
+        if !match map_cell.surface().terrain {
             Terrain::Snow => self.may_located_on_mixed_tiles,
-            Terrain::Water => {
-                self.is_valid_water_mixed_tile(tile, delta_pos, neighborhood_same_relation)
-            }
-            _ => false,
+            Terrain::Water => self.is_valid_water_mixed_tile(tile, neighborhood_same_relation),
+            _ => true,
         } {
-            return true;
+            return false;
         }
 
-        false
+        true
     }
 
     fn is_valid_mountain_mixed_tile(
@@ -179,31 +177,39 @@ impl ObstacleTemplate {
         ) {
             !tile.vertical_mirroring()
         } else {
-            self.may_located_on_mixed_tiles
+            false
         }
     }
 
     fn is_valid_water_mixed_tile(
         &self,
         tile: &Tile,
-        delta_pos: &DeltaPos,
         neighborhood_same_relation: &NeighborhoodSameRelation,
     ) -> bool {
-        assert!(matches!(
-            tile.terrain_visible_type(),
-            TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
-        ));
-
-        if self.filename() == "avlrfx04.def" && !neighborhood_same_relation[3] {
+        if match self.filename() {
+            "avlrfx04.def" | "ZReef2.def" => !neighborhood_same_relation[3],
+            "AVLref40.def" => !neighborhood_same_relation[0],
+            "ZReef3.def" => !neighborhood_same_relation[1],
+            _ => false,
+        } {
             return false;
         }
 
         if let TileType::WideObliqueAngle(_) = tile.tile_type() {
             match self.filename() {
+                "AVLref30.def" => true,
+                "AVLrk1w0.def" => tile.vertical_mirroring(),
+                "avlrfx04.def" | "avlrfx01.def" => tile.horizontal_mirroring(),
                 "AVLrk3w0.def" => !tile.vertical_mirroring(),
-                "AVLrk4w0.def" => !(tile.vertical_mirroring() && tile.horizontal_mirroring()),
-                "avlrfx01.def" => tile.horizontal_mirroring(),
-                _ => self.may_located_on_mixed_tiles,
+                "AVLref10.def" | "AVLref60.def" => !tile.horizontal_mirroring(),
+                "AVLref20.def" => tile.vertical_mirroring() && tile.horizontal_mirroring(),
+                "AVLref50.def" | "ZReef2.def" | "AVLref40.def" => {
+                    tile.horizontal_mirroring() && !tile.vertical_mirroring()
+                }
+                "AVLrk4w0.def" | "avlrfx06.def" | "AVLrk2w0.def" | "ZReef1.def" => {
+                    !(tile.vertical_mirroring() && tile.horizontal_mirroring())
+                }
+                _ => false,
             }
         } else {
             self.may_located_on_mixed_tiles
