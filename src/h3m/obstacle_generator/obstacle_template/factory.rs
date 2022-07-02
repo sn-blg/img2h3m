@@ -212,7 +212,9 @@ fn sparsity(
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 289..=625,
+            "AvLRD02.def" => 81..=144,
             "AVLrk3w0.def" | "AVLrk4w0.def" => 14..=16,
+            "avlrfx06.def" | "AVLrk2w0.def" => 25..=36,
             _ => 36..=64,
         },
 
@@ -360,6 +362,7 @@ fn frequency(
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 0,
+            "AvLRD02.def" => 1,
             _ => surface_area,
         },
 
