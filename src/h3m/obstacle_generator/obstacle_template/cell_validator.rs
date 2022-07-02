@@ -35,6 +35,9 @@ impl ObstacleTemplate {
             TemplateClass::Mountain | TemplateClass::Volcano | TemplateClass::Waterfalls => {
                 self.is_valid_mountain_mixed_tile(map_cell, neighborhood_same_relation)
             }
+            TemplateClass::Rock => {
+                self.is_valid_rock_mixed_tile(map_cell, neighborhood_same_relation)
+            }
             _ => true,
         } {
             return false;
@@ -181,6 +184,17 @@ impl ObstacleTemplate {
         }
     }
 
+    fn is_valid_rock_mixed_tile(
+        &self,
+        map_cell: &MapCell,
+        neighborhood_same_relation: &NeighborhoodSameRelation,
+    ) -> bool {
+        match map_cell.surface().terrain {
+            Terrain::Water => self.may_located_on_mixed_tiles,
+            _ => matches!(self.filename(), "AVLrk5d0.def" | "AVLr16u0.def"),
+        }
+    }
+
     fn is_valid_water_mixed_tile(
         &self,
         tile: &Tile,
@@ -197,7 +211,8 @@ impl ObstacleTemplate {
 
         if let TileType::WideObliqueAngle(_) = tile.tile_type() {
             match self.filename() {
-                "AVLref30.def" => true,
+                "AVLref30.def" | "AVLrk4w0.def" | "AVLrk2w0.def" | "avlrfx06.def"
+                | "ZReef1.def" => true,
                 "AVLrk1w0.def" => tile.vertical_mirroring(),
                 "avlrfx04.def" | "avlrfx01.def" => tile.horizontal_mirroring(),
                 "AVLrk3w0.def" => !tile.vertical_mirroring(),
@@ -205,9 +220,6 @@ impl ObstacleTemplate {
                 "AVLref20.def" => tile.vertical_mirroring() && tile.horizontal_mirroring(),
                 "AVLref50.def" | "ZReef2.def" | "AVLref40.def" => {
                     tile.horizontal_mirroring() && !tile.vertical_mirroring()
-                }
-                "AVLrk4w0.def" | "avlrfx06.def" | "AVLrk2w0.def" | "ZReef1.def" => {
-                    !(tile.vertical_mirroring() && tile.horizontal_mirroring())
                 }
                 _ => false,
             }
