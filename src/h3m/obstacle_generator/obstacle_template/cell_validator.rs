@@ -58,7 +58,7 @@ impl ObstacleTemplate {
         }
 
         if !match map_cell.surface().terrain {
-            Terrain::Snow => self.may_located_on_mixed_tiles,
+            Terrain::Snow => self.is_valid_snow_mixed_tile(tile, nsr),
             Terrain::Water => self.is_valid_water_mixed_tile(tile, nsr),
             _ => true,
         } {
@@ -286,6 +286,40 @@ impl ObstacleTemplate {
         }
 
         false
+    }
+
+    fn is_valid_snow_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
+        let is_bottom_wide_oblique_angle =
+            matches!(tile.tile_type(), TileType::WideObliqueAngle(_)) && tile.vertical_mirroring();
+
+        let is_right_wide_oblique_angle = matches!(tile.tile_type(), TileType::WideObliqueAngle(_))
+            && tile.horizontal_mirroring();
+
+        match self.template_class {
+            TemplateClass::DeadVegetation => match self.filename() {
+                "AVLd3sn0.def" | "AVLd7sn0.def" | "AVLd5sn0.def" | "AVLd9sn0.def" => {
+                    !is_bottom_wide_oblique_angle
+                }
+                "AVLddsn3.def" | "AVLddsn2.def" => {
+                    !(is_bottom_wide_oblique_angle && is_right_wide_oblique_angle)
+                }
+                _ => self.may_located_on_mixed_tiles,
+            },
+            TemplateClass::Stump => match self.filename() {
+                "AVLp2sn0.def" => !is_right_wide_oblique_angle && same_bottom(nsr),
+                _ => self.may_located_on_mixed_tiles,
+            },
+            TemplateClass::PineTrees => match self.filename() {
+                "AVLSNTR0.def" | "AVLSNTR1.def" | "AVLd9sn0.def" | "AVLSNTR4.def"
+                | "AVLSNTR8.def" | "AVLSNTR9.def" => matches!(
+                    tile.tile_type(),
+                    TileType::HalfDiff(Orientation::Horizontal, _)
+                        | TileType::HalfDiff2(Orientation::Horizontal, _, _)
+                ),
+                _ => same_bottom(nsr),
+            },
+            _ => self.may_located_on_mixed_tiles,
+        }
     }
 
     fn is_valid_water_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
