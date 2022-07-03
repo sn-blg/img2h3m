@@ -90,6 +90,11 @@ impl ObstacleTemplate {
                 _ => (),
             },
 
+            Terrain::Grass => match self.filename() {
+                "grsmnt02.def" => return false,
+                _ => (),
+            },
+
             Terrain::Snow => match self.filename() {
                 "AVLmtsn2.def" => {
                     return same_right_bottom(nsr);
@@ -173,14 +178,10 @@ impl ObstacleTemplate {
             _ => (),
         }
 
-        if matches!(
-            tile.tile_type(),
-            TileType::HalfDiff(Orientation::Horizontal, _)
-                | TileType::HalfDiff2(Orientation::Horizontal, _, _)
-        ) {
-            !tile.vertical_mirroring()
-        } else {
-            false
+        match tile.tile_type() {
+            TileType::HalfDiff(Orientation::Horizontal, _) => !tile.vertical_mirroring(),
+            TileType::HalfDiff2(Orientation::Horizontal, _, _) => tile.vertical_mirroring(),
+            _ => false,
         }
     }
 
@@ -210,18 +211,22 @@ impl ObstacleTemplate {
                 "AVLr03u0.def" => {
                     return match tile.tile_type() {
                         TileType::HalfDiff(_, Terrain::Sand) => true,
-                        TileType::HalfDiff(Orientation::Horizontal, _)
-                        | TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
+                        TileType::HalfDiff(Orientation::Horizontal, _) => {
                             !tile.vertical_mirroring()
+                        }
+                        TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
+                            tile.vertical_mirroring()
                         }
                         _ => false,
                     };
                 }
                 "AVLr04u0.def" | "AVLr01u0.def" => {
                     match tile.tile_type() {
-                        TileType::HalfDiff(Orientation::Horizontal, _)
-                        | TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
+                        TileType::HalfDiff(Orientation::Horizontal, _) => {
                             !tile.vertical_mirroring()
+                        }
+                        TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
+                            tile.vertical_mirroring()
                         }
                         _ => false,
                     };
@@ -256,6 +261,22 @@ impl ObstacleTemplate {
                         TileType::HalfDiff(_, Terrain::Sand) => true,
                         _ => false,
                     };
+                }
+                _ => (),
+            },
+
+            Terrain::Highlands => match self.filename() {
+                "AVlrhl03.def" => return false,
+                "AVlrhl01.def" | "AVlrhl02.def" => {
+                    return match tile.tile_type() {
+                        TileType::HalfDiff(Orientation::Horizontal, _) => {
+                            !tile.vertical_mirroring()
+                        }
+                        TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
+                            tile.vertical_mirroring()
+                        }
+                        _ => false,
+                    }
                 }
                 _ => (),
             },

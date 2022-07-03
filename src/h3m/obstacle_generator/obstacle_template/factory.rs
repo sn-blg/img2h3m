@@ -226,6 +226,7 @@ fn sparsity(
 
         TemplateClass::Mountain => match filename {
             "AVLMTWL7.def" => 225..=625,
+            "AVLmtsb0.def" => 36..=64,
             _ => {
                 if surface_area <= 4 {
                     25..=36
@@ -362,7 +363,7 @@ fn frequency(
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 0,
-            "AvLRD02.def" => 1,
+            "AvLRD02.def" | "AvLRD01.def" => 1,
             _ => surface_area,
         },
 
