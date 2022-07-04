@@ -311,7 +311,10 @@ fn frequency(
 
         TemplateClass::Waterfalls => 2,
 
-        TemplateClass::SnowHills => 1,
+        TemplateClass::SnowHills => match filename {
+            "avlxsn02.def" => 0,
+            _ => 1,
+        },
 
         TemplateClass::BarchanDunes => match filename {
             "AVLmtdn1.def" | "AVLmtdn2.def" => 3,

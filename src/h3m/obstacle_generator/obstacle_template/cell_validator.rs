@@ -311,7 +311,7 @@ impl ObstacleTemplate {
             },
             TemplateClass::PineTrees => match self.filename() {
                 "AVLSNTR0.def" | "AVLSNTR1.def" | "AVLd9sn0.def" | "AVLSNTR4.def"
-                | "AVLSNTR8.def" | "AVLSNTR9.def" => matches!(
+                | "AVLSNTR8.def" | "AVLSNTR9.def" | "AVLSNTR2.def" | "AVLsntr7.def" => matches!(
                     tile.tile_type(),
                     TileType::HalfDiff(Orientation::Horizontal, _)
                         | TileType::HalfDiff2(Orientation::Horizontal, _, _)
