@@ -2,7 +2,7 @@ use super::common::NEIGHBORHOOD_SIZE;
 use super::tiles_table::TilesGroupInfo;
 use super::Neighborhood;
 use crate::h3m::terrain_map::tile::Tile;
-pub use crate::h3m::terrain_map::tile::{Orientation, TerrainVisibleType, TileType};
+pub use crate::h3m::terrain_map::tile::{TerrainVisibleType, TileType};
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TileComposition {
@@ -100,20 +100,5 @@ impl DraftTile {
             .iter()
             .zip(neighborhood_groups(new_neighborhood))
             .any(|(&old_group, new_group)| old_group != new_group)
-    }
-}
-
-impl Default for DraftTile {
-    fn default() -> Self {
-        DraftTile {
-            composition: TileComposition::Main,
-            tile_type: TileType::Undefined,
-            terrain_visible_type: TerrainVisibleType::Mixed,
-            code: 0,
-            vertical_mirroring: false,
-            horizontal_mirroring: false,
-            group_number: 0,
-            neighborhood_groups: [None; NEIGHBORHOOD_SIZE],
-        }
     }
 }

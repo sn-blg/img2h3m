@@ -4,21 +4,24 @@ use crate::h3m::Terrain;
 pub enum TerrainVisibleType {
     Same,
     Diff(Terrain),
-    Mixed,
-    DiffMixed(Terrain),
-}
-
-#[derive(Clone, Copy, PartialEq)]
-pub enum Orientation {
-    Vertical,
-    Horizontal,
+    Mixed(Terrain),
+    MixedMany,
+    DiffMixed(Terrain, Terrain),
 }
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TileType {
-    HalfDiff(Orientation, Terrain),
-    HalfDiff2(Orientation, Terrain, Terrain),
-    WideObliqueAngle(Terrain),
+    VerticalHalf,
+    HorizontalHalf,
+
+    Scrap,
+    InvertScrap,
+
+    Corner,
+    InvertCorner,
+
+    Diagonal,
+
     Solid,
     Undefined,
 }
@@ -49,7 +52,9 @@ impl Tile {
             } else {
                 matches!(
                     terrain_visible_type,
-                    TerrainVisibleType::Mixed | TerrainVisibleType::DiffMixed(_)
+                    TerrainVisibleType::Mixed(_)
+                        | TerrainVisibleType::MixedMany
+                        | TerrainVisibleType::DiffMixed(_, _)
                 )
             },
             "invalid tile type, tile code: {}",

@@ -1,8 +1,7 @@
 use super::template_class::TemplateClass;
 use super::ObstacleTemplate;
-use crate::common::position::DeltaPos;
 use crate::h3m::obstacle_generator::obstacle_map::{NeighborhoodSameRelation, ObstacleMapCell};
-use crate::h3m::terrain_map::{Orientation, TerrainVisibleType, Tile, TileType};
+use crate::h3m::terrain_map::{TerrainVisibleType, Tile, TileType};
 use crate::h3m::{MapCell, Terrain};
 
 fn same_bottom(nsr: &NeighborhoodSameRelation) -> bool {
@@ -22,7 +21,7 @@ fn same_right_bottom(nsr: &NeighborhoodSameRelation) -> bool {
 }
 
 impl ObstacleTemplate {
-    pub fn is_valid_cell(&self, obstacle_map_cell: &ObstacleMapCell, delta_pos: &DeltaPos) -> bool {
+    pub fn is_valid_cell(&self, obstacle_map_cell: &ObstacleMapCell) -> bool {
         if !self.is_valid_terrain(obstacle_map_cell.terrain_group()) {
             return false;
         }
@@ -73,6 +72,8 @@ impl ObstacleTemplate {
         map_cell: &MapCell,
         nsr: &NeighborhoodSameRelation,
     ) -> bool {
+        self.may_located_on_mixed_tiles
+        /*
         let tile = map_cell.tile();
 
         match map_cell.surface().terrain {
@@ -183,9 +184,12 @@ impl ObstacleTemplate {
             TileType::HalfDiff2(Orientation::Horizontal, _, _) => tile.vertical_mirroring(),
             _ => false,
         }
+        */
     }
 
     fn is_valid_rock_mixed_tile(&self, map_cell: &MapCell, nsr: &NeighborhoodSameRelation) -> bool {
+        self.may_located_on_mixed_tiles
+        /*
         let tile = map_cell.tile();
 
         match map_cell.surface().terrain {
@@ -286,9 +290,12 @@ impl ObstacleTemplate {
         }
 
         false
+        */
     }
 
     fn is_valid_snow_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
+        self.may_located_on_mixed_tiles
+        /*
         let is_bottom_wide_oblique_angle =
             matches!(tile.tile_type(), TileType::WideObliqueAngle(_)) && tile.vertical_mirroring();
 
@@ -310,19 +317,30 @@ impl ObstacleTemplate {
                 _ => self.may_located_on_mixed_tiles,
             },
             TemplateClass::PineTrees => match self.filename() {
-                "AVLSNTR0.def" | "AVLSNTR1.def" | "AVLd9sn0.def" | "AVLSNTR4.def"
-                | "AVLSNTR8.def" | "AVLSNTR9.def" | "AVLSNTR2.def" | "AVLsntr7.def" => matches!(
+                "AVLSNTR0.def" | "AVLSNTR8.def" => matches!(
                     tile.tile_type(),
-                    TileType::HalfDiff(Orientation::Horizontal, _)
-                        | TileType::HalfDiff2(Orientation::Horizontal, _, _)
+                    TileType::HalfDiff(_, _) | TileType::HalfDiff2(_, _, _)
                 ),
+                "AVLd9sn0.def" | "AVLSNTR4.def" | "AVLSNTR2.def" | "AVLsntr7.def" => {
+                    matches!(
+                        tile.tile_type(),
+                        TileType::HalfDiff(_, _) | TileType::HalfDiff2(_, _, _)
+                    ) || same_bottom(nsr)
+                }
+                "AVLSNTR3.def" => same_bottom(nsr),
+                "AVLSNTR1.def" | "AVLSNTR9.def" | "AVLSNTR5.def" | "AVLsntr6.def" => {
+                    !is_right_wide_oblique_angle && same_bottom(nsr)
+                }
                 _ => same_bottom(nsr),
             },
             _ => self.may_located_on_mixed_tiles,
         }
+        */
     }
 
     fn is_valid_water_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
+        self.may_located_on_mixed_tiles
+        /*
         if match self.filename() {
             "avlrfx04.def" | "ZReef2.def" => !nsr[3],
             "AVLref40.def" => !nsr[0],
@@ -349,5 +367,6 @@ impl ObstacleTemplate {
         } else {
             self.may_located_on_mixed_tiles
         }
+        */
     }
 }

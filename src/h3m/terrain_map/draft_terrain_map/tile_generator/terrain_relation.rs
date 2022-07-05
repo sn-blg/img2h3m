@@ -20,8 +20,8 @@ impl Terrain {
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TerrainRelation {
-    Same,                           // Some neighbour == central terrain
-    SameTyped(&'static [TileType]), // Some neighbour == central terrain and neighbour tail type == any name in [TileType]
+    Same,                // Some neighbour == central terrain
+    SameTyped(TileType), // Some neighbour == central terrain and neighbour tail type == TileType
 
     Other(TerrainCategory), // Some neighbour != central terrain and neighbour in TerrainCategory
     OtherAny,               // Some neighbour != central terrain

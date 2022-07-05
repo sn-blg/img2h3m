@@ -17,7 +17,7 @@ pub struct ObstacleMapCell {
 pub fn calc_terrain(map_cell: &MapCell) -> Terrain {
     match map_cell.tile().terrain_visible_type() {
         TerrainVisibleType::Diff(terrain) => terrain,
-        TerrainVisibleType::DiffMixed(terrain) => terrain,
+        TerrainVisibleType::DiffMixed(terrain, _) => terrain,
         _ => map_cell.surface().terrain,
     }
 }
