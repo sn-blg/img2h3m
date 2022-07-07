@@ -351,13 +351,16 @@ impl ObstacleTemplate {
 
         if tile.is_scrap() {
             match self.filename() {
-                "AVLref30.def" | "AVLrk4w0.def" | "AVLrk2w0.def" | "avlrfx06.def"
+                "AVLrk1w0.def" | "AVLref30.def" | "AVLrk4w0.def" | "AVLrk2w0.def" | "avlrfx06.def"
                 | "ZReef1.def" => true,
-                "AVLrk1w0.def" => tile.is_scrap_on(Side::Bottom),
                 "avlrfx04.def" | "avlrfx01.def" => tile.is_scrap_on(Side::Right),
                 "AVLrk3w0.def" => tile.is_scrap_on(Side::Top),
                 "AVLref10.def" | "AVLref60.def" => tile.is_scrap_on(Side::Left),
-                "AVLref20.def" => tile.is_scrap_on_corner(CornerSide::BottomRight),
+                "avlrfx02.def" => tile.is_scrap_on_corner(CornerSide::TopLeft),
+                "AVLref20.def" => {
+                    tile.is_scrap_on_corner(CornerSide::BottomRight)
+                        || tile.is_scrap_on_corner(CornerSide::TopLeft)
+                }
                 "AVLref50.def" | "ZReef2.def" | "AVLref40.def" => {
                     tile.is_scrap_on_corner(CornerSide::TopRight)
                 }
