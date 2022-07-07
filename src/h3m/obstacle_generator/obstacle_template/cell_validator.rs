@@ -1,4 +1,5 @@
 use super::template_class::TemplateClass;
+use super::tile_side::{CornerSide, Side};
 use super::ObstacleTemplate;
 use crate::h3m::obstacle_generator::obstacle_map::{NeighborhoodSameRelation, ObstacleMapCell};
 use crate::h3m::terrain_map::{TerrainVisibleType, Tile, TileType};
@@ -339,8 +340,6 @@ impl ObstacleTemplate {
     }
 
     fn is_valid_water_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
-        self.may_located_on_mixed_tiles
-        /*
         if match self.filename() {
             "avlrfx04.def" | "ZReef2.def" => !nsr[3],
             "AVLref40.def" => !nsr[0],
@@ -350,23 +349,22 @@ impl ObstacleTemplate {
             return false;
         }
 
-        if let TileType::WideObliqueAngle(_) = tile.tile_type() {
+        if tile.is_scrap() {
             match self.filename() {
                 "AVLref30.def" | "AVLrk4w0.def" | "AVLrk2w0.def" | "avlrfx06.def"
                 | "ZReef1.def" => true,
-                "AVLrk1w0.def" => tile.vertical_mirroring(),
-                "avlrfx04.def" | "avlrfx01.def" => tile.horizontal_mirroring(),
-                "AVLrk3w0.def" => !tile.vertical_mirroring(),
-                "AVLref10.def" | "AVLref60.def" => !tile.horizontal_mirroring(),
-                "AVLref20.def" => tile.vertical_mirroring() && tile.horizontal_mirroring(),
+                "AVLrk1w0.def" => tile.is_scrap_on(Side::Bottom),
+                "avlrfx04.def" | "avlrfx01.def" => tile.is_scrap_on(Side::Right),
+                "AVLrk3w0.def" => tile.is_scrap_on(Side::Top),
+                "AVLref10.def" | "AVLref60.def" => tile.is_scrap_on(Side::Left),
+                "AVLref20.def" => tile.is_scrap_on_corner(CornerSide::BottomRight),
                 "AVLref50.def" | "ZReef2.def" | "AVLref40.def" => {
-                    tile.horizontal_mirroring() && !tile.vertical_mirroring()
+                    tile.is_scrap_on_corner(CornerSide::TopRight)
                 }
                 _ => false,
             }
         } else {
             self.may_located_on_mixed_tiles
         }
-        */
     }
 }

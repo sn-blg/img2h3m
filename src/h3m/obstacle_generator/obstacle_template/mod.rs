@@ -9,6 +9,7 @@ mod cell_validator;
 mod factory;
 mod sparsity;
 mod template_class;
+mod tile_side;
 
 pub struct ObstacleTemplate {
     h3m_template: H3mObjectTemplate,
