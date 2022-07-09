@@ -73,7 +73,7 @@ impl ObstacleTemplate {
         map_cell: &MapCell,
         nsr: &NeighborhoodSameRelation,
     ) -> bool {
-        self.may_located_on_mixed_tiles
+        false
         /*
         let tile = map_cell.tile();
 
@@ -189,7 +189,7 @@ impl ObstacleTemplate {
     }
 
     fn is_valid_rock_mixed_tile(&self, map_cell: &MapCell, nsr: &NeighborhoodSameRelation) -> bool {
-        self.may_located_on_mixed_tiles
+        map_cell.surface().terrain == Terrain::Water
         /*
         let tile = map_cell.tile();
 
@@ -295,48 +295,35 @@ impl ObstacleTemplate {
     }
 
     fn is_valid_snow_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
-        self.may_located_on_mixed_tiles
-        /*
-        let is_bottom_wide_oblique_angle =
-            matches!(tile.tile_type(), TileType::WideObliqueAngle(_)) && tile.vertical_mirroring();
-
-        let is_right_wide_oblique_angle = matches!(tile.tile_type(), TileType::WideObliqueAngle(_))
-            && tile.horizontal_mirroring();
-
         match self.template_class {
             TemplateClass::DeadVegetation => match self.filename() {
-                "AVLd3sn0.def" | "AVLd7sn0.def" | "AVLd5sn0.def" | "AVLd9sn0.def" => {
-                    !is_bottom_wide_oblique_angle
-                }
-                "AVLddsn3.def" | "AVLddsn2.def" => {
-                    !(is_bottom_wide_oblique_angle && is_right_wide_oblique_angle)
-                }
+                "AVLd3sn0.def" => same_bottom(nsr),
+                "AVLd7sn0.def" | "AVLd5sn0.def" | "AVLd9sn0.def" => !tile.is_scrap_on(Side::Bottom),
+                "AVLddsn2.def" | "AVLddsn3.def" => !tile.is_scrap_on(Side::Bottom),
+                "AVLd2sn0.def" => !tile.is_scrap_on_corner(CornerSide::BottomLeft),
+                "AVLddsn4.def" => !tile.is_scrap_on_corner(CornerSide::BottomRight),
                 _ => self.may_located_on_mixed_tiles,
             },
+
             TemplateClass::Stump => match self.filename() {
-                "AVLp2sn0.def" => !is_right_wide_oblique_angle && same_bottom(nsr),
+                "AVLp2sn0.def" => !tile.is_scrap() && same_bottom(nsr),
                 _ => self.may_located_on_mixed_tiles,
             },
+
             TemplateClass::PineTrees => match self.filename() {
-                "AVLSNTR0.def" | "AVLSNTR8.def" => matches!(
-                    tile.tile_type(),
-                    TileType::HalfDiff(_, _) | TileType::HalfDiff2(_, _, _)
-                ),
-                "AVLd9sn0.def" | "AVLSNTR4.def" | "AVLSNTR2.def" | "AVLsntr7.def" => {
-                    matches!(
-                        tile.tile_type(),
-                        TileType::HalfDiff(_, _) | TileType::HalfDiff2(_, _, _)
-                    ) || same_bottom(nsr)
+                "AVLSNTR8.def" => !tile.is_scrap_on(Side::Right) && !tile.is_scrap_on(Side::Bottom),
+                "AVLSNTR1.def" => !tile.is_scrap() && same_bottom(nsr),
+                "AVLSNTR0.def" | "AVLSNTR9.def" => {
+                    !tile.is_scrap_on(Side::Right) && same_bottom(nsr)
                 }
-                "AVLSNTR3.def" => same_bottom(nsr),
-                "AVLSNTR1.def" | "AVLSNTR9.def" | "AVLSNTR5.def" | "AVLsntr6.def" => {
-                    !is_right_wide_oblique_angle && same_bottom(nsr)
+                "AVLSNTR2.def" | "AVLSNTR3.def" | "AVLSNTR5.def" | "AVLsntr6.def" => {
+                    same_bottom(nsr)
                 }
-                _ => same_bottom(nsr),
+                "AVLsntr7.def" | "AVLSNTR4.def" => !tile.is_scrap_on_corner(CornerSide::BottomLeft),
+                _ => self.may_located_on_mixed_tiles,
             },
             _ => self.may_located_on_mixed_tiles,
         }
-        */
     }
 
     fn is_valid_water_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
@@ -351,8 +338,8 @@ impl ObstacleTemplate {
 
         if tile.is_scrap() {
             match self.filename() {
-                "AVLrk1w0.def" | "AVLref30.def" | "AVLrk4w0.def" | "AVLrk2w0.def" | "avlrfx06.def"
-                | "ZReef1.def" => true,
+                "AVLrk1w0.def" | "AVLref30.def" | "AVLrk4w0.def" | "AVLrk2w0.def"
+                | "avlrfx06.def" | "ZReef1.def" => true,
                 "avlrfx04.def" | "avlrfx01.def" => tile.is_scrap_on(Side::Right),
                 "AVLrk3w0.def" => tile.is_scrap_on(Side::Top),
                 "AVLref10.def" | "AVLref60.def" => tile.is_scrap_on(Side::Left),
