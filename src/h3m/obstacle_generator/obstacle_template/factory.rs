@@ -214,8 +214,7 @@ fn sparsity(
             "AVLrws02.def" => 289..=625,
             "AvLRD02.def" => 81..=144,
             "AVLrk3w0.def" | "AVLrk4w0.def" => 14..=16,
-            "avlrfx06.def" | "AVLrk2w0.def" => 25..=36,
-            _ => 36..=64,
+            _ => 25..=36,
         },
 
         TemplateClass::Mound | TemplateClass::SandDune => 36..=64,

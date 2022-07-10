@@ -21,6 +21,10 @@ fn same_right_bottom(nsr: &NeighborhoodSameRelation) -> bool {
     nsr[4] && nsr[6] && nsr[7]
 }
 
+fn same_left_right_bottom(nsr: &NeighborhoodSameRelation) -> bool {
+    nsr[3] && nsr[4] && nsr[5] && nsr[6] && nsr[7]
+}
+
 impl ObstacleTemplate {
     pub fn is_valid_cell(&self, obstacle_map_cell: &ObstacleMapCell) -> bool {
         if !self.is_valid_terrain(obstacle_map_cell.terrain_group()) {
@@ -189,8 +193,6 @@ impl ObstacleTemplate {
     }
 
     fn is_valid_rock_mixed_tile(&self, map_cell: &MapCell, nsr: &NeighborhoodSameRelation) -> bool {
-        map_cell.surface().terrain == Terrain::Water
-        /*
         let tile = map_cell.tile();
 
         match map_cell.surface().terrain {
@@ -206,92 +208,65 @@ impl ObstacleTemplate {
             },
 
             Terrain::Subterranean => match self.filename() {
-                "AVLr16u0.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(Orientation::Horizontal, _)
-                        | TileType::HalfDiff2(Orientation::Horizontal, _, _) => true,
-                        _ => false,
-                    };
-                }
+                "AVLr01u0.def" | "AVLr04u0.def" => return same_left_right_bottom(nsr),
                 "AVLr03u0.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(_, Terrain::Sand) => true,
-                        TileType::HalfDiff(Orientation::Horizontal, _) => {
-                            !tile.vertical_mirroring()
-                        }
-                        TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
-                            tile.vertical_mirroring()
-                        }
-                        _ => false,
-                    };
+                    return if tile.mixed_only_with(Terrain::Sand) {
+                        true
+                    } else {
+                        same_left_right_bottom(nsr)
+                    }
                 }
-                "AVLr04u0.def" | "AVLr01u0.def" => {
-                    match tile.tile_type() {
-                        TileType::HalfDiff(Orientation::Horizontal, _) => {
-                            !tile.vertical_mirroring()
-                        }
-                        TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
-                            tile.vertical_mirroring()
-                        }
-                        _ => false,
-                    };
+                "AVLr05u0.def" => {
+                    return if tile.mixed_only_with(Terrain::Sand) {
+                        same_bottom(nsr)
+                    } else {
+                        same_right_bottom(nsr)
+                    }
                 }
-                "AVLr05u0.def" => return same_left_bottom(nsr),
                 "AVLr07u0.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(_, Terrain::Sand) => same_right_bottom(nsr),
-                        _ => same_left_bottom(nsr) && same_right_bottom(nsr),
-                    };
+                    return if tile.mixed_only_with(Terrain::Sand) {
+                        same_right_bottom(nsr)
+                    } else {
+                        same_left_bottom(nsr)
+                    }
                 }
-                "AVLr11u0.def" | "AVLstg40.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(_, Terrain::Sand) => true,
-                        _ => same_right_bottom(nsr),
-                    };
+                "AVLr11u0.def" | "AVLstg40.def" | "AVLstg50.def" => {
+                    return if tile.mixed_only_with(Terrain::Sand) {
+                        true
+                    } else {
+                        same_right_bottom(nsr)
+                    }
                 }
                 "AVLr12u0.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(_, Terrain::Dirt) => same_right_bottom(nsr),
-                        _ => same_left_bottom(nsr) && same_right_bottom(nsr),
-                    };
+                    return if tile.mixed_only_with(Terrain::Dirt) {
+                        same_right_bottom(nsr)
+                    } else {
+                        same_left_right_bottom(nsr)
+                    }
                 }
-                "AVLstg50.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(_, Terrain::Sand) => true,
-                        _ => same_right_bottom(nsr),
-                    };
+                "AVLr16u0.def" => {
+                    return if tile.mixed_only_with(Terrain::Dirt) {
+                        true
+                    } else {
+                        same_right_bottom(nsr)
+                    }
                 }
-                "AVLstg60.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(_, Terrain::Sand) => true,
-                        _ => false,
-                    };
-                }
+                "AVLstg60.def" => return tile.mixed_only_with(Terrain::Sand),
                 _ => (),
             },
 
             Terrain::Highlands => match self.filename() {
                 "AVlrhl03.def" => return false,
-                "AVlrhl01.def" | "AVlrhl02.def" => {
-                    return match tile.tile_type() {
-                        TileType::HalfDiff(Orientation::Horizontal, _) => {
-                            !tile.vertical_mirroring()
-                        }
-                        TileType::HalfDiff2(Orientation::Horizontal, _, _) => {
-                            tile.vertical_mirroring()
-                        }
-                        _ => false,
-                    }
-                }
+                "AVlrhl01.def" | "AVlrhl02.def" => return same_left_right_bottom(nsr),
                 _ => (),
             },
 
             Terrain::Water => return self.may_located_on_mixed_tiles,
+
             _ => (),
         }
 
         false
-        */
     }
 
     fn is_valid_snow_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
@@ -302,12 +277,12 @@ impl ObstacleTemplate {
                 "AVLddsn2.def" | "AVLddsn3.def" => !tile.is_scrap_on(Side::Bottom),
                 "AVLd2sn0.def" => !tile.is_scrap_on_corner(CornerSide::BottomLeft),
                 "AVLddsn4.def" => !tile.is_scrap_on_corner(CornerSide::BottomRight),
-                _ => self.may_located_on_mixed_tiles,
+                _ => true,
             },
 
             TemplateClass::Stump => match self.filename() {
                 "AVLp2sn0.def" => !tile.is_scrap() && same_bottom(nsr),
-                _ => self.may_located_on_mixed_tiles,
+                _ => false,
             },
 
             TemplateClass::PineTrees => match self.filename() {
@@ -320,7 +295,7 @@ impl ObstacleTemplate {
                     same_bottom(nsr)
                 }
                 "AVLsntr7.def" | "AVLSNTR4.def" => !tile.is_scrap_on_corner(CornerSide::BottomLeft),
-                _ => self.may_located_on_mixed_tiles,
+                _ => false,
             },
             _ => self.may_located_on_mixed_tiles,
         }
