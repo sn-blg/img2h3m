@@ -226,6 +226,7 @@ fn sparsity(
         TemplateClass::Mountain => match filename {
             "AVLMTWL7.def" => 225..=625,
             "AVLmtsb0.def" => 36..=64,
+            "AVLMTWL1.def" => 25..=36,
             _ => {
                 if surface_area <= 4 {
                     25..=36

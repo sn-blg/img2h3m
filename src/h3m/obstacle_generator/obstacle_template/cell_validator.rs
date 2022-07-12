@@ -5,36 +5,34 @@ use crate::h3m::obstacle_generator::obstacle_map::{NeighborhoodSameRelation, Obs
 use crate::h3m::terrain_map::{TerrainVisibleType, Tile};
 use crate::h3m::{MapCell, Terrain};
 
-fn same_bottom(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[6]
-}
+fn same_side(nsr: &NeighborhoodSameRelation, side_list: &[Side]) -> bool {
+    let mut top = false;
+    let mut bottom = false;
+    let mut left = false;
+    let mut right = false;
 
-fn same_left(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[3]
-}
+    for side in side_list {
+        match side {
+            Side::Top => top = true,
+            Side::Bottom => bottom = true,
+            Side::Left => left = true,
+            Side::Right => right = true,
+        }
+    }
 
-fn same_left_right(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[3] && nsr[4]
-}
+    if (top && !nsr[1])
+        || (left && !nsr[3])
+        || (right && !nsr[4])
+        || (bottom && !nsr[6])
+        || (top && left && !nsr[0])
+        || (top && right && !nsr[2])
+        || (bottom && left && !nsr[5])
+        || (bottom && right && !nsr[7])
+    {
+        return false;
+    }
 
-fn same_left_bottom(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[3] && nsr[5] && nsr[6]
-}
-
-fn same_right_bottom(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[4] && nsr[6] && nsr[7]
-}
-
-fn same_left_right_bottom(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[3] && nsr[4] && nsr[5] && nsr[6] && nsr[7]
-}
-
-fn same_top_left_bottom(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[0] && nsr[1] && nsr[3] && nsr[5] && nsr[6]
-}
-
-fn same_top_right_bottom(nsr: &NeighborhoodSameRelation) -> bool {
-    nsr[1] && nsr[2] && nsr[4] && nsr[6] && nsr[7]
+    true
 }
 
 impl ObstacleTemplate {
@@ -95,40 +93,41 @@ impl ObstacleTemplate {
             Terrain::Dirt => match self.filename() {
                 "avlmtdr7.def" => return true,
                 "avlmtdr3.def" => {
-                    return same_bottom(nsr);
+                    return same_side(nsr, &[Side::Bottom]);
                 }
                 "avlmtdr4.def" => {
-                    return same_left_bottom(nsr);
+                    return same_side(nsr, &[Side::Left, Side::Bottom]);
                 }
                 "avlmtdr1.def" => {
-                    return same_right_bottom(nsr);
+                    return same_side(nsr, &[Side::Right, Side::Bottom]);
                 }
                 _ => (),
             },
 
-            Terrain::Grass => match self.filename() {
-                "grsmnt02.def" => return false,
-                _ => (),
-            },
-
-            Terrain::Snow => match self.filename() {
-                "AVLmtsn2.def" => {
-                    return same_right_bottom(nsr);
+            Terrain::Grass => {
+                if self.filename() == "grsmnt02.def" {
+                    return false;
                 }
-                _ => (),
-            },
+            }
 
-            Terrain::Swamp => match self.filename() {
-                "AVLmtsw3.def" => return false,
-                _ => (),
-            },
+            Terrain::Snow => {
+                if self.filename() == "AVLmtsn2.def" {
+                    return same_side(nsr, &[Side::Right, Side::Bottom]);
+                }
+            }
+
+            Terrain::Swamp => {
+                if self.filename() == "AVLmtsw3.def" {
+                    return false;
+                }
+            }
 
             Terrain::Rough => match self.filename() {
                 "avlmtrf4.def" | "avlmtrf6.def" => {
-                    return same_bottom(nsr);
+                    return same_side(nsr, &[Side::Bottom]);
                 }
                 "avlmtrf2.def" | "avlmtrf1.def" | "avlmtrf5.def" => {
-                    return same_left_bottom(nsr);
+                    return same_side(nsr, &[Side::Left, Side::Bottom]);
                 }
                 _ => (),
             },
@@ -140,10 +139,10 @@ impl ObstacleTemplate {
                     match self.filename() {
                         "AVLmtsb5.def" | "AVLmtsb4.def" => return true,
                         "AVLmtsb0.def" => {
-                            return same_right_bottom(nsr);
+                            return same_side(nsr, &[Side::Right, Side::Bottom]);
                         }
                         "AVLmtsb2.def" => {
-                            return same_left_bottom(nsr);
+                            return same_side(nsr, &[Side::Left, Side::Bottom]);
                         }
                         _ => (),
                     }
@@ -153,12 +152,16 @@ impl ObstacleTemplate {
             Terrain::Lava => match self.filename() {
                 "AVLmtvo5.def" | "AVLvol20.def" | "AVLvol10.def" | "AVLvol30.def"
                 | "AVLmtvo4.def" => return false,
-                "AVLmtvo3.def" | "AVLvol60.def" => return same_top_left_bottom(nsr),
+                "AVLmtvo3.def" | "AVLvol60.def" => {
+                    return same_side(nsr, &[Side::Top, Side::Left, Side::Bottom])
+                }
                 "AVLmtvo6.def" => {
-                    return tile.mixed_only_with(Terrain::Dirt) && same_top_right_bottom(nsr)
+                    return tile.mixed_only_with(Terrain::Dirt)
+                        && same_side(nsr, &[Side::Top, Side::Right, Side::Bottom])
                 }
                 "AVLvol40.def" => {
-                    return tile.mixed_only_with(Terrain::Dirt) && same_left_right_bottom(nsr)
+                    return tile.mixed_only_with(Terrain::Dirt)
+                        && same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
                 }
                 _ => (),
             },
@@ -166,7 +169,8 @@ impl ObstacleTemplate {
             Terrain::Wasteland => match self.filename() {
                 "AVLMTWL3.def" | "AVLMTWL7.def" => return false,
                 "AVLMTWL5.def" | "AVLMTWL6.def" => {
-                    return same_top_left_bottom(nsr) || same_top_right_bottom(nsr)
+                    return same_side(nsr, &[Side::Top, Side::Left, Side::Bottom])
+                        || same_side(nsr, &[Side::Top, Side::Right, Side::Bottom])
                 }
                 _ => (),
             },
@@ -174,7 +178,7 @@ impl ObstacleTemplate {
             _ => (),
         }
 
-        same_left_right_bottom(nsr)
+        same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
     }
 
     fn is_valid_rock_mixed_tile(&self, map_cell: &MapCell, nsr: &NeighborhoodSameRelation) -> bool {
@@ -184,51 +188,51 @@ impl ObstacleTemplate {
             Terrain::Dirt => match self.filename() {
                 "AVLrk5d0.def" => return true,
                 "AvLRD01.def" => {
-                    return same_right_bottom(nsr);
+                    return same_side(nsr, &[Side::Right, Side::Bottom]);
                 }
                 "AvLRD02.def" => {
-                    return same_left(nsr);
+                    return same_side(nsr, &[Side::Left]);
                 }
                 _ => (),
             },
 
             Terrain::Subterranean => match self.filename() {
                 "AVLr01u0.def" | "AVLr04u0.def" | "AVLr05u0.def" => {
-                    return same_left_right_bottom(nsr)
+                    return same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
                 }
                 "AVLr03u0.def" => {
                     return if tile.mixed_only_with(Terrain::Sand) {
-                        same_left_right(nsr)
+                        same_side(nsr, &[Side::Left, Side::Right])
                     } else {
-                        same_left_right_bottom(nsr)
+                        same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
                     }
                 }
                 "AVLr07u0.def" => {
                     return if tile.mixed_only_with(Terrain::Sand) {
-                        same_right_bottom(nsr)
+                        same_side(nsr, &[Side::Right, Side::Bottom])
                     } else {
-                        same_left_bottom(nsr)
+                        same_side(nsr, &[Side::Left, Side::Bottom])
                     }
                 }
                 "AVLr11u0.def" | "AVLstg40.def" | "AVLstg50.def" => {
                     return if tile.mixed_only_with(Terrain::Sand) {
                         true
                     } else {
-                        same_right_bottom(nsr)
+                        same_side(nsr, &[Side::Right, Side::Bottom])
                     }
                 }
                 "AVLr12u0.def" => {
                     return if tile.mixed_only_with(Terrain::Dirt) {
-                        same_right_bottom(nsr)
+                        same_side(nsr, &[Side::Right, Side::Bottom])
                     } else {
-                        same_left_right_bottom(nsr)
+                        same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
                     }
                 }
                 "AVLr16u0.def" => {
                     return if tile.mixed_only_with(Terrain::Dirt) {
                         true
                     } else {
-                        same_right_bottom(nsr)
+                        same_side(nsr, &[Side::Right, Side::Bottom])
                     }
                 }
                 "AVLstg60.def" => return tile.mixed_only_with(Terrain::Sand),
@@ -237,7 +241,9 @@ impl ObstacleTemplate {
 
             Terrain::Highlands => match self.filename() {
                 "AVlrhl03.def" => return false,
-                "AVlrhl01.def" | "AVlrhl02.def" => return same_left_right_bottom(nsr),
+                "AVlrhl01.def" | "AVlrhl02.def" => {
+                    return same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
+                }
                 _ => (),
             },
 
@@ -252,7 +258,7 @@ impl ObstacleTemplate {
     fn is_valid_snow_mixed_tile(&self, tile: &Tile, nsr: &NeighborhoodSameRelation) -> bool {
         match self.template_class {
             TemplateClass::DeadVegetation => match self.filename() {
-                "AVLd3sn0.def" => same_bottom(nsr),
+                "AVLd3sn0.def" => same_side(nsr, &[Side::Bottom]),
                 "AVLd7sn0.def" | "AVLd5sn0.def" | "AVLd9sn0.def" => !tile.is_scrap_on(Side::Bottom),
                 "AVLddsn2.def" | "AVLddsn3.def" => !tile.is_scrap_on(Side::Bottom),
                 "AVLd2sn0.def" => !tile.is_scrap_on_corner(CornerSide::BottomLeft),
@@ -261,18 +267,18 @@ impl ObstacleTemplate {
             },
 
             TemplateClass::Stump => match self.filename() {
-                "AVLp2sn0.def" => !tile.is_scrap() && same_bottom(nsr),
+                "AVLp2sn0.def" => !tile.is_scrap() && same_side(nsr, &[Side::Bottom]),
                 _ => false,
             },
 
             TemplateClass::PineTrees => match self.filename() {
                 "AVLSNTR8.def" => !tile.is_scrap_on(Side::Right) && !tile.is_scrap_on(Side::Bottom),
-                "AVLSNTR1.def" => !tile.is_scrap() && same_bottom(nsr),
+                "AVLSNTR1.def" => !tile.is_scrap() && same_side(nsr, &[Side::Bottom]),
                 "AVLSNTR0.def" | "AVLSNTR9.def" => {
-                    !tile.is_scrap_on(Side::Right) && same_bottom(nsr)
+                    !tile.is_scrap_on(Side::Right) && same_side(nsr, &[Side::Bottom])
                 }
                 "AVLSNTR2.def" | "AVLSNTR3.def" | "AVLSNTR5.def" | "AVLsntr6.def" => {
-                    same_bottom(nsr)
+                    same_side(nsr, &[Side::Bottom])
                 }
                 "AVLsntr7.def" | "AVLSNTR4.def" => !tile.is_scrap_on_corner(CornerSide::BottomLeft),
                 _ => false,
