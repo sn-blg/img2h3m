@@ -66,6 +66,14 @@ impl ObstacleTemplate {
                 self.is_valid_mountain_mixed_tile(map_cell, nsr)
             }
             TemplateClass::Rock => self.is_valid_rock_mixed_tile(map_cell, nsr),
+            TemplateClass::Cactus => {
+                if self.filename() == "AVLwct08.def" {
+                    tile.mixed_only_with(Terrain::Sand)
+                        || same_side(nsr, &[Side::Right, Side::Left])
+                } else {
+                    true
+                }
+            }
             _ => true,
         } {
             return false;
@@ -215,11 +223,8 @@ impl ObstacleTemplate {
                     }
                 }
                 "AVLr11u0.def" | "AVLstg40.def" | "AVLstg50.def" => {
-                    return if tile.mixed_only_with(Terrain::Sand) {
-                        true
-                    } else {
-                        same_side(nsr, &[Side::Right, Side::Bottom])
-                    }
+                    return tile.mixed_only_with(Terrain::Sand)
+                        || same_side(nsr, &[Side::Right, Side::Bottom]);
                 }
                 "AVLr12u0.def" => {
                     return if tile.mixed_only_with(Terrain::Dirt) {
@@ -229,11 +234,8 @@ impl ObstacleTemplate {
                     }
                 }
                 "AVLr16u0.def" => {
-                    return if tile.mixed_only_with(Terrain::Dirt) {
-                        true
-                    } else {
-                        same_side(nsr, &[Side::Right, Side::Bottom])
-                    }
+                    return tile.mixed_only_with(Terrain::Dirt)
+                        || same_side(nsr, &[Side::Right, Side::Bottom]);
                 }
                 "AVLstg60.def" => return tile.mixed_only_with(Terrain::Sand),
                 _ => (),
