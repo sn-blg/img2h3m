@@ -20,6 +20,7 @@ pub struct ObstacleTemplate {
     terrain_group_mask: u16,
     frequency: usize,
     may_located_on_mixed_tiles: bool,
+    may_overlap: bool,
     sparsity: Sparsity, // limit: square of the distance to the same obstacle
 }
 
@@ -51,6 +52,10 @@ impl ObstacleTemplate {
 
     pub fn sparsity(&self) -> Sparsity {
         self.sparsity
+    }
+
+    pub fn may_overlap(&self) -> bool {
+        self.may_overlap
     }
 
     pub fn is_valid_terrain(&self, terrain_group: u16) -> bool {

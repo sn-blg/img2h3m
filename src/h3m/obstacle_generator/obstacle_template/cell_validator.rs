@@ -41,6 +41,10 @@ impl ObstacleTemplate {
             return false;
         }
 
+        if obstacle_map_cell.located_obstacle().is_some() {
+            return false;
+        }
+
         let map_cell = match obstacle_map_cell.map_cell() {
             Some(map_cell) => map_cell,
             None => return false,

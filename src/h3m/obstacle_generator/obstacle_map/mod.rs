@@ -8,6 +8,7 @@ use rand::{rngs::ThreadRng, Rng};
 use sparsity_validator::SparsityValidator;
 
 mod areas_layout;
+mod located_obstacle;
 mod obstacle_map_area;
 mod obstacle_map_cell;
 mod sparsity_validator;
@@ -164,7 +165,7 @@ impl ObstacleMap {
         for delta in obstacle.shape() {
             let delta_position = position.sub(delta);
             let delta_position_index = delta_position.index(self.size);
-            self.cells[delta_position_index].set_template(template_index);
+            self.cells[delta_position_index].set_obstacle(obstacle, position);
 
             self.sparsity_validator.add_position(
                 template_index,
@@ -186,7 +187,7 @@ impl ObstacleMap {
 
     pub fn first_position_to_place_obstacle(&self) -> Option<Position<usize>> {
         for (index, cell) in self.cells.iter().enumerate() {
-            if cell.terrain_group() != 0 {
+            if cell.need_place_obstacle() {
                 return Some(Position::from_index(self.size, index));
             }
         }

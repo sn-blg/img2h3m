@@ -71,6 +71,7 @@ impl ObstacleTemplate {
             terrain_group_mask,
             frequency,
             may_located_on_mixed_tiles,
+            may_overlap: false,
             sparsity,
         }
     }
