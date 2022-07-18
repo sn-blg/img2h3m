@@ -114,10 +114,11 @@ impl ObstacleMap {
                 0
             }
         };
-        let sparsity = rng.gen_range(
+        let sparsity = if self.sparsity_penalty == 0 {
+            rng.gen_range(obstacle.sparsity().min()..=obstacle.sparsity().max())
+        } else {
             apply_sparsity_penalty(obstacle.sparsity().min())
-                ..=apply_sparsity_penalty(obstacle.sparsity().max()),
-        );
+        };
 
         let is_valid_delta = |position: &Position<usize>, delta: &DeltaPos<usize>| {
             let delta_position = position.checked_sub(delta);

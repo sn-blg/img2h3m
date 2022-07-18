@@ -137,11 +137,11 @@ fn may_located_on_mixed_tiles(template_class: TemplateClass, filename: &'static 
         TemplateClass::OakTrees
         | TemplateClass::PineTrees
         | TemplateClass::Spruces
-        | TemplateClass::Cactus => true,
+        | TemplateClass::Cactus
+        | TemplateClass::Rock => true,
 
         TemplateClass::Mountain | TemplateClass::Volcano | TemplateClass::Waterfalls => true,
 
-        TemplateClass::Rock => !matches!(filename, "AVLrfx08.def" | "AVLrfx07.def"),
         TemplateClass::Reef => !matches!(filename, "avlrfx05.def" | "ZReef4.def" | "ZReef5.def"),
 
         TemplateClass::Stump => !matches!(filename, "AVLp1sn0.def"),
@@ -214,7 +214,9 @@ fn sparsity(
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 289..=625,
             "AvLRD02.def" => 81..=144,
-            "AVLrk3w0.def" | "AVLrk4w0.def" => 14..=16,
+            "AVLrk1w0.def" | "avlrfx06.def" | "AVLrk3w0.def" | "AVLrk2w0.def" | "AVLrk4w0.def" => {
+                14..=25
+            }
             _ => 25..=36,
         },
 
@@ -279,7 +281,10 @@ fn sparsity(
 
         TemplateClass::Waterfalls => 144..=225,
 
-        TemplateClass::Reef => 9..=16,
+        TemplateClass::Reef => match filename {
+            "ZReef5.def" => 16..=36,
+            _ => 9..=16,
+        },
 
         TemplateClass::Mandrake => 2..=9,
     })

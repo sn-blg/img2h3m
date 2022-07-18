@@ -298,6 +298,8 @@ impl ObstacleTemplate {
             "avlrfx04.def" | "ZReef2.def" => !nsr[3],
             "AVLref40.def" => !nsr[0],
             "ZReef3.def" => !nsr[1],
+            "AVLrfx07.def" => !same_side(nsr, &[Side::Top, Side::Right]),
+            "AVLrfx08.def" => !same_side(nsr, &[Side::Top, Side::Left]),
             _ => false,
         } {
             return false;
@@ -310,14 +312,17 @@ impl ObstacleTemplate {
                 "avlrfx04.def" | "avlrfx01.def" => tile.is_scrap_on(Side::Right),
                 "AVLrk3w0.def" => tile.is_scrap_on(Side::Top),
                 "AVLref10.def" | "AVLref60.def" => tile.is_scrap_on(Side::Left),
-                "avlrfx02.def" => tile.is_scrap_on_corner(CornerSide::TopLeft),
-                "AVLref20.def" => {
+                "AVLref20.def" | "avlrfx02.def" => {
                     tile.is_scrap_on_corner(CornerSide::BottomRight)
                         || tile.is_scrap_on_corner(CornerSide::TopLeft)
                 }
-                "AVLref50.def" | "ZReef2.def" | "AVLref40.def" => {
-                    tile.is_scrap_on_corner(CornerSide::TopRight)
+                "AVLref50.def" | "ZReef2.def" => tile.is_scrap_on_corner(CornerSide::TopRight),
+                "avlrfx03.def" | "AVLref40.def" => {
+                    tile.is_scrap_on_corner(CornerSide::BottomLeft)
+                        || tile.is_scrap_on_corner(CornerSide::TopRight)
                 }
+                "ZReef3.def" | "AVLrfx07.def" => tile.is_scrap_on_corner(CornerSide::BottomLeft),
+                "AVLrfx08.def" => tile.is_scrap_on_corner(CornerSide::BottomRight),
                 _ => false,
             }
         } else {
