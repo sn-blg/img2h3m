@@ -208,7 +208,7 @@ fn sparsity(
         TemplateClass::Crater => match filename {
             "AVLctrd0.def" | "AVLctds0.def" | "AVLctrg0.def" | "AVLctsn0.def" | "AVLctrs0.def"
             | "AVLctrr0.def" | "AVLctrl0.def" | "AVLcthl0.def" => 289..=625,
-            _ => 64..=100,
+            _ => 100..=196,
         },
 
         TemplateClass::Rock => match filename {
@@ -282,7 +282,7 @@ fn sparsity(
         TemplateClass::Waterfalls => 144..=225,
 
         TemplateClass::Reef => match filename {
-            "ZReef5.def" => 16..=36,
+            "ZReef5.def" => 16..=144,
             _ => 9..=16,
         },
 
