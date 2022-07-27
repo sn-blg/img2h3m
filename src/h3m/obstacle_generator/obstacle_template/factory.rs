@@ -62,6 +62,8 @@ impl ObstacleTemplate {
 
         let sparsity = sparsity(template_class, shape.len(), create_params.filename);
 
+        let may_be_overlapped = may_be_overlapped(template_class);
+
         ObstacleTemplate {
             h3m_template: H3mObjectTemplate::from_create_params(create_params),
             filename: create_params.filename,
@@ -71,7 +73,7 @@ impl ObstacleTemplate {
             terrain_group_mask,
             frequency,
             may_located_on_mixed_tiles,
-            may_overlap: false,
+            may_be_overlapped,
             sparsity,
         }
     }
@@ -380,4 +382,8 @@ fn frequency(
 
         _ => surface_area,
     }
+}
+
+fn may_be_overlapped(template_class: TemplateClass) -> bool {
+    matches!(template_class, TemplateClass::Mountain)
 }

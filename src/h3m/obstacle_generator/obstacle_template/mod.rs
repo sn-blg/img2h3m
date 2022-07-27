@@ -7,6 +7,7 @@ use template_class::TemplateClass;
 
 mod cell_validator;
 mod factory;
+mod overlap_map;
 mod sparsity;
 mod template_class;
 mod tile_side;
@@ -20,7 +21,7 @@ pub struct ObstacleTemplate {
     terrain_group_mask: u16,
     frequency: usize,
     may_located_on_mixed_tiles: bool,
-    may_overlap: bool,
+    may_be_overlapped: bool,
     sparsity: Sparsity, // limit: square of the distance to the same obstacle
 }
 
@@ -54,8 +55,8 @@ impl ObstacleTemplate {
         self.sparsity
     }
 
-    pub fn may_overlap(&self) -> bool {
-        self.may_overlap
+    pub fn may_be_overlapped(&self) -> bool {
+        self.may_be_overlapped
     }
 
     pub fn is_valid_terrain(&self, terrain_group: u16) -> bool {

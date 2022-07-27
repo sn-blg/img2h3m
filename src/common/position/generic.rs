@@ -1,6 +1,7 @@
 use num::{CheckedAdd, CheckedSub, Signed, Unsigned};
-use std::cmp::PartialOrd;
+use std::cmp::{Eq, PartialEq, PartialOrd};
 use std::fmt::Debug;
+use std::hash::Hash;
 use std::ops::{Add, Div, Mul, Rem, Sub};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -83,7 +84,7 @@ where
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct SignedDeltaPos<T: Clone + Copy + Signed> {
     row: T,
     column: T,

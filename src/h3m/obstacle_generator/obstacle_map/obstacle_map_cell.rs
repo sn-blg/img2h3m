@@ -54,7 +54,7 @@ impl ObstacleMapCell {
         assert!(self.terrain_group != 0);
         assert!(self.map_cell.is_some());
 
-        if obstacle.may_overlap() {
+        if obstacle.may_be_overlapped() {
             let overlapping_obstacle = OverlappingObstacle::new(obstacle.filename(), base_position);
             match self.located_obstacle {
                 Some(LocatedObstacle::Common) => panic!(
