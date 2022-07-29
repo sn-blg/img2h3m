@@ -28,7 +28,11 @@ impl OverlapMap {
         overlap_map
     }
 
-    pub fn may_overlap(filename: &'static str, delta: SignedDeltaPos<isize>) -> bool {
+    pub fn may_overlap(
+        &self,
+        overlapped_filename: &'static str,
+        delta: SignedDeltaPos<isize>,
+    ) -> bool {
         false
     }
 }

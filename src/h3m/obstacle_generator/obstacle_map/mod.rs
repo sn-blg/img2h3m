@@ -2,6 +2,7 @@ use super::obstacle_template::ObstacleTemplate;
 use crate::common::position::generic::{DeltaPos, Position, SignedDeltaPos};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
+pub use located_obstacle::{LocatedObstacle, OverlappingObstacle};
 pub use obstacle_map_area::*;
 pub use obstacle_map_cell::{NeighborhoodSameRelation, ObstacleMapCell};
 use rand::{rngs::ThreadRng, Rng};
@@ -121,7 +122,7 @@ impl ObstacleMap {
         };
 
         let is_valid_delta = |position: &Position<usize>, delta: &DeltaPos<usize>| {
-            let delta_position = position.checked_sub(delta);
+            let delta_position = position.checked_sub_delta(delta);
             if let Some(delta_position) = delta_position {
                 let delta_position_index = delta_position.index(self.size);
                 let delta_cell = &self.cells[delta_position_index];
@@ -164,7 +165,7 @@ impl ObstacleMap {
     ) {
         let position = Position::from_index(self.size, position_index);
         for delta in obstacle.shape() {
-            let delta_position = position.sub(delta);
+            let delta_position = position.sub_delta(delta);
             let delta_position_index = delta_position.index(self.size);
             self.cells[delta_position_index].set_obstacle(obstacle, position);
 

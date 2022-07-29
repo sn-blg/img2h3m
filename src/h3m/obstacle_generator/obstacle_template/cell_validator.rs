@@ -1,6 +1,8 @@
 use super::template_class::TemplateClass;
 use super::tile_side::{CornerSide, Side};
 use super::ObstacleTemplate;
+use crate::common::position::Position;
+use crate::h3m::obstacle_generator::obstacle_map::LocatedObstacle;
 use crate::h3m::obstacle_generator::obstacle_map::{NeighborhoodSameRelation, ObstacleMapCell};
 use crate::h3m::terrain_map::{TerrainVisibleType, Tile};
 use crate::h3m::{MapCell, Terrain};
@@ -41,8 +43,23 @@ impl ObstacleTemplate {
             return false;
         }
 
-        if obstacle_map_cell.located_obstacle().is_some() {
-            return false;
+        match obstacle_map_cell.located_obstacle() {
+            Some(LocatedObstacle::Common) => return false,
+            Some(LocatedObstacle::Overlapping(ref vec)) => {
+                let position = Position::new(
+                    obstacle_map_cell.position().row() as usize,
+                    obstacle_map_cell.position().column() as usize,
+                );
+                for overlapping_obstacle in vec {
+                    if !self.overlap_map.may_overlap(
+                        overlapping_obstacle.filename(),
+                        position.sub_position(overlapping_obstacle.base_position()),
+                    ) {
+                        return false;
+                    }
+                }
+            }
+            None => (),
         }
 
         let map_cell = match obstacle_map_cell.map_cell() {

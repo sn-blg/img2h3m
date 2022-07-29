@@ -118,7 +118,7 @@ impl TerrainCheck {
         F: Fn(Position) -> Option<Terrain>,
     {
         let position = Position::new(row, column);
-        let neighbour_getter = |delta_row: i32, delta_column: i32| {
+        let neighbour_getter = |delta_row: isize, delta_column: isize| {
             terrain_getter(position.checked_apply(
                 self.size,
                 self.size,

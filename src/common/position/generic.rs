@@ -63,7 +63,7 @@ impl<T: Clone + Copy + Unsigned> DeltaPos<T> {
 }
 
 impl<T: Clone + Copy + Unsigned + CheckedSub> Position<T> {
-    pub fn checked_sub(&self, delta: &DeltaPos<T>) -> Option<Self> {
+    pub fn checked_sub_delta(&self, delta: &DeltaPos<T>) -> Option<Self> {
         let row = self.row().checked_sub(&delta.row());
         let column = self.column().checked_sub(&delta.column());
         match (row, column) {
@@ -77,7 +77,7 @@ impl<T> Position<T>
 where
     T: Clone + Copy + Unsigned + Sub<Output = T>,
 {
-    pub fn sub(&self, delta: &DeltaPos<T>) -> Self {
+    pub fn sub_delta(&self, delta: &DeltaPos<T>) -> Self {
         let row = self.row() - delta.row();
         let column = self.column() - delta.column();
         Position::new(row, column)

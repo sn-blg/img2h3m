@@ -2,6 +2,7 @@ use crate::common::position::DeltaPos;
 use crate::h3m::parser::H3mObjectTemplate;
 use crate::h3m::result::H3mResult;
 pub use factory::ObstacleTemplateCreateParams;
+use overlap_map::OverlapMap;
 use sparsity::Sparsity;
 use template_class::TemplateClass;
 
@@ -23,6 +24,7 @@ pub struct ObstacleTemplate {
     may_located_on_mixed_tiles: bool,
     may_be_overlapped: bool,
     sparsity: Sparsity, // limit: square of the distance to the same obstacle
+    overlap_map: OverlapMap,
 }
 
 impl ObstacleTemplate {

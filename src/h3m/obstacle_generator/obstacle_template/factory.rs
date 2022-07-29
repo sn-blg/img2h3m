@@ -1,3 +1,4 @@
+use super::overlap_map::OverlapMap;
 use super::sparsity::Sparsity;
 use super::template_class::TemplateClass;
 use super::ObstacleTemplate;
@@ -64,6 +65,8 @@ impl ObstacleTemplate {
 
         let may_be_overlapped = may_be_overlapped(template_class);
 
+        let overlap_map = OverlapMap::new(create_params.filename);
+
         ObstacleTemplate {
             h3m_template: H3mObjectTemplate::from_create_params(create_params),
             filename: create_params.filename,
@@ -75,6 +78,7 @@ impl ObstacleTemplate {
             may_located_on_mixed_tiles,
             may_be_overlapped,
             sparsity,
+            overlap_map,
         }
     }
 }

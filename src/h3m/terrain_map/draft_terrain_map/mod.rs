@@ -34,7 +34,7 @@ impl DraftTerrainMap {
             None => return [None; 8],
         };
 
-        let neighbour_getter = |delta_row: i32, delta_column: i32| {
+        let neighbour_getter = |delta_row: isize, delta_column: isize| {
             let neighbour_position = cell.position.checked_apply(
                 self.size,
                 self.size,
