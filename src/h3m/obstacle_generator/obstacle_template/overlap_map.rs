@@ -8,7 +8,7 @@ impl OverlapMap {
         self.0.insert(
             overlapped_filename,
             delta_pos_arr
-                .into_iter()
+                .iter()
                 .map(|&(row, column)| SignedDeltaPos::new(row, column))
                 .collect(),
         );
@@ -33,6 +33,11 @@ impl OverlapMap {
         overlapped_filename: &'static str,
         delta: SignedDeltaPos<isize>,
     ) -> bool {
-        false
+        let pos_set = self.0.get(overlapped_filename);
+        if let Some(pos_set) = pos_set {
+            pos_set.contains(&delta)
+        } else {
+            false
+        }
     }
 }
