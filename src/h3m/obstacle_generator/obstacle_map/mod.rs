@@ -127,7 +127,7 @@ impl ObstacleMap {
                 let delta_position_index = delta_position.index(self.size);
                 let delta_cell = &self.cells[delta_position_index];
 
-                obstacle.is_valid_cell(delta_cell)
+                obstacle.is_valid_cell(delta_cell, position)
                     && self.sparsity_validator.verify_position(
                         template_index,
                         sparsity,

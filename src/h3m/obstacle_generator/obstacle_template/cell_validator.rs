@@ -38,7 +38,11 @@ fn same_side(nsr: &NeighborhoodSameRelation, side_list: &[Side]) -> bool {
 }
 
 impl ObstacleTemplate {
-    pub fn is_valid_cell(&self, obstacle_map_cell: &ObstacleMapCell) -> bool {
+    pub fn is_valid_cell(
+        &self,
+        obstacle_map_cell: &ObstacleMapCell,
+        obstacle_base_position: &Position,
+    ) -> bool {
         if !self.is_valid_terrain(obstacle_map_cell.terrain_group()) {
             return false;
         }
@@ -46,14 +50,10 @@ impl ObstacleTemplate {
         match obstacle_map_cell.located_obstacle() {
             Some(LocatedObstacle::Common) => return false,
             Some(LocatedObstacle::Overlapping(ref vec)) => {
-                let position = Position::new(
-                    obstacle_map_cell.position().row() as usize,
-                    obstacle_map_cell.position().column() as usize,
-                );
                 for overlapping_obstacle in vec {
                     if !self.overlap_map.may_overlap(
                         overlapping_obstacle.filename(),
-                        position.sub_position(overlapping_obstacle.base_position()),
+                        obstacle_base_position.sub_position(overlapping_obstacle.base_position()),
                     ) {
                         return false;
                     }
