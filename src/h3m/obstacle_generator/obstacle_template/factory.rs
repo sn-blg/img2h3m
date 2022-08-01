@@ -242,7 +242,7 @@ fn sparsity(
                 } else if surface_area == 5 {
                     16..=25
                 } else {
-                    0..=0
+                    2..=9
                 }
             }
         },
