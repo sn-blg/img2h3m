@@ -31,6 +31,21 @@ impl OverlapMap {
                     "avlmtdr4.def",
                     &[(2, 2), (2, 1), (2, 0), (2, -1), (2, -2), (-1, 0), (0, 3)],
                 );
+                overlap_map.add("avlmtdr5.def", &[(2, 3)]);
+                overlap_map.add("avlmtdr6.def", &[(-1, 0), (2, 0), (0, 3)]);
+                overlap_map.add("avlmtdr7.def", &[(-1, -2), (2, 2), (0, -4), (0, 4)]);
+                overlap_map.add(
+                    "avlmtdr8.def",
+                    &[
+                        (-1, -2),
+                        (-1, -1),
+                        (-1, 0),
+                        (2, -1),
+                        (1, -3),
+                        (2, -3),
+                        (-1, 1),
+                    ],
+                );
             }
             "avlmtdr2.def" => {
                 overlap_map.add(
@@ -39,6 +54,13 @@ impl OverlapMap {
                 );
                 overlap_map.add("avlmtdr3.def", &[(-1, 3), (-1, 4)]);
                 overlap_map.add("avlmtdr4.def", &[(-1, 2), (2, -1)]);
+                overlap_map.add("avlmtdr5.def", &[(2, 2)]);
+                overlap_map.add("avlmtdr6.def", &[(2, -1), (-1, 2)]);
+                overlap_map.add("avlmtdr7.def", &[(2, 1), (-1, 2)]);
+                overlap_map.add(
+                    "avlmtdr8.def",
+                    &[(-1, 1), (-1, 2), (2, -1), (2, -2), (2, -3)],
+                );
             }
             "avlmtdr3.def" => {
                 overlap_map.add(
@@ -47,6 +69,9 @@ impl OverlapMap {
                 );
                 overlap_map.add("avlmtdr2.def", &[(1, -3), (1, -4)]);
                 overlap_map.add("avlmtdr4.def", &[(-1, -1), (1, -1)]);
+                overlap_map.add("avlmtdr6.def", &[(-1, -1), (1, -1), (-1, 0)]);
+                overlap_map.add("avlmtdr7.def", &[(-1, -4), (0, -4), (1, -1)]);
+                overlap_map.add("avlmtdr8.def", &[(-1, -1), (-1, -2), (1, -3)]);
             }
             "avlmtdr4.def" => {
                 overlap_map.add(
@@ -63,6 +88,78 @@ impl OverlapMap {
                 );
                 overlap_map.add("avlmtdr2.def", &[(1, -2), (-2, 1)]);
                 overlap_map.add("avlmtdr3.def", &[(1, 1), (-1, 1)]);
+                overlap_map.add("avlmtdr5.def", &[(1, 1)]);
+                overlap_map.add("avlmtdr6.def", &[(1, -1), (-1, 1)]);
+                overlap_map.add("avlmtdr7.def", &[(-1, 0)]);
+                overlap_map.add("avlmtdr8.def", &[(-1, 0), (-1, -1), (1, -2)]);
+            }
+            "avlmtdr5.def" => {
+                overlap_map.add("avlmtdr1.def", &[(-2, -3)]);
+                overlap_map.add("avlmtdr2.def", &[(-2, -2)]);
+                overlap_map.add("avlmtdr4.def", &[(-1, -1)]);
+                overlap_map.add("avlmtdr6.def", &[(-1, -1), (1, 0), (-1, 0)]);
+                overlap_map.add("avlmtdr7.def", &[(-1, -4)]);
+                overlap_map.add(
+                    "avlmtdr8.def",
+                    &[(0, -4), (-1, -1), (-1, -2), (-1, 1), (1, -2), (1, -3)],
+                );
+            }
+            "avlmtdr6.def" => {
+                overlap_map.add("avlmtdr1.def", &[(1, 0), (-2, 0), (0, -3)]);
+                overlap_map.add("avlmtdr2.def", &[(-2, 1), (1, -2)]);
+                overlap_map.add("avlmtdr3.def", &[(1, 1), (-1, 1), (1, 0)]);
+                overlap_map.add("avlmtdr4.def", &[(-1, 1), (1, -1)]);
+                overlap_map.add("avlmtdr5.def", &[(1, 1), (-1, 0), (1, 0), (1, -1)]);
+                overlap_map.add("avlmtdr7.def", &[(0, -3), (0, -4)]);
+                overlap_map.add("avlmtdr8.def", &[(1, -1), (1, -2), (1, -3), (1, -4)]);
+            }
+            "avlmtdr7.def" => {
+                overlap_map.add("avlmtdr1.def", &[(1, 2), (-2, -2), (0, 4), (0, -4)]);
+                overlap_map.add("avlmtdr2.def", &[(-2, -1), (1, -2)]);
+                overlap_map.add("avlmtdr3.def", &[(0, 4), (-1, 1)]);
+                overlap_map.add("avlmtdr4.def", &[(1, 0), (0, -1)]);
+                overlap_map.add("avlmtdr5.def", &[(-1, -3), (1, 4)]);
+                overlap_map.add("avlmtdr6.def", &[(0, 3), (0, -1), (0, -2)]);
+                overlap_map.add(
+                    "avlmtdr8.def",
+                    &[(-1, -1), (-1, -2), (0, -2), (0, -3), (1, 2), (-1, 1)],
+                );
+            }
+            "avlmtdr8.def" => {
+                overlap_map.add(
+                    "avlmtdr1.def",
+                    &[(1, 2), (1, 1), (1, 0), (-2, 1), (-1, 3), (-2, 3), (1, -1)],
+                );
+                overlap_map.add(
+                    "avlmtdr2.def",
+                    &[(1, -1), (1, -2), (-2, 1), (-2, 2), (-2, 3)],
+                );
+                overlap_map.add(
+                    "avlmtdr3.def",
+                    &[(1, 1), (1, 2), (-1, 3), (0, 2), (0, 3), (0, -2)],
+                );
+                overlap_map.add("avlmtdr4.def", &[(1, 0), (1, 1), (1, -1), (-1, 2)]);
+                overlap_map.add(
+                    "avlmtdr5.def",
+                    &[
+                        (0, 4),
+                        (1, 1),
+                        (1, 2),
+                        (1, -1),
+                        (0, -2),
+                        (0, 3),
+                        (-1, 2),
+                        (-1, 3),
+                    ],
+                );
+                overlap_map.add(
+                    "avlmtdr6.def",
+                    &[(-1, 1), (-1, 2), (-1, 3), (-1, 4), (1, -1), (1, -2)],
+                );
+                overlap_map.add(
+                    "avlmtdr7.def",
+                    &[(1, 1), (1, 2), (0, 2), (-1, -2), (1, -1), (0, -3), (0, -4)],
+                );
             }
             _ => (),
         }
