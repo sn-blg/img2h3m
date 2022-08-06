@@ -4,7 +4,7 @@ use crate::h3m::result::H3mResult;
 pub use cell_validator::CellValidationResult;
 pub use factory::ObstacleTemplateCreateParams;
 use overlap_map::OverlapMap;
-use sparsity::Sparsity;
+pub use sparsity::Sparsity;
 use template_class::TemplateClass;
 
 mod cell_validator;
@@ -25,6 +25,7 @@ pub struct ObstacleTemplate {
     may_located_on_mixed_tiles: bool,
     may_be_overlapped: bool,
     sparsity: Sparsity, // limit: square of the distance to the same obstacle
+    overlap_obstacle_sparsity_penalty: usize,
     overlap_map: OverlapMap,
 }
 
@@ -64,5 +65,9 @@ impl ObstacleTemplate {
 
     pub fn is_valid_terrain(&self, terrain_group: u16) -> bool {
         (terrain_group & self.terrain_group_mask) != 0
+    }
+
+    pub fn overlap_obstacle_sparsity_penalty(&self) -> usize {
+        self.overlap_obstacle_sparsity_penalty
     }
 }

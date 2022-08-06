@@ -1,4 +1,4 @@
-use super::obstacle_template::{CellValidationResult, ObstacleTemplate};
+use super::obstacle_template::{CellValidationResult, ObstacleTemplate, Sparsity};
 use crate::common::position::generic::{DeltaPos, Position, SignedDeltaPos};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
@@ -101,6 +101,27 @@ impl ObstacleMap {
         self.sparsity_penalty = sparsity_penalty;
     }
 
+    fn calc_sparsity(
+        &self,
+        sparsity: Sparsity,
+        additional_sparsity_penalty: usize,
+        rng: &mut ThreadRng,
+    ) -> usize {
+        let sparsity_penalty = self.sparsity_penalty + additional_sparsity_penalty;
+        let apply_sparsity_penalty = |sparsity, sparsity_penalty| {
+            if sparsity >= sparsity_penalty {
+                sparsity - sparsity_penalty
+            } else {
+                0
+            }
+        };
+        if sparsity_penalty == 0 {
+            rng.gen_range(sparsity.min()..=sparsity.max())
+        } else {
+            apply_sparsity_penalty(sparsity.min(), sparsity_penalty)
+        }
+    }
+
     pub fn try_position_obstacle(
         &self,
         area: &ObstacleMapArea,
@@ -108,20 +129,7 @@ impl ObstacleMap {
         obstacle: &ObstacleTemplate,
         rng: &mut ThreadRng,
     ) -> Option<usize> {
-        let apply_sparsity_penalty = |sparsity| {
-            if sparsity >= self.sparsity_penalty {
-                sparsity - self.sparsity_penalty
-            } else {
-                0
-            }
-        };
-        let sparsity = if self.sparsity_penalty == 0 {
-            rng.gen_range(obstacle.sparsity().min()..=obstacle.sparsity().max())
-        } else {
-            apply_sparsity_penalty(obstacle.sparsity().min())
-        };
-
-        let is_valid_delta = |position: &Position<usize>, delta: &DeltaPos<usize>| {
+        let mut is_valid_delta = |position: &Position<usize>, delta: &DeltaPos<usize>| {
             let delta_position = position.checked_sub_delta(delta);
             if let Some(delta_position) = delta_position {
                 let delta_position_index = delta_position.index(self.size);
@@ -129,7 +137,7 @@ impl ObstacleMap {
 
                 let cell_validation_result = obstacle.validate_cell(delta_cell, position);
 
-                let verify_position = || {
+                let verify_position = |sparsity| {
                     self.sparsity_validator.verify_position(
                         template_index,
                         sparsity,
@@ -138,8 +146,16 @@ impl ObstacleMap {
                 };
 
                 match cell_validation_result {
-                    CellValidationResult::Valid => verify_position(),
-                    CellValidationResult::ValidWithOverlapping => verify_position(),
+                    CellValidationResult::Valid => {
+                        verify_position(self.calc_sparsity(obstacle.sparsity(), 0, rng))
+                    }
+                    CellValidationResult::ValidWithOverlapping => {
+                        verify_position(self.calc_sparsity(
+                            obstacle.sparsity(),
+                            obstacle.overlap_obstacle_sparsity_penalty(),
+                            rng,
+                        ))
+                    }
                     CellValidationResult::Invalid => false,
                 }
             } else {
@@ -147,7 +163,7 @@ impl ObstacleMap {
             }
         };
 
-        let is_valid_index = |index| {
+        let mut is_valid_index = |index| {
             let position = Position::from_index(self.size, index);
             for delta in obstacle.shape() {
                 if !is_valid_delta(&position, delta) {
