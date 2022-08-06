@@ -37,12 +37,41 @@ fn same_side(nsr: &NeighborhoodSameRelation, side_list: &[Side]) -> bool {
     true
 }
 
+#[derive(Clone, Copy)]
+pub enum CellValidationResult {
+    Valid,
+    ValidWithOverlapping,
+    Invalid,
+}
+
 impl ObstacleTemplate {
-    pub fn is_valid_cell(
+    pub fn validate_cell(
         &self,
         obstacle_map_cell: &ObstacleMapCell,
         obstacle_base_position: &Position,
+    ) -> CellValidationResult {
+        let mut is_overlapping = false;
+        let is_valid = self.is_valid_cell(
+            obstacle_map_cell,
+            obstacle_base_position,
+            &mut is_overlapping,
+        );
+
+        match (is_valid, is_overlapping) {
+            (true, true) => CellValidationResult::ValidWithOverlapping,
+            (true, false) => CellValidationResult::Valid,
+            (false, _) => CellValidationResult::Invalid,
+        }
+    }
+
+    fn is_valid_cell(
+        &self,
+        obstacle_map_cell: &ObstacleMapCell,
+        obstacle_base_position: &Position,
+        if_overlapping: &mut bool,
     ) -> bool {
+        *if_overlapping = false;
+
         if !self.is_valid_terrain(obstacle_map_cell.terrain_group()) {
             return false;
         }
@@ -50,6 +79,7 @@ impl ObstacleTemplate {
         match obstacle_map_cell.located_obstacle() {
             Some(LocatedObstacle::Common) => return false,
             Some(LocatedObstacle::Overlapping(ref vec)) => {
+                assert!(!vec.is_empty());
                 for overlapping_obstacle in vec {
                     if !self.overlap_map.may_overlap(
                         overlapping_obstacle.filename(),
@@ -58,6 +88,7 @@ impl ObstacleTemplate {
                         return false;
                     }
                 }
+                *if_overlapping = true;
             }
             None => (),
         }

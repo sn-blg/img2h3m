@@ -1,4 +1,4 @@
-use super::obstacle_template::ObstacleTemplate;
+use super::obstacle_template::{CellValidationResult, ObstacleTemplate};
 use crate::common::position::generic::{DeltaPos, Position, SignedDeltaPos};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
@@ -127,12 +127,21 @@ impl ObstacleMap {
                 let delta_position_index = delta_position.index(self.size);
                 let delta_cell = &self.cells[delta_position_index];
 
-                obstacle.is_valid_cell(delta_cell, position)
-                    && self.sparsity_validator.verify_position(
+                let cell_validation_result = obstacle.validate_cell(delta_cell, position);
+
+                let verify_position = || {
+                    self.sparsity_validator.verify_position(
                         template_index,
                         sparsity,
                         delta_position,
                     )
+                };
+
+                match cell_validation_result {
+                    CellValidationResult::Valid => verify_position(),
+                    CellValidationResult::ValidWithOverlapping => verify_position(),
+                    CellValidationResult::Invalid => false,
+                }
             } else {
                 false
             }

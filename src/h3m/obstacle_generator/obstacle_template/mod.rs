@@ -1,6 +1,7 @@
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::H3mObjectTemplate;
 use crate::h3m::result::H3mResult;
+pub use cell_validator::CellValidationResult;
 pub use factory::ObstacleTemplateCreateParams;
 use overlap_map::OverlapMap;
 use sparsity::Sparsity;
