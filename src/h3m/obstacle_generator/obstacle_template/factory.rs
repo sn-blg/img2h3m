@@ -67,7 +67,7 @@ impl ObstacleTemplate {
 
         let overlap_map = OverlapMap::new(create_params.filename);
 
-        let overlap_obstacle_sparsity_penalty = 16;
+        let overlap_obstacle_sparsity_penalty = 100;
 
         ObstacleTemplate {
             h3m_template: H3mObjectTemplate::from_create_params(create_params),
@@ -240,15 +240,7 @@ fn sparsity(
             "AVLmtsb0.def" => 36..=64,
             "AVLMTWL1.def" => 25..=36,
             "avlmtdr1.def" | "avlmtdr2.def" | "avlmtdr3.def" | "avlmtdr4.def" | "avlmtdr5.def"
-            | "avlmtdr6.def" | "avlmtdr7.def" | "avlmtdr8.def" => {
-                if surface_area <= 4 {
-                    36..=64
-                } else if surface_area == 5 {
-                    25..=36
-                } else {
-                    16..=25
-                }
-            }
+            | "avlmtdr6.def" | "avlmtdr7.def" | "avlmtdr8.def" => 100..=144,
             _ => {
                 if surface_area <= 4 {
                     25..=36
