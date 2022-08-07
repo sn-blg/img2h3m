@@ -203,7 +203,7 @@ fn sparsity(
         TemplateClass::Lake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 100..=225,
+        | TemplateClass::FrozenLake => 100..=196,
 
         TemplateClass::LavaLake => 144..=324,
 
