@@ -203,7 +203,7 @@ fn sparsity(
         TemplateClass::Lake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 100..=196,
+        | TemplateClass::FrozenLake => 100..=196, // todo: от размера?
 
         TemplateClass::LavaLake => 144..=324,
 
@@ -239,8 +239,6 @@ fn sparsity(
             "AVLMTWL7.def" => 225..=625,
             "AVLmtsb0.def" => 36..=64,
             "AVLMTWL1.def" => 25..=36,
-            "avlmtdr1.def" | "avlmtdr2.def" | "avlmtdr3.def" | "avlmtdr4.def" | "avlmtdr5.def"
-            | "avlmtdr6.def" | "avlmtdr7.def" | "avlmtdr8.def" => 100..=144,
             _ => {
                 if surface_area <= 4 {
                     25..=36
@@ -358,7 +356,7 @@ fn frequency(
             | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
             | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area / 2,
 
-            _ => surface_area,
+            _ => std::cmp::min(surface_area, 10),
         },
 
         TemplateClass::DeadVegetation => {
