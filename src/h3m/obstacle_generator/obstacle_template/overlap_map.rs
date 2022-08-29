@@ -161,6 +161,129 @@ impl OverlapMap {
                     &[(1, 1), (1, 2), (0, 2), (-1, -2), (1, -1), (0, -3), (0, -4)],
                 );
             }
+
+            "AVLPNTR2.def" => {
+                overlap_map.add("AVLPNTR3.def", &[(-1, 1), (1, -1)]);
+                overlap_map.add("AVLPNTR4.def", &[(1, 0), (-1, 0), (1, 1), (-1, -1)]);
+                overlap_map.add(
+                    "AVLPNTR5.def",
+                    &[(1, 0), (-1, 0), (0, -2), (0, 2), (1, 1), (-1, -1)],
+                );
+                overlap_map.add(
+                    "AVLpntr6.def",
+                    &[(0, 1), (0, -2), (1, 0), (-2, 0), (-2, -1), (1, 1)],
+                );
+                overlap_map.add("AVLpntr7.def", &[(1, -1), (-2, 2), (-1, -1)]);
+            }
+            "AVLPNTR3.def" => {
+                overlap_map.add("AVLPNTR2.def", &[(-1, 1), (1, -1)]);
+                overlap_map.add(
+                    "AVLPNTR4.def",
+                    &[(1, 0), (-1, 0), (0, -2), (1, 1), (-1, -1)],
+                );
+                overlap_map.add(
+                    "AVLPNTR5.def",
+                    &[(1, 0), (-1, 0), (0, -2), (0, 1), (0, 2), (1, 1), (-1, -1)],
+                );
+                overlap_map.add("AVLpntr6.def", &[(1, 0), (1, 1), (-2, -1), (1, -1)]);
+                overlap_map.add("AVLpntr7.def", &[(1, -1), (-2, 1), (-1, -1)]);
+            }
+            "AVLPNTR4.def" => {
+                overlap_map.add("AVLPNTR2.def", &[(-1, 0), (1, 0), (-1, -1), (1, 1)]);
+                overlap_map.add("AVLPNTR3.def", &[(-1, 0), (1, 0), (0, 2), (-1, -1), (1, 1)]);
+                overlap_map.add("AVLPNTR5.def", &[(-1, -1), (1, 1), (1, 2), (-1, -2)]);
+                overlap_map.add(
+                    "AVLpntr6.def",
+                    &[(1, 1), (-2, -2), (-2, 1), (-2, -1), (1, -1), (1, 2)],
+                );
+                overlap_map.add(
+                    "AVLpntr7.def",
+                    &[(1, 1), (-1, -1), (-2, -1), (-1, 2), (1, -1)],
+                );
+            }
+            "AVLPNTR5.def" => {
+                overlap_map.add(
+                    "AVLPNTR2.def",
+                    &[(-1, 0), (1, 0), (0, 2), (0, -2), (-1, -1), (1, 1)],
+                );
+                overlap_map.add(
+                    "AVLPNTR3.def",
+                    &[(-1, 0), (1, 0), (0, 2), (0, -1), (0, -2), (-1, -1), (1, 1)],
+                );
+                overlap_map.add("AVLPNTR4.def", &[(1, 1), (-1, -1), (-1, -2), (1, 2)]);
+                overlap_map.add(
+                    "AVLpntr6.def",
+                    &[(1, 1), (-1, -1), (-2, -1), (-2, -2), (1, 2), (-1, 1)],
+                );
+                overlap_map.add(
+                    "AVLpntr7.def",
+                    &[
+                        (1, 1),
+                        (-1, -1),
+                        (0, 2),
+                        (1, -1),
+                        (-1, 1),
+                        (-2, -1),
+                        (-2, 1),
+                    ],
+                );
+            }
+            "AVLpntr6.def" => {
+                overlap_map.add(
+                    "AVLPNTR2.def",
+                    &[(0, -1), (-1, 0), (2, 0), (2, 1), (-1, -1)],
+                );
+                overlap_map.add("AVLPNTR3.def", &[(-1, 0), (-1, -1), (2, 1), (-1, 1)]);
+                overlap_map.add(
+                    "AVLPNTR4.def",
+                    &[(-1, -1), (2, 2), (2, -1), (2, 1), (-1, 1), (-1, -2)],
+                );
+                overlap_map.add(
+                    "AVLPNTR5.def",
+                    &[(-1, -1), (1, 1), (2, 1), (2, 2), (-1, -2), (1, -1)],
+                );
+                overlap_map.add(
+                    "AVLpntr7.def",
+                    &[
+                        (1, -1),
+                        (-1, 1),
+                        (1, 1),
+                        (-1, -1),
+                        (-2, 1),
+                        (-2, -1),
+                        (2, 1),
+                        (2, -1),
+                        (0, 2),
+                    ],
+                );
+            }
+            "AVLpntr7.def" => {
+                overlap_map.add("AVLPNTR2.def", &[(-1, 1), (2, -2), (1, 1)]);
+                overlap_map.add("AVLPNTR3.def", &[(-1, 1), (2, -1), (1, 1)]);
+                overlap_map.add(
+                    "AVLPNTR4.def",
+                    &[(-1, -1), (1, 1), (2, 1), (1, -2), (-1, 1)],
+                );
+                overlap_map.add(
+                    "AVLPNTR5.def",
+                    &[(-1, -1), (1, 1), (0, -2), (-1, 1), (1, -1), (2, 1), (2, -1)],
+                );
+                overlap_map.add(
+                    "AVLpntr6.def",
+                    &[
+                        (-1, 1),
+                        (1, -1),
+                        (-1, -1),
+                        (1, 1),
+                        (2, -1),
+                        (2, 1),
+                        (-2, -1),
+                        (-2, 1),
+                        (0, -2),
+                    ],
+                );
+            }
+
             _ => (),
         }
 

@@ -392,5 +392,8 @@ fn frequency(
 }
 
 fn may_be_overlapped(template_class: TemplateClass) -> bool {
-    matches!(template_class, TemplateClass::Mountain)
+    matches!(
+        template_class,
+        TemplateClass::Mountain | TemplateClass::PineTrees
+    )
 }
