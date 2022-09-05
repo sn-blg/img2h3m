@@ -67,7 +67,8 @@ impl ObstacleTemplate {
 
         let overlap_map = OverlapMap::new(create_params.filename);
 
-        let overlap_obstacle_sparsity_penalty = 100;
+        let overlap_obstacle_sparsity_penalty =
+            overlap_obstacle_sparsity_penalty(template_class, create_params.filename);
 
         ObstacleTemplate {
             h3m_template: H3mObjectTemplate::from_create_params(create_params),
@@ -251,7 +252,8 @@ fn sparsity(
         },
 
         TemplateClass::BarchanDunes => match filename {
-            "AVLmtdn1.def" | "AVLmtdn2.def" => 100..=196,
+            "AVLmtdn1.def" | "AVLmtdn2.def" => 144..=225,
+            "AVLmtdn5.def" => 64..=100,
             _ => 25..=49,
         },
 
@@ -332,13 +334,13 @@ fn frequency(
         },
 
         TemplateClass::BarchanDunes => match filename {
-            "AVLmtdn1.def" | "AVLmtdn2.def" => 3,
-            _ => 4,
+            "AVLmtdn1.def" | "AVLmtdn2.def" => 1,
+            _ => 3,
         },
 
         TemplateClass::Palms => match filename {
             "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
-            | "avlspl14.def" => 2,
+            | "avlspl14.def" => 1,
 
             "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
             | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
@@ -349,6 +351,8 @@ fn frequency(
         },
 
         TemplateClass::Mountain => match filename {
+            "AVLmtds1.def" => 6,
+
             "AVLmtsn1.def" | "AVLmtsn2.def" | "AVLmtsn3.def" | "AVLmtsn4.def" | "AVLmtsn5.def"
             | "AVLmtsn6.def" => surface_area * 2,
 
@@ -387,6 +391,15 @@ fn frequency(
 
         TemplateClass::SandPit => 1,
 
+        TemplateClass::YuccaTrees => 2,
+
+        TemplateClass::SandDune => 3,
+
+        TemplateClass::Cactus => match filename {
+            "AVcact03.def" | "AVcact02.def" | "AVcact01.def" | "AVLca040.def" => 2,
+            _ => surface_area,
+        },
+
         _ => surface_area,
     }
 }
@@ -396,4 +409,18 @@ fn may_be_overlapped(template_class: TemplateClass) -> bool {
         template_class,
         TemplateClass::Mountain | TemplateClass::PineTrees
     )
+}
+
+fn overlap_obstacle_sparsity_penalty(
+    template_class: TemplateClass,
+    filename: &'static str,
+) -> usize {
+    match template_class {
+        TemplateClass::Mountain => match filename {
+            "AVLmtds4.def" | "AVLmtds6.def" | "AVLmtds3.def" | "AVLmtds5.def" => 4,
+            _ => 0,
+        },
+
+        _ => 0,
+    }
 }
