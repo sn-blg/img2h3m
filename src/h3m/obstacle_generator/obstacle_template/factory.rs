@@ -417,7 +417,7 @@ fn overlap_obstacle_sparsity_penalty(
 ) -> usize {
     match template_class {
         TemplateClass::Mountain => match filename {
-            "AVLmtds4.def" | "AVLmtds6.def" | "AVLmtds3.def" | "AVLmtds5.def" => 4,
+            "AVLmtds4.def" | "AVLmtds6.def" | "AVLmtds3.def" => 4,
             _ => 0,
         },
 
