@@ -692,6 +692,7 @@ impl OverlapMap {
                     &[(1, 4), (2, 3), (2, 4), (1, -1), (0, 2), (-1, -1)],
                 );
                 overlap_map.add("AVLmtsw6.def", &[(-1, 1), (-1, 2), (0, -1)]);
+                overlap_map.add("mntswp03.def", &[(1, 1)]);
             }
             "AVLmtsw2.def" => {
                 overlap_map.add(
@@ -722,6 +723,7 @@ impl OverlapMap {
                 );
                 overlap_map.add("AVLmtsw5.def", &[(0, -1), (-1, 0), (1, -2)]);
                 overlap_map.add("AVLmtsw6.def", &[(-1, 3), (-1, 4), (2, -2)]);
+                overlap_map.add("mntswp01.def", &[(-1, 1)]);
             }
             "AVLmtsw3.def" => {
                 overlap_map.add(
@@ -772,6 +774,65 @@ impl OverlapMap {
                 overlap_map.add("AVLmtsw3.def", &[(-1, 1), (-1, 2), (1, 0), (1, -1)]);
                 overlap_map.add("AVLmtsw4.def", &[(1, -1), (1, -2), (-1, 1)]);
                 overlap_map.add("AVLmtsw5.def", &[(1, -1), (-1, 1), (1, 1), (-1, -1)]);
+            }
+
+            "mntswp01.def" => {
+                overlap_map.add("AVLmtsw1.def", &[(1, 1)]);
+                overlap_map.add("AVLmtsw2.def", &[(1, -1), (0, 2)]);
+                overlap_map.add("mntswp02.def", &[(-1, -1), (1, 1), (1, -1), (-1, 1)]);
+                overlap_map.add("mntswp03.def", &[(1, 1), (1, 2), (-1, -1), (-1, -2)]);
+                overlap_map.add("mntswp04.def", &[(-1, -1), (1, 1), (1, -1), (-1, 1)]);
+                overlap_map.add("mntswp05.def", &[(0, 1), (1, -1), (1, -3)]);
+                overlap_map.add("mntswp06.def", &[(1, 1), (1, 2), (-2, -3)]);
+            }
+            "mntswp02.def" => {
+                overlap_map.add("mntswp01.def", &[(1, 1), (-1, -1), (-1, 1), (1, -1)]);
+                overlap_map.add("mntswp03.def", &[(1, 1), (-1, 2), (1, -1)]);
+                overlap_map.add("mntswp04.def", &[(-1, 1), (-1, 2), (1, -1), (1, -2)]);
+                overlap_map.add("mntswp05.def", &[(1, -4), (-2, 2)]);
+                overlap_map.add("mntswp06.def", &[(1, -1), (-2, -4), (0, -3), (0, -4)]);
+            }
+            "mntswp03.def" => {
+                overlap_map.add("AVLmtsw1.def", &[(1, 1)]);
+                overlap_map.add("mntswp01.def", &[(-1, -1), (-1, -2), (1, 1), (1, 2)]);
+                overlap_map.add("mntswp02.def", &[(-1, -1), (1, -2), (-1, 1)]);
+                overlap_map.add("mntswp04.def", &[(-1, 1), (1, -1), (1, 1), (-1, -1)]);
+                overlap_map.add("mntswp05.def", &[(0, 1), (-2, -2), (1, -3)]);
+                overlap_map.add("mntswp06.def", &[(1, 1), (-2, -3), (-2, -4)]);
+            }
+            "mntswp04.def" => {
+                overlap_map.add("AVLmtsw2.def", &[(1, -4)]);
+                overlap_map.add("mntswp01.def", &[(1, 1), (-1, -1), (-1, 1), (1, -1)]);
+                overlap_map.add("mntswp02.def", &[(1, -1), (1, -2), (-1, 1), (-1, 2)]);
+                overlap_map.add("mntswp03.def", &[(1, -1), (-1, 1), (-1, -1), (1, 1)]);
+                overlap_map.add("mntswp05.def", &[(-2, 2), (1, -3)]);
+                overlap_map.add(
+                    "mntswp06.def",
+                    &[(0, -3), (0, -4), (-1, 1), (-1, 2), (-2, -3), (1, 1)],
+                );
+            }
+            "mntswp05.def" => {
+                overlap_map.add("mntswp01.def", &[(0, -1), (-1, 1), (-1, 3)]);
+                overlap_map.add("mntswp02.def", &[(-1, 4), (2, -2)]);
+                overlap_map.add("mntswp03.def", &[(0, -1), (2, 2), (-1, 3)]);
+                overlap_map.add("mntswp04.def", &[(2, -2), (-1, 3)]);
+                overlap_map.add(
+                    "mntswp06.def",
+                    &[(-1, 2), (-1, 3), (-2, -2), (1, 2), (1, 3), (1, -1)],
+                );
+            }
+            "mntswp06.def" => {
+                overlap_map.add("mntswp01.def", &[(-1, -1), (2, 3)]);
+                overlap_map.add("mntswp02.def", &[(-1, 1), (2, 4), (0, 3)]);
+                overlap_map.add("mntswp03.def", &[(-1, -1), (2, 3), (2, 4)]);
+                overlap_map.add(
+                    "mntswp04.def",
+                    &[(0, 3), (0, 4), (1, -1), (1, -2), (2, 3), (-1, -1)],
+                );
+                overlap_map.add(
+                    "mntswp05.def",
+                    &[(1, -2), (1, -3), (2, 2), (-1, -2), (-1, -3), (-1, 1)],
+                );
             }
 
             _ => (),
