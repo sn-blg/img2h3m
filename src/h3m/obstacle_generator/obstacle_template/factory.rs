@@ -278,7 +278,9 @@ fn sparsity(
         }
 
         TemplateClass::Palms => match filename {
-            "AVLswmp1.def" | "AVLplm20.def" | "AVLplm30.def" | "AVLswmp0.def" => 16..=36,
+            "AVLswmp1.def" | "AVLplm20.def" | "AVLplm30.def" | "AVLswmp0.def" | "avlswn03.def" => {
+                16..=36
+            }
             _ => forest_sparsity(surface_area),
         },
 
@@ -407,7 +409,7 @@ fn frequency(
 fn may_be_overlapped(template_class: TemplateClass) -> bool {
     matches!(
         template_class,
-        TemplateClass::Mountain | TemplateClass::PineTrees
+        TemplateClass::Mountain | TemplateClass::PineTrees | TemplateClass::Palms
     )
 }
 
