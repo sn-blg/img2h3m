@@ -5,7 +5,6 @@ use super::ObstacleTemplate;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::Terrain;
-use std::cmp::Ordering;
 
 pub struct ObstacleTemplateCreateParams {
     pub filename: &'static str,
@@ -194,10 +193,11 @@ fn sparsity(
     surface_area: usize,
     filename: &'static str,
 ) -> Sparsity {
-    let forest_sparsity = |surface_area: usize| match surface_area.cmp(&2) {
-        Ordering::Less => 2..=9,
-        Ordering::Greater => 0..=0,
-        Ordering::Equal => 2..=6,
+    let forest_sparsity = |surface_area: usize| match surface_area {
+        0..=1 => 2..=9,
+        2 => 2..=6,
+        3..=4 => 0..=4,
+        _ => 0..=0,
     };
 
     Sparsity::new(match template_class {
@@ -343,6 +343,8 @@ fn frequency(
         TemplateClass::Palms => match filename {
             "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
             | "avlspl14.def" => 1,
+
+            "AVLswmp6.def" | "AVLswmp7.def" => 4,
 
             "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
             | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
