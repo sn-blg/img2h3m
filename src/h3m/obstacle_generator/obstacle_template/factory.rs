@@ -240,6 +240,7 @@ fn sparsity(
             "AVLMTWL7.def" => 225..=625,
             "AVLmtsb0.def" => 36..=64,
             "AVLMTWL1.def" => 25..=36,
+            "AVLmtsw1.def" | "AVLmtsw2.def" => 25..=36,
             _ => {
                 if surface_area <= 4 {
                     25..=36
@@ -345,6 +346,7 @@ fn frequency(
             | "avlspl14.def" => 1,
 
             "AVLswmp6.def" | "AVLswmp7.def" => 4,
+            "AVLswmp2.def" | "AVLswmp3.def" | "AVLswmp4.def" | "AVLswmp5.def" => 3,
 
             "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
             | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
@@ -422,6 +424,7 @@ fn overlap_obstacle_sparsity_penalty(
     match template_class {
         TemplateClass::Mountain => match filename {
             "AVLmtds4.def" | "AVLmtds6.def" | "AVLmtds3.def" => 4,
+            "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
             _ => 0,
         },
 
