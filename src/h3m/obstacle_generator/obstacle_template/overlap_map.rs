@@ -843,6 +843,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, -1)]);
                 overlap_map.add("avlswtr3.def", &[(-1, -1), (1, 1), (-1, 1), (1, -1)]);
+                overlap_map.add("avlswtr9.def", &[(1, 1), (-1, 0), (-1, -3), (-1, -4)]);
             }
             "AVLswmp3.def" => {
                 overlap_map.add("AVLswmp2.def", &[(1, 1), (-1, -1), (-1, 1), (1, -1)]);
@@ -858,6 +859,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, 2)]);
                 overlap_map.add("avlswtr3.def", &[(-1, 1), (1, -1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, 1), (-1, 2), (1, -3)]);
             }
             "AVLswmp4.def" => {
                 overlap_map.add("AVLswmp2.def", &[(-1, -1), (1, 1)]);
@@ -873,6 +875,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, -1)]);
                 overlap_map.add("avlswtr3.def", &[(-1, -1), (1, 1), (-1, 1), (1, -1)]);
+                overlap_map.add("avlswtr9.def", &[(1, 1), (-1, 0), (-1, -3), (-1, -4)]);
             }
             "AVLswmp5.def" => {
                 overlap_map.add("AVLswmp2.def", &[(1, 1), (-1, -1), (-1, 1), (1, -1)]);
@@ -888,6 +891,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, 2)]);
                 overlap_map.add("avlswtr3.def", &[(-1, 1), (1, -1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, 1), (-1, 2), (1, -3)]);
             }
             "AVLswmp6.def" => {
                 overlap_map.add("AVLswmp2.def", &[(2, 1), (2, 2), (-1, -1), (-1, -2)]);
@@ -903,6 +907,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, -1), (2, 2)]);
                 overlap_map.add("avlswtr3.def", &[(1, -2), (2, 1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, -1), (0, -1), (1, -2), (1, 1)]);
             }
             "AVLswmp7.def" => {
                 overlap_map.add("AVLswmp2.def", &[(-1, -1), (-1, 1), (2, -1)]);
@@ -918,6 +923,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, 2), (2, -1)]);
                 overlap_map.add("avlswtr3.def", &[(2, -2), (2, -1), (-1, 1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, -1), (0, -1), (1, -3)]);
             }
 
             "avlswtr7.def" => {
@@ -932,6 +938,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, -1), (-1, 2)]);
                 overlap_map.add("avlswtr3.def", &[(-1, -1), (-1, 1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, -3), (-1, 1)]);
             }
             "avlswtr1.def" => {
                 overlap_map.add("AVLswmp2.def", &[(-1, 1), (1, -1), (1, 1), (-1, -1)]);
@@ -946,6 +953,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, 2), (1, -1)]);
                 overlap_map.add("avlswtr3.def", &[(-1, 1), (1, -1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, 1), (1, -3), (-1, -1)]);
             }
             "avlswtr2.def" => {
                 overlap_map.add("AVLswmp2.def", &[(-1, -1)]);
@@ -960,6 +968,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(-1, -1), (1, 2)]);
                 overlap_map.add("avlswtr3.def", &[(1, 0), (-1, 0)]);
+                overlap_map.add("avlswtr9.def", &[(1, 1), (-1, 0), (-1, -3), (-1, -4)]);
             }
             "avlswtr4.def" => {
                 overlap_map.add("AVLswmp2.def", &[(-1, -1), (0, 1), (1, 2)]);
@@ -975,6 +984,7 @@ impl OverlapMap {
 
                 overlap_map.add("avlswtr8.def", &[(2, 2), (0, 0)]);
                 overlap_map.add("avlswtr3.def", &[(0, 2), (2, 0), (1, 1)]);
+                overlap_map.add("avlswtr9.def", &[(1, 1), (-1, -3)]);
             }
 
             "avlswtr8.def" => {
@@ -991,6 +1001,7 @@ impl OverlapMap {
                 overlap_map.add("avlswtr4.def", &[(-2, -2), (0, 0)]);
 
                 overlap_map.add("avlswtr3.def", &[(1, -1), (1, -2), (-1, 0), (-1, 1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, 1), (-1, -4), (-1, -1), (-1, -2)]);
             }
             "avlswtr3.def" => {
                 overlap_map.add("AVLswmp2.def", &[(1, 1), (-1, -1), (1, -1), (-1, 1)]);
@@ -1006,6 +1017,23 @@ impl OverlapMap {
                 overlap_map.add("avlswtr4.def", &[(0, -2), (-2, 0), (-1, -1)]);
 
                 overlap_map.add("avlswtr8.def", &[(-1, 1), (-1, 2), (1, 0), (1, -1)]);
+                overlap_map.add("avlswtr9.def", &[(-1, 1), (-1, -4), (-1, -1), (-1, -2)]);
+            }
+            "avlswtr9.def" => {
+                overlap_map.add("AVLswmp2.def", &[(-1, -1), (1, 0), (1, 3), (1, 4)]);
+                overlap_map.add("AVLswmp3.def", &[(1, -1), (1, -2), (-1, 3)]);
+                overlap_map.add("AVLswmp4.def", &[(-1, -1), (1, 0), (1, 3), (1, 4)]);
+                overlap_map.add("AVLswmp5.def", &[(1, -1), (1, -2), (-1, 3)]);
+                overlap_map.add("AVLswmp6.def", &[(1, 1), (0, 1), (-1, 2), (-1, -1)]);
+                overlap_map.add("AVLswmp7.def", &[(1, 1), (0, 1), (-1, 3)]);
+
+                overlap_map.add("avlswtr7.def", &[(1, 3), (1, -1)]);
+                overlap_map.add("avlswtr1.def", &[(1, -1), (-1, 3), (1, 1)]);
+                overlap_map.add("avlswtr2.def", &[(-1, -1), (1, 0), (1, 3), (1, 4)]);
+                overlap_map.add("avlswtr4.def", &[(-1, -1), (1, 3)]);
+
+                overlap_map.add("avlswtr8.def", &[(1, -1), (1, 4), (1, 1), (1, 2)]);
+                overlap_map.add("avlswtr3.def", &[(1, -1), (1, 4), (1, 1), (1, 2)]);
             }
 
             _ => (),
