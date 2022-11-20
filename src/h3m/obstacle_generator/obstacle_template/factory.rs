@@ -279,9 +279,8 @@ fn sparsity(
         }
 
         TemplateClass::Palms => match filename {
-            "AVLswmp1.def" | "AVLplm20.def" | "AVLplm30.def" | "AVLswmp0.def" | "avlswn03.def" => {
-                16..=36
-            }
+            "AVLswmp1.def" | "AVLplm20.def" | "AVLplm30.def" | "AVLswmp0.def" | "avlswn03.def"
+            | "avlswn02.def" => 16..=36,
             _ => forest_sparsity(surface_area),
         },
 
