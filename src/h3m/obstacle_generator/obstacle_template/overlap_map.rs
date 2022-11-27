@@ -406,7 +406,7 @@ impl OverlapMap {
                 );
                 overlap_map.add(
                     "AVLmtds4.def",
-                    &[(0, 0), (0, 1), (-1, 1), (0, -1), (0, -2), (1, 0)],
+                    &[(0, 1), (-1, 1), (0, -1), (0, -2), (1, 0)],
                 );
                 overlap_map.add(
                     "AVLmtds5.def",
