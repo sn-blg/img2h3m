@@ -1135,6 +1135,7 @@ impl OverlapMap {
                     &[(1, -1), (-1, -1), (1, 1), (-1, 1), (1, -2)],
                 );
                 overlap_map.add("avlmtrf5.def", &[(-1, -1), (1, 1)]);
+                overlap_map.add("avlmtrf6.def", &[(1, 1), (-1, 1)]);
             }
             "avlmtrf4.def" => {
                 overlap_map.add(
@@ -1158,6 +1159,7 @@ impl OverlapMap {
                     &[(-1, 1), (1, 1), (-1, -1), (1, -1), (-1, 2)],
                 );
                 overlap_map.add("avlmtrf5.def", &[(1, 1), (1, -1)]);
+                overlap_map.add("avlmtrf6.def", &[(-1, 1), (1, -1), (-1, 2), (1, 1)]);
             }
             "avlmtrf5.def" => {
                 overlap_map.add(
@@ -1179,6 +1181,10 @@ impl OverlapMap {
                 );
                 overlap_map.add("avlmtrf3.def", &[(1, 1), (-1, -1)]);
                 overlap_map.add("avlmtrf4.def", &[(1, 1), (-1, -1), (-1, 1)]);
+                overlap_map.add(
+                    "avlmtrf6.def",
+                    &[(-1, 0), (1, 0), (1, -1), (-1, 1), (-1, -1), (1, 1), (0, 2)],
+                );
             }
             "avlmtrf6.def" => {
                 overlap_map.add(
@@ -1186,7 +1192,24 @@ impl OverlapMap {
                     &[(1, 0), (0, -3), (0, -4), (-2, -3), (1, -1)],
                 );
                 overlap_map.add("avlmtrf2.def", &[(1, -3), (0, -3), (-1, 1)]);
+                overlap_map.add("avlmtrf3.def", &[(-1, -1), (1, -1)]);
+                overlap_map.add("avlmtrf4.def", &[(1, -1), (-1, 1), (1, -2), (-1, -1)]);
+                overlap_map.add(
+                    "avlmtrf5.def",
+                    &[(1, 0), (-1, 0), (-1, 1), (1, -1), (1, 1), (-1, -1), (0, -2)],
+                );
             }
+
+            "AVLtrRo0.def" => {
+                overlap_map.add("AVLtrRo2.def", &[(0, -1), (0, 1), (-1, -1), (1, 1)]);
+            }
+
+            "AVLtrRo2.def" => {
+                overlap_map.add("AVLtrRo0.def", &[(0, 1), (0, -1), (1, 1), (-1, -1)]);
+            }
+            "AVLtrRo3.def" => {}
+            "AVLtrRo4.def" => {}
+            "AVLtrRo5.def" => {}
 
             _ => (),
         }

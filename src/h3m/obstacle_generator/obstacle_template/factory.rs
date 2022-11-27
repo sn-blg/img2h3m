@@ -241,6 +241,7 @@ fn sparsity(
             "AVLmtsb0.def" => 36..=64,
             "AVLMTWL1.def" => 25..=36,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25..=36,
+            "avlmtrf4.def" => 25..=36,
             _ => {
                 if surface_area <= 4 {
                     25..=36
@@ -356,6 +357,7 @@ fn frequency(
         },
 
         TemplateClass::Mountain => match filename {
+            "avlmtrf4.def" => 4,
             "AVLmtds1.def" => 6,
 
             "AVLmtsn1.def" | "AVLmtsn2.def" | "AVLmtsn3.def" | "AVLmtsn4.def" | "AVLmtsn5.def"
@@ -412,7 +414,7 @@ fn frequency(
 fn may_be_overlapped(template_class: TemplateClass) -> bool {
     matches!(
         template_class,
-        TemplateClass::Mountain | TemplateClass::PineTrees | TemplateClass::Palms
+        TemplateClass::Mountain | TemplateClass::PineTrees | TemplateClass::Palms | TemplateClass::Trees
     )
 }
 
@@ -424,6 +426,7 @@ fn overlap_obstacle_sparsity_penalty(
         TemplateClass::Mountain => match filename {
             "AVLmtds4.def" | "AVLmtds6.def" | "AVLmtds3.def" => 4,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
+            "avlmtrf4.def" => 12,
             _ => 0,
         },
 
