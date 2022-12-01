@@ -382,8 +382,8 @@ fn frequency(
 
         TemplateClass::Trees => match filename {
             "AVLtrRo4.def" => 2,
-            "AVLtrRo8.def" | "AVLtrRo9.def" | "AVLtrRo5.def" | "AVLtrRo1.def"
-            | "AVLtrRo0.def" | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area, 3),
+            "AVLtrRo8.def" | "AVLtrRo9.def" | "AVLtrRo5.def" | "AVLtrRo1.def" | "AVLtrRo0.def"
+            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area, 3),
 
             _ => surface_area,
         },

@@ -1159,10 +1159,7 @@ impl OverlapMap {
                 overlap_map.add("avlmtrf6.def", &[(-1, 1), (1, -1), (-1, 2), (1, 1)]);
             }
             "avlmtrf5.def" => {
-                overlap_map.add(
-                    "avlmtrf1.def",
-                    &[(1, 1), (-2, -3), (-2, -4), (-2, -1)],
-                );
+                overlap_map.add("avlmtrf1.def", &[(1, 1), (-2, -3), (-2, -4), (-2, -1)]);
                 overlap_map.add(
                     "avlmtrf2.def",
                     &[
@@ -1201,21 +1198,25 @@ impl OverlapMap {
                 overlap_map.add("AVLtrRo2.def", &[(0, -1), (0, 1), (-1, -1), (1, 1)]);
                 overlap_map.add("AVLtrRo3.def", &[(0, 2), (-1, 0)]);
                 overlap_map.add("AVLtrRo4.def", &[(0, -1), (1, 1)]);
+                overlap_map.add("AVLtrRo5.def", &[(1, 0), (0, 2)]);
             }
             "AVLtrRo1.def" => {
                 overlap_map.add("AVLtrRo2.def", &[(0, -2), (1, 0), (-1, 0)]);
                 overlap_map.add("AVLtrRo3.def", &[(1, -1), (-1, 1)]);
                 overlap_map.add("AVLtrRo4.def", &[(1, -1)]);
+                overlap_map.add("AVLtrRo5.def", &[(1, -1)]);
             }
             "AVLtrRo8.def" => {
                 overlap_map.add("AVLtrRo2.def", &[(2, 2), (-1, -1)]);
                 overlap_map.add("AVLtrRo3.def", &[(0, 2), (1, -2)]);
                 overlap_map.add("AVLtrRo4.def", &[(2, 2)]);
+                overlap_map.add("AVLtrRo5.def", &[(-1, 0), (1, 1)]);
             }
             "AVLtrRo9.def" => {
                 overlap_map.add("AVLtrRo2.def", &[(1, 2), (0, -2)]);
                 overlap_map.add("AVLtrRo3.def", &[(2, -2), (-1, 2)]);
                 overlap_map.add("AVLtrRo4.def", &[(1, 2)]);
+                overlap_map.add("AVLtrRo5.def", &[(1, 1)]);
             }
 
             "AVLtrRo2.def" => {
@@ -1236,7 +1237,12 @@ impl OverlapMap {
                 overlap_map.add("AVLtrRo8.def", &[(-2, -2)]);
                 overlap_map.add("AVLtrRo9.def", &[(-1, -2)]);
             }
-            "AVLtrRo5.def" => {}
+            "AVLtrRo5.def" => {
+                overlap_map.add("AVLtrRo0.def", &[(-1, 0), (0, -2)]);
+                overlap_map.add("AVLtrRo1.def", &[(-1, 1)]);
+                overlap_map.add("AVLtrRo8.def", &[(1, 0), (-1, -1)]);
+                overlap_map.add("AVLtrRo9.def", &[(-1, -1)]);
+            }
 
             _ => (),
         }
