@@ -431,7 +431,7 @@ fn overlap_obstacle_sparsity_penalty(
     match template_class {
         TemplateClass::Mountain => match filename {
             "AVLmtds6.def" => 4,
-            "AVLmtds3.def" | "AVLmtds4.def" => 8,
+            "AVLmtds3.def" | "AVLmtds4.def" => 9,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
             "avlmtrf4.def" => 12,
             _ => 0,

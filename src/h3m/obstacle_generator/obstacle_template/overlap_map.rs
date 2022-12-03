@@ -1195,7 +1195,7 @@ impl OverlapMap {
             }
 
             "AVLtrRo0.def" => {
-                overlap_map.add("AVLtrRo2.def", &[(0, -1), (0, 1), (-1, -1), (1, 1)]);
+                overlap_map.add("AVLtrRo2.def", &[(0, -1), (-1, -1), (1, 1)]);
                 overlap_map.add("AVLtrRo3.def", &[(0, 2), (-1, 0)]);
                 overlap_map.add("AVLtrRo4.def", &[(0, -1), (1, 1)]);
                 overlap_map.add("AVLtrRo5.def", &[(1, 0), (0, 2)]);
@@ -1220,7 +1220,7 @@ impl OverlapMap {
             }
 
             "AVLtrRo2.def" => {
-                overlap_map.add("AVLtrRo0.def", &[(0, 1), (0, -1), (1, 1), (-1, -1)]);
+                overlap_map.add("AVLtrRo0.def", &[(0, 1), (1, 1), (-1, -1)]);
                 overlap_map.add("AVLtrRo1.def", &[(0, 2), (-1, 0), (1, 0)]);
                 overlap_map.add("AVLtrRo8.def", &[(-2, -2), (1, 1)]);
                 overlap_map.add("AVLtrRo9.def", &[(-1, -2), (0, 2)]);
@@ -1242,6 +1242,16 @@ impl OverlapMap {
                 overlap_map.add("AVLtrRo1.def", &[(-1, 1)]);
                 overlap_map.add("AVLtrRo8.def", &[(1, 0), (-1, -1)]);
                 overlap_map.add("AVLtrRo9.def", &[(-1, -1)]);
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // WASTELAND
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            "AVLMTWL1.def" => {
+                overlap_map.add("AVLMTWL2.def", &[(1, -4)]);
+            }
+            "AVLMTWL2.def" => {
+                overlap_map.add("AVLMTWL1.def", &[(-1, 4)]);
             }
 
             _ => (),
