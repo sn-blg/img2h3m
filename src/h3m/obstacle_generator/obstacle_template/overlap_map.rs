@@ -1249,9 +1249,23 @@ impl OverlapMap {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             "AVLMTWL1.def" => {
                 overlap_map.add("AVLMTWL2.def", &[(1, -4)]);
+                overlap_map.add("AVLMTWL3.def", &[(2, 3), (2, 4)]);
+                overlap_map.add("AVLMTWL4.def", &[(-1, -1), (-1, 0)]);
             }
             "AVLMTWL2.def" => {
                 overlap_map.add("AVLMTWL1.def", &[(-1, 4)]);
+                overlap_map.add("AVLMTWL3.def", &[(-1, 3), (-1, 4), (1, -2)]);
+                overlap_map.add("AVLMTWL4.def", &[(-1, 3), (-1, 4), (1, -1)]);
+            }
+            "AVLMTWL3.def" => {
+                overlap_map.add("AVLMTWL1.def", &[(-2, -3), (-2, -4)]);
+                overlap_map.add("AVLMTWL2.def", &[(1, -3), (1, -4), (-1, 2)]);
+                overlap_map.add("AVLMTWL4.def", &[(1, -1), (-1, -1)]);
+            }
+            "AVLMTWL4.def" => {
+                overlap_map.add("AVLMTWL1.def", &[(1, 1), (1, 0)]);
+                overlap_map.add("AVLMTWL2.def", &[(1, -3), (1, -4), (-1, 1)]);
+                overlap_map.add("AVLMTWL3.def", &[(-1, 1), (1, 1)]);
             }
 
             _ => (),
