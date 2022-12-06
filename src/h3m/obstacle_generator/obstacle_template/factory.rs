@@ -312,55 +312,57 @@ fn frequency(
     surface_editor_group_mask: u16,
     filename: &'static str,
 ) -> usize {
+    let surface_area = surface_area * 10;
+
     match template_class {
         TemplateClass::LavaLake => match filename {
             "AVLllk10.def" | "AVLllk20.def" => 0,
-            _ => 1,
+            _ => 10,
         },
 
-        TemplateClass::FrozenLake => 2,
+        TemplateClass::FrozenLake => 20,
 
-        TemplateClass::LimestoneLake | TemplateClass::TarPit => 1,
+        TemplateClass::LimestoneLake | TemplateClass::TarPit => 10,
 
         TemplateClass::Lake => match filename {
-            "AVLlk1r.def" => 1,
-            _ => 3,
+            "AVLlk1r.def" => 10,
+            _ => 30,
         },
 
-        TemplateClass::IceBlock => 1,
+        TemplateClass::IceBlock => 10,
 
-        TemplateClass::Crater => 1,
+        TemplateClass::Crater => 10,
 
-        TemplateClass::Waterfalls => 2,
+        TemplateClass::Waterfalls => 20,
 
         TemplateClass::SnowHills => match filename {
             "avlxsn02.def" => 0,
-            _ => 1,
+            _ => 10,
         },
 
         TemplateClass::BarchanDunes => match filename {
-            "AVLmtdn1.def" | "AVLmtdn2.def" => 1,
-            _ => 3,
+            "AVLmtdn1.def" | "AVLmtdn2.def" => 10,
+            _ => 30,
         },
 
         TemplateClass::Palms => match filename {
             "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
-            | "avlspl14.def" => 1,
+            | "avlspl14.def" => 10,
 
-            "AVLswmp6.def" | "AVLswmp7.def" => 4,
-            "AVLswmp2.def" | "AVLswmp3.def" | "AVLswmp4.def" | "AVLswmp5.def" => 3,
+            "AVLswmp6.def" | "AVLswmp7.def" => 40,
+            "AVLswmp2.def" | "AVLswmp3.def" | "AVLswmp4.def" | "AVLswmp5.def" => 30,
 
             "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
             | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
             | "avlswtr8.def" | "avlswtr3.def" | "avlswtr9.def" | "avlswtr0.def"
-            | "avlswt00.def" => surface_area + (surface_area / 3),
+            | "avlswt00.def" => (surface_area + (surface_area / 3)),
 
             _ => surface_area,
         },
 
         TemplateClass::Mountain => match filename {
-            "avlmtrf4.def" => 4,
-            "AVLmtds1.def" => 6,
+            "avlmtrf4.def" => 40,
+            "AVLmtds1.def" => 60,
 
             "AVLmtsn1.def" | "AVLmtsn2.def" | "AVLmtsn3.def" | "AVLmtsn4.def" | "AVLmtsn5.def"
             | "AVLmtsn6.def" => surface_area * 2,
@@ -369,47 +371,49 @@ fn frequency(
             | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
             | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area / 2,
 
-            _ => std::cmp::min(surface_area, 10),
+            _ => std::cmp::min(surface_area, 100),
         },
 
         TemplateClass::DeadVegetation => {
             if surface_editor_group_mask == Terrain::Snow.group() {
                 surface_area
             } else {
-                std::cmp::min(surface_area, 2)
+                std::cmp::min(surface_area, 25)
             }
         }
 
         TemplateClass::Trees => match filename {
-            "AVLtrRo4.def" => 2,
+            "AVLtrRo4.def" => 20,
             "AVLtrRo8.def" | "AVLtrRo9.def" | "AVLtrRo5.def" | "AVLtrRo1.def" | "AVLtrRo0.def"
-            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area, 3),
+            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area, 30),
 
             _ => surface_area,
         },
 
         TemplateClass::Volcano => match filename {
-            "AVLvol20.def" | "AVLvol40.def" => 1,
+            "AVLvol20.def" | "AVLvol40.def" => 10,
             _ => surface_area,
         },
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 0,
-            "AvLRD02.def" | "AvLRD01.def" => 1,
+            "AvLRD02.def" | "AvLRD01.def" => 10,
             _ => surface_area,
         },
 
-        TemplateClass::SandPit => 1,
+        TemplateClass::SandPit => 10,
 
-        TemplateClass::YuccaTrees => 2,
+        TemplateClass::YuccaTrees => 20,
 
-        TemplateClass::SandDune => 3,
+        TemplateClass::SandDune => 30,
 
-        TemplateClass::Cactus => match filename {
-            "AVcact03.def" | "AVcact02.def" | "AVcact01.def" | "AVLca040.def" => 2,
-            _ => surface_area,
-        },
-
+        TemplateClass::Cactus => {
+            if surface_editor_group_mask == Terrain::Wasteland.group() {
+                6
+            } else {
+                surface_area
+            }
+        }
         _ => surface_area,
     }
 }
