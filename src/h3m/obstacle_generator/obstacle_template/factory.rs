@@ -1,3 +1,4 @@
+use super::multi_sparsity::MultiSparsity;
 use super::overlap_map::OverlapMap;
 use super::sparsity::Sparsity;
 use super::template_class::TemplateClass;
@@ -62,6 +63,8 @@ impl ObstacleTemplate {
 
         let sparsity = sparsity(template_class, shape.len(), create_params.filename);
 
+        let multi_sparsity = multi_sparsity(create_params.filename);
+
         let may_be_overlapped = may_be_overlapped(template_class);
 
         let overlap_map = OverlapMap::new(create_params.filename);
@@ -80,6 +83,7 @@ impl ObstacleTemplate {
             may_located_on_mixed_tiles,
             may_be_overlapped,
             sparsity,
+            multi_sparsity,
             overlap_map,
             overlap_obstacle_sparsity_penalty,
         }
@@ -304,6 +308,56 @@ fn sparsity(
 
         TemplateClass::Mandrake => 2..=9,
     })
+}
+
+fn multi_sparsity(filename: &'static str) -> MultiSparsity {
+    let mut multi_sparsity = MultiSparsity::new();
+
+    let tar_pits = [
+        "AVLwloi1.def",
+        "AVLwloi2.def",
+        "AVLwloi3.def",
+        "AVLwloi4.def",
+        "AVLwloi5.def",
+    ];
+    let wasteland_trees = [
+        "AVLtRo00.def",
+        "AVLtRo01.def",
+        "AVLtRo02.def",
+        "AVLtRo03.def",
+        "AVLtRo04.def",
+        "AVLtRo05.def",
+        "AVLtRo06.def",
+        "AVLtRo07.def",
+        "AVLtRo08.def",
+        "AVLtRo09.def",
+        "AVLtRo10.def",
+        "AVLtRo11.def",
+        "AVLtRo12.def",
+        "AVLtRo13.def",
+        "AVLtrRo0.def",
+        "AVLtrRo1.def",
+        "AVLtrRo2.def",
+        "AVLtrRo3.def",
+        "AVLtrRo4.def",
+        "AVLtrRo5.def",
+        "AVLtrRo6.def",
+        "AVLtrRo7.def",
+        "AVLtrRo8.def",
+        "AVLtrRo9.def",
+    ];
+
+    if tar_pits.contains(&filename) {
+        for wasteland_tree in wasteland_trees {
+            multi_sparsity.add(wasteland_tree, 9..=16);
+        }
+    } else if wasteland_trees.contains(&filename) {
+        for tar_pit in tar_pits {
+            multi_sparsity.add(tar_pit, 9..=16);
+        }
+    }
+
+    multi_sparsity
 }
 
 fn frequency(

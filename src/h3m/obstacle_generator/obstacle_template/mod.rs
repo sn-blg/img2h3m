@@ -3,6 +3,7 @@ use crate::h3m::parser::H3mObjectTemplate;
 use crate::h3m::result::H3mResult;
 pub use cell_validator::CellValidationResult;
 pub use factory::ObstacleTemplateCreateParams;
+pub use multi_sparsity::MultiSparsity;
 use overlap_map::OverlapMap;
 pub use sparsity::Sparsity;
 use template_class::TemplateClass;
@@ -26,6 +27,7 @@ pub struct ObstacleTemplate {
     may_located_on_mixed_tiles: bool,
     may_be_overlapped: bool,
     sparsity: Sparsity, // limit: square of the distance to the same obstacle
+    multi_sparsity: MultiSparsity,
     overlap_obstacle_sparsity_penalty: usize,
     overlap_map: OverlapMap,
 }
