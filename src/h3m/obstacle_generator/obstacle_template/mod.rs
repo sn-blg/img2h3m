@@ -9,6 +9,7 @@ use template_class::TemplateClass;
 
 mod cell_validator;
 mod factory;
+mod multi_sparsity;
 mod overlap_map;
 mod sparsity;
 mod template_class;

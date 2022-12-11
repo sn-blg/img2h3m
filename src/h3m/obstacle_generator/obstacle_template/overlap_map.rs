@@ -1263,7 +1263,7 @@ impl OverlapMap {
                 overlap_map.add("AVLMTWL3.def", &[(-1, 3), (-1, 4), (1, -2)]);
                 overlap_map.add("AVLMTWL4.def", &[(-1, 3), (-1, 4), (1, -1)]);
                 overlap_map.add("AVLMTWL5.def", &[(2, -1)]);
-                overlap_map.add("AVLMTWL6.def", &[(2, -1), (-1, 3), (-1, 4), (0, 0)]);
+                overlap_map.add("AVLMTWL6.def", &[(2, -1), (-1, 3), (-1, 4)]);
             }
             "AVLMTWL3.def" => {
                 overlap_map.add("AVLMTWL1.def", &[(-2, -3), (-2, -4)]);
@@ -1289,7 +1289,7 @@ impl OverlapMap {
                     "AVLMTWL1.def",
                     &[(1, 1), (1, -1), (1, -2), (-1, 1), (0, -4), (-2, -3)],
                 );
-                overlap_map.add("AVLMTWL2.def", &[(-2, 1), (1, -3), (1, -4), (0, 0)]);
+                overlap_map.add("AVLMTWL2.def", &[(-2, 1), (1, -3), (1, -4)]);
                 overlap_map.add("AVLMTWL3.def", &[(1, 0), (1, 1), (-1, 2), (-2, 0)]);
                 overlap_map.add("AVLMTWL4.def", &[(-1, 1), (1, -1), (1, -2)]);
                 overlap_map.add("AVLMTWL5.def", &[(1, 0), (-1, 0), (1, -1)]);
