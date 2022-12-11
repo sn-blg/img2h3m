@@ -312,7 +312,7 @@ fn frequency(
     surface_editor_group_mask: u16,
     filename: &'static str,
 ) -> usize {
-    let surface_area = surface_area * 10;
+    let surface_area_coeff = surface_area * 10;
 
     match template_class {
         TemplateClass::LavaLake => match filename {
@@ -355,9 +355,9 @@ fn frequency(
             "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
             | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
             | "avlswtr8.def" | "avlswtr3.def" | "avlswtr9.def" | "avlswtr0.def"
-            | "avlswt00.def" => (surface_area + (surface_area / 3)),
+            | "avlswt00.def" => (surface_area_coeff + (surface_area_coeff / 3)),
 
-            _ => surface_area,
+            _ => surface_area_coeff,
         },
 
         TemplateClass::Mountain => match filename {
@@ -365,40 +365,40 @@ fn frequency(
             "AVLmtds1.def" => 60,
 
             "AVLmtsn1.def" | "AVLmtsn2.def" | "AVLmtsn3.def" | "AVLmtsn4.def" | "AVLmtsn5.def"
-            | "AVLmtsn6.def" => surface_area * 2,
+            | "AVLmtsn6.def" => surface_area_coeff * 2,
 
             "AVLmtsw1.def" | "AVLmtsw2.def" | "AVLmtsw3.def" | "AVLmtsw4.def" | "AVLmtsw5.def"
             | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
-            | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area / 2,
+            | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area_coeff / 2,
 
-            _ => std::cmp::min(surface_area, 100),
+            _ => std::cmp::min(surface_area_coeff, 100),
         },
 
         TemplateClass::DeadVegetation => {
             if surface_editor_group_mask == Terrain::Snow.group() {
-                surface_area
+                surface_area_coeff
             } else {
-                std::cmp::min(surface_area, 25)
+                std::cmp::min(surface_area_coeff, 23)
             }
         }
 
         TemplateClass::Trees => match filename {
             "AVLtrRo4.def" => 20,
             "AVLtrRo8.def" | "AVLtrRo9.def" | "AVLtrRo5.def" | "AVLtrRo1.def" | "AVLtrRo0.def"
-            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area, 30),
+            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area_coeff, 30),
 
-            _ => surface_area,
+            _ => surface_area_coeff,
         },
 
         TemplateClass::Volcano => match filename {
             "AVLvol20.def" | "AVLvol40.def" => 10,
-            _ => surface_area,
+            _ => surface_area_coeff,
         },
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 0,
             "AvLRD02.def" | "AvLRD01.def" => 10,
-            _ => surface_area,
+            _ => surface_area_coeff,
         },
 
         TemplateClass::SandPit => 10,
@@ -411,10 +411,10 @@ fn frequency(
             if surface_editor_group_mask == Terrain::Wasteland.group() {
                 6
             } else {
-                surface_area
+                surface_area_coeff
             }
         }
-        _ => surface_area,
+        _ => surface_area_coeff,
     }
 }
 
