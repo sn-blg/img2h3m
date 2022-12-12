@@ -6,6 +6,7 @@ use super::ObstacleTemplate;
 use crate::common::position::DeltaPos;
 use crate::h3m::parser::{H3mObjectTemplate, Mask};
 use crate::h3m::Terrain;
+use std::ops::RangeInclusive;
 
 pub struct ObstacleTemplateCreateParams {
     pub filename: &'static str,
@@ -310,6 +311,24 @@ fn sparsity(
     })
 }
 
+fn update_multi_sparsity(
+    filename: &'static str,
+    multi_sparsity: &mut MultiSparsity,
+    first_array: &[&'static str],
+    second_array: &[&'static str],
+    sparsity: RangeInclusive<usize>,
+) {
+    if first_array.contains(&filename) {
+        for neighbor_name in second_array {
+            multi_sparsity.add(neighbor_name, sparsity.clone());
+        }
+    } else if second_array.contains(&filename) {
+        for neighbor_name in first_array {
+            multi_sparsity.add(neighbor_name, sparsity.clone());
+        }
+    }
+}
+
 fn multi_sparsity(filename: &'static str) -> MultiSparsity {
     let mut multi_sparsity = MultiSparsity::new();
 
@@ -347,15 +366,13 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         "AVLtrRo9.def",
     ];
 
-    if tar_pits.contains(&filename) {
-        for wasteland_tree in wasteland_trees {
-            multi_sparsity.add(wasteland_tree, 9..=16);
-        }
-    } else if wasteland_trees.contains(&filename) {
-        for tar_pit in tar_pits {
-            multi_sparsity.add(tar_pit, 9..=16);
-        }
-    }
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &tar_pits,
+        &wasteland_trees,
+        9..=16,
+    );
 
     multi_sparsity
 }
@@ -451,7 +468,9 @@ fn frequency(
 
         TemplateClass::Rock => match filename {
             "AVLrws02.def" => 0,
-            "AvLRD02.def" | "AvLRD01.def" => 10,
+            "AvLRD02.def" => 10,
+            "AVLrk5d0.def" => 3,
+            "AvLRD01.def" => 5,
             _ => surface_area_coeff,
         },
 
