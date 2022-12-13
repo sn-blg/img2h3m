@@ -183,13 +183,13 @@ impl ObstacleTemplate {
             }
 
             Terrain::Rough => match self.filename() {
-                "avlmtrf4.def" | "avlmtrf6.def" => {
+                "avlmtrf4.def" => {
                     return same_side(nsr, &[Side::Right, Side::Bottom]);
                 }
                 "avlmtrf2.def" | "avlmtrf1.def" => {
                     return same_side(nsr, &[Side::Left, Side::Bottom]);
                 }
-                "avlmtrf5.def" => {
+                "avlmtrf5.def" | "avlmtrf6.def" => {
                     return same_side(nsr, &[Side::Left, Side::Right, Side::Bottom]);
                 }
                 _ => (),

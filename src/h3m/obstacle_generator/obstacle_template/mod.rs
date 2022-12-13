@@ -62,6 +62,10 @@ impl ObstacleTemplate {
         self.sparsity
     }
 
+    pub fn multi_sparsity(&self) -> &MultiSparsity {
+        &self.multi_sparsity
+    }
+
     pub fn may_be_overlapped(&self) -> bool {
         self.may_be_overlapped
     }

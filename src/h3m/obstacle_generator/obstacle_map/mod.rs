@@ -14,6 +14,22 @@ mod obstacle_map_area;
 mod obstacle_map_cell;
 mod sparsity_validator;
 
+fn max_sparsity(obstacle: &ObstacleTemplate) -> usize {
+    let max_multi_sparsity = obstacle
+        .multi_sparsity()
+        .iter()
+        .map(|multi_sparsity_entry| multi_sparsity_entry.sparsity().max())
+        .max();
+
+    let max_sparsity = obstacle.sparsity().max();
+
+    if let Some(max_multi_sparsity) = max_multi_sparsity {
+        std::cmp::max(max_multi_sparsity, max_sparsity)
+    } else {
+        max_sparsity
+    }
+}
+
 impl ObstacleMapCell {
     fn from_map_cell_index(index: usize, terrain_map: &TerrainMap) -> H3mResult<ObstacleMapCell> {
         let size = terrain_map.size();
@@ -189,7 +205,7 @@ impl ObstacleMap {
 
             self.sparsity_validator.add_position(
                 template_index,
-                obstacle.sparsity().max(),
+                max_sparsity(obstacle),
                 delta_position,
             );
         }
