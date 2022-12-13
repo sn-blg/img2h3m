@@ -124,6 +124,22 @@ impl ObstacleMap {
         obstacle: &ObstacleTemplate,
         rng: &mut ThreadRng,
     ) -> Option<usize> {
+        struct LocalMultiSparsityEntry {
+            sparsity: usize,
+            neighbor_index: Option<usize>,
+        }
+
+        let multi_sparsity: Vec<LocalMultiSparsityEntry> = obstacle
+            .multi_sparsity()
+            .iter()
+            .map(|multi_sparsity_entry| LocalMultiSparsityEntry {
+                sparsity: rng.gen_range(
+                    multi_sparsity_entry.sparsity().min()..=multi_sparsity_entry.sparsity().max(),
+                ),
+                neighbor_index: None,
+            })
+            .collect();
+
         fn apply_sparsity_penalty(sparsity: usize, sparsity_penalty: usize) -> usize {
             if sparsity >= sparsity_penalty {
                 sparsity - sparsity_penalty
@@ -160,6 +176,21 @@ impl ObstacleMap {
                 .verify_position(template_index, final_sparsity, delta_position)
         };
 
+        let is_valid_delta_multi_sparsity = |delta_position| {
+            for multi_sparsity_entry in &multi_sparsity {
+                if let Some(neighbor_index) = multi_sparsity_entry.neighbor_index {
+                    if !self.sparsity_validator.verify_position(
+                        neighbor_index,
+                        multi_sparsity_entry.sparsity,
+                        delta_position,
+                    ) {
+                        return false;
+                    }
+                }
+            }
+            true
+        };
+
         let is_valid_index = |index| {
             let position = Position::from_index(self.size, index);
             let mut is_overlapping = false;
@@ -175,6 +206,9 @@ impl ObstacleMap {
             for delta in obstacle.shape() {
                 let delta_position = position.checked_sub_delta(delta).unwrap();
                 if !is_valid_delta_sparsity(delta_position, is_overlapping) {
+                    return false;
+                }
+                if !is_valid_delta_multi_sparsity(delta_position) {
                     return false;
                 }
             }
