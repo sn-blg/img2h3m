@@ -339,6 +339,11 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         "AVLwloi4.def",
         "AVLwloi5.def",
     ];
+    let limestone_lake = [
+        "AVLwll00.def",
+        "AVLwll01.def",
+        "AVLwll02.def",
+    ];
     let wasteland_trees = [
         "AVLtRo00.def",
         "AVLtRo01.def",
@@ -370,8 +375,51 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         filename,
         &mut multi_sparsity,
         &tar_pits,
+        &limestone_lake,
+        2..=4,
+    );
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &tar_pits,
         &wasteland_trees,
-        9..=16,
+        4..=12,
+    );
+
+    let big_barchan_dunes = ["AVLmtdn1.def", "AVLmtdn2.def"];
+    let barchan_dunes = ["AVLmtdn3.def", "AVLmtdn4.def"];
+    let little_barchan_dunes = ["AVLmtdn5.def", "AVLmtdn6.def"];
+
+    let sand_mountain = [
+        "AVLmtds1.def",
+        "AVLmtds2.def",
+        "AVLmtds3.def",
+        "AVLmtds4.def",
+        "AVLmtds5.def",
+        "AVLmtds6.def",
+    ];
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &big_barchan_dunes,
+        &sand_mountain,
+        4..=9,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &barchan_dunes,
+        &sand_mountain,
+        2..=9,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &little_barchan_dunes,
+        &sand_mountain,
+        2..=2,
     );
 
     multi_sparsity
@@ -393,7 +441,8 @@ fn frequency(
 
         TemplateClass::FrozenLake => 20,
 
-        TemplateClass::LimestoneLake | TemplateClass::TarPit => 10,
+        TemplateClass::LimestoneLake => 10,
+        TemplateClass::TarPit => 15,
 
         TemplateClass::Lake => match filename {
             "AVLlk1r.def" => 10,
@@ -416,20 +465,25 @@ fn frequency(
             _ => 30,
         },
 
-        TemplateClass::Palms => match filename {
-            "avlspl09.def" | "avlspl10.def" | "avlspl11.def" | "avlspl12.def" | "avlspl13.def"
-            | "avlspl14.def" => 10,
+        TemplateClass::Palms => {
+            if surface_editor_group_mask == Terrain::Sand.group() {
+                2
+            } else {
+                match filename {
+                    "AVLswmp6.def" | "AVLswmp7.def" => 40,
+                    "AVLswmp2.def" | "AVLswmp3.def" | "AVLswmp4.def" | "AVLswmp5.def" => 30,
 
-            "AVLswmp6.def" | "AVLswmp7.def" => 40,
-            "AVLswmp2.def" | "AVLswmp3.def" | "AVLswmp4.def" | "AVLswmp5.def" => 30,
+                    "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def"
+                    | "avlswn02.def" | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def"
+                    | "avlswn01.def" | "avlswtr8.def" | "avlswtr3.def" | "avlswtr9.def"
+                    | "avlswtr0.def" | "avlswt00.def" => {
+                        surface_area_coeff + (surface_area_coeff / 3)
+                    }
 
-            "avlswtr7.def" | "avlswtr1.def" | "avlswtr2.def" | "avlswtr4.def" | "avlswn02.def"
-            | "avlswtr5.def" | "avlswn03.def" | "avlswtr6.def" | "avlswn01.def"
-            | "avlswtr8.def" | "avlswtr3.def" | "avlswtr9.def" | "avlswtr0.def"
-            | "avlswt00.def" => (surface_area_coeff + (surface_area_coeff / 3)),
-
-            _ => surface_area_coeff,
-        },
+                    _ => surface_area_coeff,
+                }
+            }
+        }
 
         TemplateClass::Mountain => match filename {
             "avlmtrf4.def" => 40,
@@ -476,15 +530,15 @@ fn frequency(
 
         TemplateClass::SandPit => 10,
 
-        TemplateClass::YuccaTrees => 20,
+        TemplateClass::YuccaTrees => 9,
 
         TemplateClass::SandDune => 30,
 
         TemplateClass::Cactus => {
             if surface_editor_group_mask == Terrain::Wasteland.group() {
-                6
+                2
             } else {
-                surface_area_coeff
+                5
             }
         }
         _ => surface_area_coeff,
@@ -507,8 +561,9 @@ fn overlap_obstacle_sparsity_penalty(
 ) -> usize {
     match template_class {
         TemplateClass::Mountain => match filename {
-            "AVLmtds6.def" => 4,
-            "AVLmtds3.def" | "AVLmtds4.def" => 9,
+            "AVLmtds1.def" | "AVLmtds2.def" => 4,
+            "AVLmtds3.def" | "AVLmtds4.def" => 12,
+            "AVLmtds6.def" => 6,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
             "avlmtrf4.def" => 12,
             _ => 0,

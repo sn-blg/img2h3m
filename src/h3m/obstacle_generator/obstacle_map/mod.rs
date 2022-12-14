@@ -1,4 +1,5 @@
 use super::obstacle_template::{CellValidationResult, ObstacleTemplate};
+use super::FilenameToTemplateIndexMap;
 use crate::common::position::generic::{DeltaPos, Position, SignedDeltaPos};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
@@ -121,12 +122,13 @@ impl ObstacleMap {
         &self,
         area: &ObstacleMapArea,
         template_index: usize,
+        filename_to_template_index_map: &FilenameToTemplateIndexMap,
         obstacle: &ObstacleTemplate,
         rng: &mut ThreadRng,
     ) -> Option<usize> {
         struct LocalMultiSparsityEntry {
             sparsity: usize,
-            neighbor_index: Option<usize>,
+            neighbor_index: usize,
         }
 
         let multi_sparsity: Vec<LocalMultiSparsityEntry> = obstacle
@@ -136,7 +138,9 @@ impl ObstacleMap {
                 sparsity: rng.gen_range(
                     multi_sparsity_entry.sparsity().min()..=multi_sparsity_entry.sparsity().max(),
                 ),
-                neighbor_index: None,
+                neighbor_index: filename_to_template_index_map
+                    .template_index(multi_sparsity_entry.neighbor_name())
+                    .unwrap(),
             })
             .collect();
 
@@ -178,14 +182,12 @@ impl ObstacleMap {
 
         let is_valid_delta_multi_sparsity = |delta_position| {
             for multi_sparsity_entry in &multi_sparsity {
-                if let Some(neighbor_index) = multi_sparsity_entry.neighbor_index {
-                    if !self.sparsity_validator.verify_position(
-                        neighbor_index,
-                        multi_sparsity_entry.sparsity,
-                        delta_position,
-                    ) {
-                        return false;
-                    }
+                if !self.sparsity_validator.verify_position(
+                    multi_sparsity_entry.neighbor_index,
+                    multi_sparsity_entry.sparsity,
+                    delta_position,
+                ) {
+                    return false;
                 }
             }
             true
