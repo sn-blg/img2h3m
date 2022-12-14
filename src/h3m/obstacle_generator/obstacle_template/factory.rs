@@ -339,11 +339,7 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         "AVLwloi4.def",
         "AVLwloi5.def",
     ];
-    let limestone_lake = [
-        "AVLwll00.def",
-        "AVLwll01.def",
-        "AVLwll02.def",
-    ];
+    let limestone_lake = ["AVLwll00.def", "AVLwll01.def", "AVLwll02.def"];
     let wasteland_trees = [
         "AVLtRo00.def",
         "AVLtRo01.def",
@@ -384,7 +380,32 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &mut multi_sparsity,
         &tar_pits,
         &wasteland_trees,
-        4..=12,
+        9..=16,
+    );
+
+    let cactus = [
+        "AVLca060.def",
+        "AVLca090.def",
+        "AVLca100.def",
+        "AVLca130.def",
+        "AVLwct01.def",
+        "AVLwct02.def",
+        "AVLwct03.def",
+        "AVLwct04.def",
+        "AVLwct05.def",
+        "AVLwct06.def",
+        "AVLwct07.def",
+        "AVLwct08.def",
+        "AVLwct09.def",
+        "AVLwct10.def",
+    ];
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLwloi5.def", "AVLwloi2.def"],
+        &cactus,
+        2..=3,
     );
 
     let big_barchan_dunes = ["AVLmtdn1.def", "AVLmtdn2.def"];
@@ -510,7 +531,7 @@ fn frequency(
         TemplateClass::Trees => match filename {
             "AVLtrRo4.def" => 20,
             "AVLtrRo8.def" | "AVLtrRo9.def" | "AVLtrRo5.def" | "AVLtrRo1.def" | "AVLtrRo0.def"
-            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area_coeff, 30),
+            | "AVLtrRo3.def" | "AVLtrRo2.def" => std::cmp::min(surface_area_coeff, 27),
 
             _ => surface_area_coeff,
         },
@@ -530,7 +551,7 @@ fn frequency(
 
         TemplateClass::SandPit => 10,
 
-        TemplateClass::YuccaTrees => 9,
+        TemplateClass::YuccaTrees => 8,
 
         TemplateClass::SandDune => 30,
 
