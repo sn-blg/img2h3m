@@ -274,7 +274,7 @@ fn sparsity(
         },
 
         TemplateClass::Cactus => match filename {
-            "AVLwct08.def" => 4..=64,
+            "AVLwct08.def" => 36..=100,
             _ => 2..=9,
         },
 
@@ -433,13 +433,49 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &mut multi_sparsity,
         &barchan_dunes,
         &sand_mountain,
-        2..=9,
+        2..=2,
     );
     update_multi_sparsity(
         filename,
         &mut multi_sparsity,
         &little_barchan_dunes,
         &sand_mountain,
+        2..=2,
+    );
+
+    let big_sand_palms = [
+        "avlspl09.def",
+        "avlspl10.def",
+        "avlspl11.def",
+        "avlspl12.def",
+        "avlspl13.def",
+        "avlspl14.def",
+    ];
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &big_barchan_dunes,
+        &big_sand_palms,
+        2..=2,
+    );
+
+    let little_sand_palms = [
+        "avlspl01.def",
+        "avlspl02.def",
+        "avlspl03.def",
+        "avlspl04.def",
+        "avlspl05.def",
+        "avlspl06.def",
+        "avlspl07.def",
+        "avlspl08.def",
+    ];
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &big_barchan_dunes,
+        &little_sand_palms,
         2..=2,
     );
 
@@ -488,7 +524,11 @@ fn frequency(
 
         TemplateClass::Palms => {
             if surface_editor_group_mask == Terrain::Sand.group() {
-                2
+                if surface_area == 1 {
+                    4
+                } else {
+                    2
+                }
             } else {
                 match filename {
                     "AVLswmp6.def" | "AVLswmp7.def" => 40,
@@ -551,17 +591,15 @@ fn frequency(
 
         TemplateClass::SandPit => 10,
 
-        TemplateClass::YuccaTrees => 8,
+        TemplateClass::YuccaTrees => 7,
 
         TemplateClass::SandDune => 30,
 
-        TemplateClass::Cactus => {
-            if surface_editor_group_mask == Terrain::Wasteland.group() {
-                2
-            } else {
-                5
-            }
-        }
+        TemplateClass::Cactus => match filename {
+            "AVcact03.def" | "AVcact02.def" | "AVcact01.def" | "AVLca040.def" => 4,
+            _ => 3,
+        },
+
         _ => surface_area_coeff,
     }
 }
@@ -582,7 +620,7 @@ fn overlap_obstacle_sparsity_penalty(
 ) -> usize {
     match template_class {
         TemplateClass::Mountain => match filename {
-            "AVLmtds1.def" | "AVLmtds2.def" => 4,
+            "AVLmtds1.def" | "AVLmtds2.def" => 2,
             "AVLmtds3.def" | "AVLmtds4.def" => 12,
             "AVLmtds6.def" => 6,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
