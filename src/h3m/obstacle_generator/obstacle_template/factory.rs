@@ -380,7 +380,7 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &mut multi_sparsity,
         &tar_pits,
         &wasteland_trees,
-        9..=16,
+        8..=12,
     );
 
     let cactus = [
@@ -426,7 +426,7 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &mut multi_sparsity,
         &big_barchan_dunes,
         &sand_mountain,
-        4..=9,
+        2..=4,
     );
     update_multi_sparsity(
         filename,
@@ -479,6 +479,52 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         2..=2,
     );
 
+    let water_rock = ["AVLrfx07.def"];
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &big_barchan_dunes,
+        &water_rock,
+        2..=2,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &barchan_dunes,
+        &water_rock,
+        2..=2,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &little_barchan_dunes,
+        &water_rock,
+        2..=2,
+    );
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLca120.def"],
+        &["AVLca020.def"],
+        9..=16,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLyuc50.def"],
+        &["AVLyuc30.def"],
+        9..=16,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLyuc40.def"],
+        &["AVLyuc10.def"],
+        9..=16,
+    );
+
     multi_sparsity
 }
 
@@ -524,11 +570,7 @@ fn frequency(
 
         TemplateClass::Palms => {
             if surface_editor_group_mask == Terrain::Sand.group() {
-                if surface_area == 1 {
-                    4
-                } else {
-                    2
-                }
+                3
             } else {
                 match filename {
                     "AVLswmp6.def" | "AVLswmp7.def" => 40,
@@ -564,7 +606,7 @@ fn frequency(
             if surface_editor_group_mask == Terrain::Snow.group() {
                 surface_area_coeff
             } else {
-                std::cmp::min(surface_area_coeff, 23)
+                std::cmp::min(surface_area_coeff, 20)
             }
         }
 
@@ -591,7 +633,7 @@ fn frequency(
 
         TemplateClass::SandPit => 10,
 
-        TemplateClass::YuccaTrees => 7,
+        TemplateClass::YuccaTrees => 5,
 
         TemplateClass::SandDune => 30,
 
@@ -620,7 +662,6 @@ fn overlap_obstacle_sparsity_penalty(
 ) -> usize {
     match template_class {
         TemplateClass::Mountain => match filename {
-            "AVLmtds1.def" | "AVLmtds2.def" => 2,
             "AVLmtds3.def" | "AVLmtds4.def" => 12,
             "AVLmtds6.def" => 6,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
