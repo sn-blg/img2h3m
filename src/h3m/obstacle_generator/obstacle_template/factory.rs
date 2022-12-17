@@ -274,7 +274,7 @@ fn sparsity(
         },
 
         TemplateClass::Cactus => match filename {
-            "AVLwct08.def" => 36..=100,
+            "AVLwct08.def" | "AVLca130.def" => 36..=100,
             _ => 2..=9,
         },
 
@@ -521,6 +521,20 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         filename,
         &mut multi_sparsity,
         &["AVLyuc40.def"],
+        &["AVLyuc10.def"],
+        9..=16,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLyuc20.def"],
+        &["AVLyuc40.def"],
+        9..=16,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLyuc20.def"],
         &["AVLyuc10.def"],
         9..=16,
     );
