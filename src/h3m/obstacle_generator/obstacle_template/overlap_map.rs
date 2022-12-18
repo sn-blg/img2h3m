@@ -1249,18 +1249,18 @@ impl OverlapMap {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             "AVLMHS00.def" => {
                 overlap_map.add("AVLMHS01.def", &[(2, 2), (-2, 1), (-2, 3)]);
-                overlap_map.add("AVLMHS02.def", &[(2, -1), (-1, 4)]);
-                overlap_map.add("AVLMHS03.def", &[(2, -1), (-1, 4)]);
+                overlap_map.add("AVLMHS02.def", &[(2, -2), (-1, 3)]);
+                overlap_map.add("AVLMHS03.def", &[(2, -2), (-1, 3)]);
             }
             "AVLMHS01.def" => {
                 overlap_map.add("AVLMHS00.def", &[(-2, -2), (2, -1), (2, -3)]);
             }
             "AVLMHS02.def" => {
-                overlap_map.add("AVLMHS00.def", &[(-2, 1), (1, -4)]);
+                overlap_map.add("AVLMHS00.def", &[(-2, 2), (1, -3)]);
                 overlap_map.add("AVLMHS03.def", &[(1, -1)]);
             }
             "AVLMHS03.def" => {
-                overlap_map.add("AVLMHS00.def", &[(-2, 1), (1, -4)]);
+                overlap_map.add("AVLMHS00.def", &[(-2, 2), (1, -3)]);
                 overlap_map.add("AVLMHS02.def", &[(-1, 1)]);
             }
 
