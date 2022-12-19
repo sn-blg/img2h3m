@@ -170,11 +170,11 @@ impl ObstacleTemplate {
                 }
             }
 
-            Terrain::Snow => {
-                if self.filename() == "AVLmtsn2.def" {
-                    return same_side(nsr, &[Side::Right, Side::Bottom]);
-                }
-            }
+            Terrain::Snow => match self.filename() {
+                "AVLmtsn2.def" => return same_side(nsr, &[Side::Right, Side::Bottom]),
+                "AVLmtsn3.def" => return false,
+                _ => (),
+            },
 
             Terrain::Swamp => {
                 if self.filename() == "AVLmtsw3.def" {

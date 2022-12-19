@@ -300,7 +300,7 @@ fn sparsity(
             _ => forest_sparsity(surface_area),
         },
 
-        TemplateClass::Waterfalls => 144..=225,
+        TemplateClass::Waterfalls => 196..=289,
 
         TemplateClass::Reef => match filename {
             "ZReef5.def" => 16..=144,
@@ -537,6 +537,28 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &["AVLyuc20.def"],
         &["AVLyuc10.def"],
         9..=16,
+    );
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLwtf00.def"],
+        &["AVLwtf01.def"],
+        9..=25,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLwtf00.def"],
+        &["AVLwtf02.def"],
+        9..=25,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLwtf01.def"],
+        &["AVLwtf02.def"],
+        9..=25,
     );
 
     multi_sparsity
