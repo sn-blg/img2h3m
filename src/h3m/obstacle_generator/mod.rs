@@ -49,19 +49,20 @@ impl ObstacleGenerator {
     pub fn generate(&mut self, terrain_map: &TerrainMap) -> H3mResult<()> {
         let mut obstacle_map = ObstacleMap::new(terrain_map)?;
 
-        let template_index_set = TemplateIndexSet::new(
-            obstacle_map.generalized_terrain_group(),
-            &self.obstacle_template_list,
-        );
-
         let filename_to_template_index_map =
             FilenameToTemplateIndexMap::new(&self.obstacle_template_list);
 
         let map_size = terrain_map.size();
         let areas = obstacle_map::make_areas(map_size, 36, 36);
 
-        for sparsity_penalty in 0..=16 {
+        for sparsity_penalty in [0, 1, 2, 4, 8, 16, 32] {
             obstacle_map.set_sparsity_penalty(sparsity_penalty);
+
+            let template_index_set = TemplateIndexSet::new(
+                obstacle_map.generalized_terrain_group(),
+                &self.obstacle_template_list,
+            );
+
             for area in areas.iter().rev() {
                 self.generate_in_area(
                     terrain_map.underground(),
@@ -71,9 +72,11 @@ impl ObstacleGenerator {
                     &mut obstacle_map,
                 )?;
             }
+
             if obstacle_map.first_position_to_place_obstacle().is_none() {
                 break;
             }
+
             println!("next iter!");
         }
 

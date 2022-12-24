@@ -1250,36 +1250,48 @@ impl OverlapMap {
             "AVLMHS00.def" => {
                 overlap_map.add(
                     "AVLMHS01.def",
-                    &[(2, 2), (-2, 1), (-2, 3), (2, -1), (-2, 0)],
+                    &[(2, 2), (-2, 1), (-2, 3), (2, -1), (-2, 0), (1, 2)],
                 );
-                overlap_map.add("AVLMHS02.def", &[(2, -2), (-1, 3)]);
+                overlap_map.add("AVLMHS02.def", &[(-1, 3)]);
                 overlap_map.add("AVLMHS03.def", &[(2, -2), (-1, 3)]);
                 overlap_map.add("AVLMHS04.def", &[(-1, 3), (2, -2)]);
+                overlap_map.add("AVLMHS05.def", &[(2, -2), (2, 1)]);
             }
             "AVLMHS01.def" => {
                 overlap_map.add(
                     "AVLMHS00.def",
-                    &[(-2, -2), (2, -1), (2, -3), (-2, 1), (2, 0)],
+                    &[(-2, -2), (2, -1), (2, -3), (-2, 1), (2, 0), (-1, -2)],
                 );
                 overlap_map.add("AVLMHS03.def", &[(1, 2), (2, 2)]);
                 overlap_map.add("AVLMHS04.def", &[(2, 0), (2, -1)]);
+                overlap_map.add("AVLMHS05.def", &[(-1, 0), (2, 0)]);
             }
             "AVLMHS02.def" => {
-                overlap_map.add("AVLMHS00.def", &[(-2, 2), (1, -3)]);
+                overlap_map.add("AVLMHS00.def", &[(1, -3)]);
                 overlap_map.add("AVLMHS03.def", &[(1, -1)]);
                 overlap_map.add("AVLMHS04.def", &[(1, -1)]);
+                overlap_map.add("AVLMHS05.def", &[(1, 1), (1, -1), (-1, 1)]);
             }
             "AVLMHS03.def" => {
                 overlap_map.add("AVLMHS00.def", &[(-2, 2), (1, -3)]);
                 overlap_map.add("AVLMHS01.def", &[(-1, -2), (-2, -2)]);
                 overlap_map.add("AVLMHS02.def", &[(-1, 1)]);
                 overlap_map.add("AVLMHS04.def", &[(1, 0)]);
+                overlap_map.add("AVLMHS05.def", &[(1, 1), (-1, -1)]);
             }
             "AVLMHS04.def" => {
                 overlap_map.add("AVLMHS00.def", &[(1, -3), (-2, 2)]);
                 overlap_map.add("AVLMHS01.def", &[(-2, 0), (-2, 1)]);
                 overlap_map.add("AVLMHS02.def", &[(-1, 1)]);
                 overlap_map.add("AVLMHS03.def", &[(-1, 0)]);
+                overlap_map.add("AVLMHS05.def", &[(1, -1), (-1, 1)]);
+            }
+            "AVLMHS05.def" => {
+                overlap_map.add("AVLMHS00.def", &[(-2, 2), (-2, -1)]);
+                overlap_map.add("AVLMHS01.def", &[(1, 0), (-2, 0)]);
+                overlap_map.add("AVLMHS02.def", &[(-1, -1), (-1, 1), (1, -1)]);
+                overlap_map.add("AVLMHS03.def", &[(-1, -1), (1, 1)]);
+                overlap_map.add("AVLMHS04.def", &[(-1, 1), (1, -1)]);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
