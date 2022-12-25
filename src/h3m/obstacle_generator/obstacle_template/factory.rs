@@ -242,6 +242,9 @@ fn sparsity(
         TemplateClass::Stump => 64..=100,
 
         TemplateClass::Mountain => match filename {
+            "AVLMHS00.def" | "AVLMHS01.def" | "AVLMHS02.def" | "AVLMHS03.def" | "AVLMHS04.def"
+            | "AVLMHS05.def" => 64..=81,
+
             "AVLMTWL7.def" => 225..=625,
             "AVLmtsb0.def" => 36..=64,
             "AVLMTWL1.def" => 25..=36,
@@ -583,6 +586,13 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &["avlhll03.def"],
         2..=2,
     );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["avlhll01.def"],
+        &["avlhll03.def"],
+        2..=2,
+    );
 
     multi_sparsity
 }
@@ -654,6 +664,9 @@ fn frequency(
             "AVLmtsn1.def" | "AVLmtsn2.def" | "AVLmtsn3.def" | "AVLmtsn4.def" | "AVLmtsn5.def"
             | "AVLmtsn6.def" => surface_area_coeff * 2,
 
+            "AVLMHS00.def" | "AVLMHS01.def" | "AVLMHS02.def" | "AVLMHS03.def" | "AVLMHS04.def"
+            | "AVLMHS05.def" => std::cmp::min(surface_area_coeff, 40),
+
             "AVLmtsw1.def" | "AVLmtsw2.def" | "AVLmtsw3.def" | "AVLmtsw4.def" | "AVLmtsw5.def"
             | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
             | "mntswp04.def" | "mntswp05.def" | "mntswp06.def" => surface_area_coeff / 2,
@@ -712,6 +725,7 @@ fn may_be_overlapped(template_class: TemplateClass) -> bool {
             | TemplateClass::PineTrees
             | TemplateClass::Palms
             | TemplateClass::Trees
+            | TemplateClass::Waterfalls
     )
 }
 
@@ -721,6 +735,10 @@ fn overlap_obstacle_sparsity_penalty(
 ) -> usize {
     match template_class {
         TemplateClass::Mountain => match filename {
+            "AVLMHS00.def" | "AVLMHS01.def" | "AVLMHS02.def" | "AVLMHS03.def" | "AVLMHS04.def"
+            | "AVLMHS05.def" => 64,
+            "AVLwtf00.def" | "AVLwtf01.def" | "AVLwtf02.def" => 100,
+
             "AVLmtds3.def" | "AVLmtds4.def" => 12,
             "AVLmtds6.def" => 6,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
