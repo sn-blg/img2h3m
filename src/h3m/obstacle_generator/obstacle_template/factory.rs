@@ -593,6 +593,20 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
         &["avlhll03.def"],
         2..=2,
     );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLMHS03.def"],
+        &["avlhll03.def"],
+        2..=2,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLMHS05.def"],
+        &["avlhll03.def"],
+        2..=2,
+    );
 
     multi_sparsity
 }
@@ -618,6 +632,7 @@ fn frequency(
 
         TemplateClass::Lake => match filename {
             "AVLlk1r.def" => 10,
+            "avlhll00.def" | "avlhll01.def" | "avlhll02.def" => 35,
             _ => 30,
         },
 
@@ -665,7 +680,7 @@ fn frequency(
             | "AVLmtsn6.def" => surface_area_coeff * 2,
 
             "AVLMHS00.def" | "AVLMHS01.def" | "AVLMHS02.def" | "AVLMHS03.def" | "AVLMHS04.def"
-            | "AVLMHS05.def" => std::cmp::min(surface_area_coeff, 40),
+            | "AVLMHS05.def" => std::cmp::min(surface_area_coeff, 37),
 
             "AVLmtsw1.def" | "AVLmtsw2.def" | "AVLmtsw3.def" | "AVLmtsw4.def" | "AVLmtsw5.def"
             | "AVLmtsw6.def" | "mntswp01.def" | "mntswp02.def" | "mntswp03.def"
@@ -736,7 +751,7 @@ fn overlap_obstacle_sparsity_penalty(
     match template_class {
         TemplateClass::Mountain => match filename {
             "AVLMHS00.def" | "AVLMHS01.def" | "AVLMHS02.def" | "AVLMHS03.def" | "AVLMHS04.def"
-            | "AVLMHS05.def" => 64,
+            | "AVLMHS05.def" => 60,
             "AVLwtf00.def" | "AVLwtf01.def" | "AVLwtf02.def" => 100,
 
             "AVLmtds3.def" | "AVLmtds4.def" => 12,
