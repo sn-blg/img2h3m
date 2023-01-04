@@ -1263,6 +1263,7 @@ impl OverlapMap {
 
                 overlap_map.add("AVLwtf00.def", &[(-1, -2), (-2, 2), (-2, 1), (-2, 0)]);
                 overlap_map.add("AVLwtf01.def", &[(-2, 1), (-2, 3), (-1, 1)]);
+                overlap_map.add("AVLwtf02.def", &[(-2, 1), (-2, 3), (-1, -2), (-2, 0)]);
             }
             "AVLMHS01.def" => {
                 overlap_map.add(
@@ -1286,6 +1287,7 @@ impl OverlapMap {
                     &[(-2, -1), (-1, 2), (-2, 1), (-1, 3), (-2, -2)],
                 );
                 overlap_map.add("AVLwtf01.def", &[(-1, 3), (-2, -1), (-2, 0)]);
+                overlap_map.add("AVLwtf02.def", &[(-2, -1), (-2, 0), (-1, 2)]);
             }
             "AVLMHS02.def" => {
                 overlap_map.add("AVLMHS00.def", &[(1, -3)]);
@@ -1295,6 +1297,7 @@ impl OverlapMap {
 
                 overlap_map.add("AVLwtf00.def", &[(-2, 1)]);
                 overlap_map.add("AVLwtf01.def", &[(-2, 1)]);
+                overlap_map.add("AVLwtf02.def", &[(-2, 1)]);
             }
             "AVLMHS03.def" => {
                 overlap_map.add("AVLMHS00.def", &[(-2, 2), (1, -3)]);
@@ -1305,6 +1308,7 @@ impl OverlapMap {
 
                 overlap_map.add("AVLwtf00.def", &[(-2, 0)]);
                 overlap_map.add("AVLwtf01.def", &[(-2, 1)]);
+                overlap_map.add("AVLwtf02.def", &[(-2, -1)]);
             }
             "AVLMHS04.def" => {
                 overlap_map.add("AVLMHS00.def", &[(-2, 2)]);
@@ -1332,6 +1336,12 @@ impl OverlapMap {
                 overlap_map.add("AVLMHS01.def", &[(1, -3), (2, 1), (2, 0)]);
                 overlap_map.add("AVLMHS02.def", &[(2, -1)]);
                 overlap_map.add("AVLMHS03.def", &[(2, -1)]);
+            }
+            "AVLwtf02.def" => {
+                overlap_map.add("AVLMHS00.def", &[(2, -1), (2, -3), (1, 2), (2, 0)]);
+                overlap_map.add("AVLMHS01.def", &[(2, 1), (2, 0), (1, -2)]);
+                overlap_map.add("AVLMHS02.def", &[(2, -1)]);
+                overlap_map.add("AVLMHS03.def", &[(2, 1)]);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

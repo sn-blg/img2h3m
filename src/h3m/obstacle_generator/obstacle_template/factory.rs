@@ -752,7 +752,7 @@ fn overlap_obstacle_sparsity_penalty(
         TemplateClass::Mountain => match filename {
             "AVLMHS00.def" | "AVLMHS01.def" | "AVLMHS02.def" | "AVLMHS03.def" | "AVLMHS04.def"
             | "AVLMHS05.def" => 60,
-            "AVLwtf00.def" | "AVLwtf01.def" | "AVLwtf02.def" => 100,
+            "AVLwtf00.def" | "AVLwtf01.def" | "AVLwtf02.def" => 81,
 
             "AVLmtds3.def" | "AVLmtds4.def" => 12,
             "AVLmtds6.def" => 6,
