@@ -104,6 +104,13 @@ impl ObstacleTemplate {
             tile.terrain_visible_type(),
             TerrainVisibleType::Same | TerrainVisibleType::Diff(_)
         ) {
+            if self.template_class == TemplateClass::BarchanDunes
+                && (self.filename() != "AVLmtdn5.def")
+                && (self.filename() != "AVLmtdn6.def")
+            {
+                let nsr = obstacle_map_cell.neighborhood_same_relation();
+                return same_side(nsr, &[Side::Right, Side::Left]);
+            }
             return true;
         }
 
