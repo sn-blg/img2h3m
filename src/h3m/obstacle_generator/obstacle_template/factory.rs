@@ -217,6 +217,7 @@ fn sparsity(
 
         TemplateClass::Volcano => match filename {
             "AVLvol20.def" => 225..=625,
+            "AVLvol50.def" => 324..=729,
             _ => 36..=64,
         },
 
@@ -509,6 +510,21 @@ fn multi_sparsity(filename: &'static str) -> MultiSparsity {
     update_multi_sparsity(
         filename,
         &mut multi_sparsity,
+        &["AVLmtdn4.def"],
+        &["avlspl12.def"],
+        2..=2,
+    );
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
+        &["AVLmtdn4.def"],
+        &["avlspl10.def"],
+        2..=2,
+    );
+
+    update_multi_sparsity(
+        filename,
+        &mut multi_sparsity,
         &["AVLca120.def"],
         &["AVLca020.def"],
         9..=16,
@@ -741,6 +757,7 @@ fn may_be_overlapped(template_class: TemplateClass) -> bool {
             | TemplateClass::Palms
             | TemplateClass::Trees
             | TemplateClass::Waterfalls
+            | TemplateClass::Volcano
     )
 }
 
