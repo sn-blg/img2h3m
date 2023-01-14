@@ -1350,9 +1350,29 @@ impl OverlapMap {
             "AVLmtvo1.def" => {
                 overlap_map.add("AVLvol50.def", &[(2, -2)]);
             }
+            "AVLmtvo2.def" => {
+                overlap_map.add("AVLvol50.def", &[(2, -2)]);
+            }
+            "AVLmtvo3.def" => {
+                overlap_map.add("AVLvol50.def", &[(-1, 0)]);
+            }
+            "AVLmtvo4.def" => {
+                overlap_map.add("AVLvol50.def", &[(-1, -2)]);
+            }
+            "AVLmtvo5.def" => {
+                overlap_map.add("AVLvol50.def", &[(1, -1), (0, -2), (1, 1), (1, 0), (1, -2)]);
+            }
+            "AVLmtvo6.def" => {
+                overlap_map.add("AVLvol50.def", &[(1, -1), (1, 0), (0, 1)]);
+            }
 
             "AVLvol50.def" => {
                 overlap_map.add("AVLmtvo1.def", &[(-2, 2), (0, 1)]);
+                overlap_map.add("AVLmtvo2.def", &[(-2, 2)]);
+                overlap_map.add("AVLmtvo3.def", &[(1, 0)]);
+                overlap_map.add("AVLmtvo4.def", &[(1, 2)]);
+                overlap_map.add("AVLmtvo5.def", &[(-1, 1), (-1, 0), (-1, 2)]);
+                overlap_map.add("AVLmtvo6.def", &[(-1, 1), (-1, 0)]);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
