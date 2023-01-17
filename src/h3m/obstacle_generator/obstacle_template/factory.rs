@@ -218,6 +218,7 @@ fn sparsity(
         TemplateClass::Volcano => match filename {
             "AVLvol20.def" => 225..=625,
             "AVLvol50.def" => 324..=729,
+            "AVLvol40.def" => 64..=100,
             _ => 36..=64,
         },
 

@@ -1348,6 +1348,8 @@ impl OverlapMap {
             // LAVA
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             "AVLmtvo1.def" => {
+                overlap_map.add("AVLmtvo2.def", &[(0, -2)]);
+
                 overlap_map.add("AVLvol50.def", &[(2, -2)]);
             }
             "AVLmtvo2.def" => {
@@ -1355,15 +1357,19 @@ impl OverlapMap {
             }
             "AVLmtvo3.def" => {
                 overlap_map.add("AVLvol50.def", &[(-1, 0)]);
+                overlap_map.add("AVLvol40.def", &[(-1, -1), (-1, 0)]);
             }
             "AVLmtvo4.def" => {
                 overlap_map.add("AVLvol50.def", &[(-1, -2)]);
+                overlap_map.add("AVLvol40.def", &[(-1, 1)]);
             }
             "AVLmtvo5.def" => {
-                overlap_map.add("AVLvol50.def", &[(1, -1), (0, -2), (1, 1), (1, 0), (1, -2)]);
+                overlap_map.add("AVLvol50.def", &[(1, -1), (1, 1), (1, 0), (1, -2)]);
+                overlap_map.add("AVLvol40.def", &[(1, -1)]);
             }
             "AVLmtvo6.def" => {
-                overlap_map.add("AVLvol50.def", &[(1, -1), (1, 0), (0, 1)]);
+                overlap_map.add("AVLvol50.def", &[(1, 0), (0, 1)]);
+                overlap_map.add("AVLvol40.def", &[(0, -1)]);
             }
 
             "AVLvol50.def" => {
@@ -1372,7 +1378,15 @@ impl OverlapMap {
                 overlap_map.add("AVLmtvo3.def", &[(1, 0)]);
                 overlap_map.add("AVLmtvo4.def", &[(1, 2)]);
                 overlap_map.add("AVLmtvo5.def", &[(-1, 1), (-1, 0), (-1, 2)]);
-                overlap_map.add("AVLmtvo6.def", &[(-1, 1), (-1, 0)]);
+                overlap_map.add("AVLmtvo6.def", &[(-1, 0)]);
+            }
+            "AVLvol40.def" => {
+                overlap_map.add("AVLmtvo1.def", &[(-1, -3)]);
+                overlap_map.add("AVLmtvo2.def", &[(0, -2)]);
+                overlap_map.add("AVLmtvo3.def", &[(0, 1), (1, 1), (1, 0)]);
+                overlap_map.add("AVLmtvo4.def", &[(1, -1)]);
+                overlap_map.add("AVLmtvo5.def", &[(-1, 1)]);
+                overlap_map.add("AVLmtvo6.def", &[(0, 1), (0, -1)]);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
