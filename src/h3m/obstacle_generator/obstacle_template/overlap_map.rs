@@ -421,6 +421,7 @@ impl OverlapMap {
                     "avlspl12.def",
                     &[(-1, 1), (1, -1), (1, 1), (-1, -1), (0, -2), (0, 2)],
                 );
+                overlap_map.add("avlspl13.def", &[(-2, 2), (1, -2), (-1, -1), (-2, 1)]);
             }
             "avlspl10.def" => {
                 overlap_map.add(
@@ -432,6 +433,7 @@ impl OverlapMap {
                     &[(1, -1), (-1, 1), (-1, -1), (1, 1), (0, -2), (0, 2)],
                 );
                 overlap_map.add("avlspl12.def", &[(1, 2), (-1, -2), (-1, 0)]);
+                overlap_map.add("avlspl13.def", &[(-2, 1), (-1, -2), (0, 2), (1, 0)]);
             }
             "avlspl11.def" => {
                 overlap_map.add("avlspl09.def", &[(1, 0), (-1, 2), (1, -2)]);
@@ -443,6 +445,7 @@ impl OverlapMap {
                     "avlspl12.def",
                     &[(-1, 1), (1, -1), (1, 1), (-1, -1), (0, 2), (0, -2)],
                 );
+                overlap_map.add("avlspl13.def", &[(-2, 2), (1, -2), (-1, -1), (-2, 1)]);
             }
             "avlspl12.def" => {
                 overlap_map.add(
@@ -454,6 +457,13 @@ impl OverlapMap {
                     "avlspl11.def",
                     &[(1, -1), (-1, 1), (-1, -1), (1, 1), (0, -2), (0, 2)],
                 );
+                overlap_map.add("avlspl13.def", &[(-2, 1), (-1, -2), (0, 2), (1, 0)]);
+            }
+            "avlspl13.def" => {
+                overlap_map.add("avlspl09.def", &[(2, -2), (-1, 2), (1, 1), (2, -1)]);
+                overlap_map.add("avlspl10.def", &[(2, -1), (1, 2), (0, -2), (-1, 0)]);
+                overlap_map.add("avlspl11.def", &[(2, -2), (-1, 2), (1, 1), (2, -1)]);
+                overlap_map.add("avlspl12.def", &[(2, -1), (1, 2), (0, -2), (-1, 0)]);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
