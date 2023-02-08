@@ -209,7 +209,7 @@ fn sparsity(
         TemplateClass::Lake
         | TemplateClass::LimestoneLake
         | TemplateClass::TarPit
-        | TemplateClass::FrozenLake => 100..=196, // todo: от размера?
+        | TemplateClass::FrozenLake => 100..=196,
 
         TemplateClass::LavaLake => 144..=324,
 
@@ -219,6 +219,7 @@ fn sparsity(
             "AVLvol20.def" => 225..=625,
             "AVLvol50.def" => 324..=625,
             "AVLvol40.def" => 49..=81,
+            "AVLvol30.def" => 36..=100,
             _ => 36..=64,
         },
 

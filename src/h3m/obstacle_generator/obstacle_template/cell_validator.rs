@@ -270,13 +270,6 @@ impl ObstacleTemplate {
                 "AVLr01u0.def" | "AVLr04u0.def" | "AVLr05u0.def" => {
                     return same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
                 }
-                "AVLr03u0.def" => {
-                    return if tile.mixed_only_with(Terrain::Sand) {
-                        same_side(nsr, &[Side::Left, Side::Right])
-                    } else {
-                        same_side(nsr, &[Side::Left, Side::Right, Side::Bottom])
-                    }
-                }
                 "AVLr07u0.def" => {
                     return if tile.mixed_only_with(Terrain::Sand) {
                         same_side(nsr, &[Side::Right, Side::Bottom])
@@ -284,7 +277,7 @@ impl ObstacleTemplate {
                         same_side(nsr, &[Side::Left, Side::Bottom])
                     }
                 }
-                "AVLr11u0.def" | "AVLstg40.def" | "AVLstg50.def" => {
+                "AVLr11u0.def" | "AVLstg40.def" | "AVLstg50.def" | "AVLr03u0.def" => {
                     return tile.mixed_only_with(Terrain::Sand)
                         || same_side(nsr, &[Side::Right, Side::Bottom]);
                 }
