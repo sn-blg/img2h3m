@@ -219,7 +219,7 @@ fn sparsity(
             "AVLvol20.def" => 225..=625,
             "AVLvol50.def" => 324..=625,
             "AVLvol40.def" => 49..=81,
-            "AVLvol30.def" => 36..=100,
+            "AVLvol30.def" => 49..=121,
             _ => 36..=64,
         },
 
@@ -777,6 +777,8 @@ fn overlap_obstacle_sparsity_penalty(
             "AVLmtds6.def" => 6,
             "AVLmtsw1.def" | "AVLmtsw2.def" => 25,
             "avlmtrf4.def" => 12,
+
+            "AVLvol30.def" => 8,
             _ => 0,
         },
 
