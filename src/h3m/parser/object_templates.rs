@@ -79,7 +79,7 @@ pub fn write_object_templates<W: Write>(
 const DEFAULT_OBJECT_TEMPLATES_COUNT: usize = 2;
 pub type DefaultObjectTemplates = [H3mObjectTemplate; DEFAULT_OBJECT_TEMPLATES_COUNT];
 
-pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
+pub fn read_default_object_templates<RS: Read + Seek>(
     input: &mut RS,
 ) -> H3mResult<DefaultObjectTemplates> {
     let templates_count = input.read_u32::<LE>()?;
@@ -102,4 +102,28 @@ pub fn read_default_and_skip_other_object_templates<RS: Read + Seek>(
     }
 
     Ok(default_object_templates)
+}
+
+pub fn find_objects_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
+    let signature = [
+        0x0Cu8, 0x00, 0x00, 0x00, 0x41, 0x56, 0x57, 0x6D, 0x72, 0x6E, 0x64, 0x30, 0x2E, 0x64, 0x65,
+        0x66,
+    ];
+
+    let offset = raw_map
+        .windows(signature.len())
+        .position(|window| window == signature)
+        .ok_or_else(|| {
+            H3mError::Parameter(ParameterError::new(
+                "Invalid input map format. Templates signature not found.",
+            ))
+        })?
+        .checked_sub(4)
+        .ok_or_else(|| {
+            H3mError::Parameter(ParameterError::new(
+                "Invalid input map format. Templates offset is too small.",
+            ))
+        })?;
+
+    Ok(offset)
 }

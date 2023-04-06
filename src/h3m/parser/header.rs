@@ -52,12 +52,6 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
     }
 
     let hota_additional_header_data_size = input.read_u32::<LE>()?;
-    if hota_additional_header_data_size != 3 {
-        return Err(H3mError::Parsing(ParsingError::new(
-            input.stream_position()?,
-            "Unsupported h3m map HotA sub-version.",
-        )));
-    }
 
     skip_bytes(input, hota_additional_header_data_size * 2)?;
 
@@ -65,12 +59,6 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
 
     let map_size = read_size(input)?;
     let has_underground = read_bool(input)?;
-
-    skip_string(input)?; // map name
-    skip_string(input)?; // map description
-
-    skip_bytes(input, 1)?; // map difficulty
-    skip_bytes(input, 1)?; // level cap
 
     Ok(H3mHeaderInfo {
         map_size,
