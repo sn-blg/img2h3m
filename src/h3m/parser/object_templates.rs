@@ -95,24 +95,31 @@ pub fn read_default_object_templates<RS: Read + Seek>(
         )));
     }
 
-    let default_object_templates = [read_object_template(input)?, read_object_template(input)?];
+    let first_object_template = read_object_template(input)?;
+    let second_object_template = read_object_template(input)?;
 
-    for _ in 0..(templates_count - DEFAULT_OBJECT_TEMPLATES_COUNT) {
-        read_object_template(input)?;
-    }
+    let default_object_templates = [first_object_template, second_object_template];
 
     Ok(default_object_templates)
 }
 
 pub fn find_objects_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
-    let signature = [
+    let first_signature = [
         0x0Cu8, 0x00, 0x00, 0x00, 0x41, 0x56, 0x57, 0x6D, 0x72, 0x6E, 0x64, 0x30, 0x2E, 0x64, 0x65,
         0x66,
     ];
+    let second_signature = [
+        0x0Cu8, 0x00, 0x00, 0x00, 0x41, 0x56, 0x4C, 0x68, 0x6F, 0x6C, 0x67, 0x30, 0x2E, 0x64, 0x65,
+        0x66,
+    ];
+    let second_signature_offset = first_signature.len() + 42;
 
     let offset = raw_map
-        .windows(signature.len())
-        .position(|window| window == signature)
+        .windows(second_signature_offset + second_signature.len())
+        .position(|window| {
+            (window[..first_signature.len()] == first_signature)
+                && (window[second_signature_offset..] == second_signature)
+        })
         .ok_or_else(|| {
             H3mError::Parameter(ParameterError::new(
                 "Invalid input map format. Templates signature not found.",
