@@ -114,7 +114,7 @@ pub fn find_objects_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
     ];
     let second_signature_offset = first_signature.len() + 42;
 
-    let offset = raw_map
+    let objects_templates_offset = raw_map
         .windows(second_signature_offset + second_signature.len())
         .position(|window| {
             (window[..first_signature.len()] == first_signature)
@@ -132,5 +132,5 @@ pub fn find_objects_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
             ))
         })?;
 
-    Ok(offset)
+    Ok(objects_templates_offset)
 }

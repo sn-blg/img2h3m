@@ -1,6 +1,6 @@
 use crate::h3m::result::*;
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
-use std::io::{Cursor, Read, Seek, SeekFrom, Write};
+use std::io::{Read, Seek, SeekFrom, Write};
 
 pub fn skip_bytes<S: Seek>(input: &mut S, count: u32) -> H3mResult<()> {
     let count = i64::try_from(count)?;
@@ -36,12 +36,6 @@ pub fn skip_bool<S: Seek>(input: &mut S) -> H3mResult<()> {
     Ok(())
 }
 
-pub fn skip_string<RS: Read + Seek>(input: &mut RS) -> H3mResult<()> {
-    let size = input.read_u32::<LE>()?;
-    skip_bytes(input, size)?;
-    Ok(())
-}
-
 pub fn write_string<W: Write>(value: &str, output: &mut W) -> H3mResult<()> {
     let size = u32::try_from(value.len())?;
     output.write_u32::<LE>(size)?;
@@ -57,14 +51,4 @@ pub fn read_string<R: Read>(input: &mut R) -> H3mResult<String> {
     input.read_exact(&mut buffer)?;
 
     Ok(String::from_utf8_lossy(&buffer).to_string())
-}
-
-pub fn position(cursor: &Cursor<&[u8]>) -> H3mResult<usize> {
-    let position = cursor.position();
-    usize::try_from(position).map_err(|_| {
-        H3mError::Internal(InternalError::new(format!(
-            "Can't convert position value {} to usize.",
-            position
-        )))
-    })
 }
