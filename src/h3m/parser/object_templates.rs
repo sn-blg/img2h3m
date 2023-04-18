@@ -103,7 +103,7 @@ pub fn read_default_object_templates<RS: Read + Seek>(
     Ok(default_object_templates)
 }
 
-pub fn find_objects_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
+pub fn find_object_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
     let first_signature = [
         0x0Cu8, 0x00, 0x00, 0x00, 0x41, 0x56, 0x57, 0x6D, 0x72, 0x6E, 0x64, 0x30, 0x2E, 0x64, 0x65,
         0x66,
@@ -133,4 +133,24 @@ pub fn find_objects_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {
         })?;
 
     Ok(objects_templates_offset)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn find_object_templates_signature_test() {
+        let raw_map = [
+            0x0Cu8, 0x00, 0x00, 0x00, 0x41, 0x56, 0x57, 0x6D, 0x72, 0x6E, 0x64, 0x30, 0x2E, 0x64,
+            0x65, 0x66,
+        ];
+
+        let objects_templates_offset = find_object_templates_offset(&raw_map);
+
+        assert!(objects_templates_offset.is_err());
+        //assert_eq!(objects_templates_offset, Err(_));
+
+        //assert_eq!(distance_square(&p(1, 0), &p(0, 0)), 1);
+    }
 }

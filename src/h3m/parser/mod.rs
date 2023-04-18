@@ -58,7 +58,7 @@ fn land_offset_from_objects_templates_offset(
 }
 
 pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
-    let objects_templates_offset = find_objects_templates_offset(raw_map)?;
+    let objects_templates_offset = find_object_templates_offset(raw_map)?;
 
     let mut raw_map = Cursor::new(raw_map);
 
