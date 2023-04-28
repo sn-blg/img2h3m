@@ -16,6 +16,7 @@ pub struct H3mInfo {
     pub land_offset: usize,
     pub underground_offset: Option<usize>,
     pub objects_templates_offset: usize,
+    pub has_non_default_templates: bool,
     pub default_object_templates: [H3mObjectTemplate; 2],
 }
 
@@ -65,7 +66,7 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
     let header_info = read_header(&mut raw_map)?;
 
     raw_map.set_position(u64::try_from(objects_templates_offset)?);
-    let default_object_templates = read_default_object_templates(&mut raw_map)?;
+    let object_templates_info = read_object_templates_info(&mut raw_map)?;
 
     let land_offset_info =
         land_offset_from_objects_templates_offset(&header_info, objects_templates_offset)?;
@@ -75,6 +76,7 @@ pub fn parse(raw_map: &[u8]) -> H3mResult<H3mInfo> {
         land_offset: land_offset_info.land_offset,
         underground_offset: land_offset_info.underground_offset,
         objects_templates_offset,
-        default_object_templates,
+        has_non_default_templates: object_templates_info.has_non_default_templates,
+        default_object_templates: object_templates_info.default_object_templates,
     })
 }

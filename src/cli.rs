@@ -36,7 +36,7 @@ pub fn get_config() -> Config {
             Arg::with_name("obstacles")
                 .short("o")
                 .help("Create obstacles on the map \
-                       (attention, this option will delete all the original objects and events on the input map)"),
+                       (attention, this option is only available for blank maps without any objects)"),
         )
         .arg(
             Arg::with_name("transparent")

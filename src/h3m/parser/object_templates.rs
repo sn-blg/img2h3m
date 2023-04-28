@@ -79,9 +79,14 @@ pub fn write_object_templates<W: Write>(
 const DEFAULT_OBJECT_TEMPLATES_COUNT: usize = 2;
 pub type DefaultObjectTemplates = [H3mObjectTemplate; DEFAULT_OBJECT_TEMPLATES_COUNT];
 
-pub fn read_default_object_templates<RS: Read + Seek>(
+pub struct H3mObjectTemplatesInfo {
+    pub has_non_default_templates: bool,
+    pub default_object_templates: DefaultObjectTemplates,
+}
+
+pub fn read_object_templates_info<RS: Read + Seek>(
     input: &mut RS,
-) -> H3mResult<DefaultObjectTemplates> {
+) -> H3mResult<H3mObjectTemplatesInfo> {
     let templates_count = input.read_u32::<LE>()?;
     let templates_count: usize = templates_count.try_into()?;
 
@@ -100,7 +105,10 @@ pub fn read_default_object_templates<RS: Read + Seek>(
 
     let default_object_templates = [first_object_template, second_object_template];
 
-    Ok(default_object_templates)
+    Ok(H3mObjectTemplatesInfo {
+        has_non_default_templates: (templates_count > DEFAULT_OBJECT_TEMPLATES_COUNT),
+        default_object_templates,
+    })
 }
 
 pub fn find_object_templates_offset(raw_map: &[u8]) -> H3mResult<usize> {

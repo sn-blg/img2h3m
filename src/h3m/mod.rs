@@ -82,6 +82,12 @@ impl H3m {
         underground: bool,
         surfaces: &[Option<Surface>],
     ) -> H3mResult<()> {
+        if obstacles && self.info.has_non_default_templates {
+            return Err(H3mError::Parameter(ParameterError::new(
+                "Unable to add obstacles: there are several objects on the input map.",
+            )));
+        }
+
         let terrain_map =
             TerrainMap::generate(self.map_size(), one_tile_water, underground, surfaces)?;
 
