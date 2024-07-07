@@ -51,9 +51,18 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
         )));
     }
 
-    let hota_additional_header_data_size = input.read_u32::<LE>()?;
+    let hota_subversion = input.read_u32::<LE>()?;
+    let bytes_to_skip = match hota_subversion {
+        0x00000001 => Ok(2),
+        0x00000003 => Ok(6),
+        0x00000006 => Ok(11),
+        other => Err(H3mError::Parsing(ParsingError::new(
+            input.stream_position()?,
+            format!("Unexpected hota subversion value 0x{:08x}.", other),
+        ))),
+    };
 
-    skip_bytes(input, hota_additional_header_data_size * 2)?;
+    skip_bytes(input, bytes_to_skip?)?;
 
     skip_bool(input)?; // players_existence
 
