@@ -218,13 +218,7 @@ impl ObstacleMap {
             true
         };
 
-        for &index in area.indexes().iter().rev() {
-            if is_valid_index(index) {
-                return Some(index);
-            }
-        }
-
-        None
+        area.indexes().iter().rev().find(|&&index| is_valid_index(index)).copied()
     }
 
     pub fn add_obstacle(

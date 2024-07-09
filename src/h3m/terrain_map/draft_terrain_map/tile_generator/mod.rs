@@ -32,11 +32,10 @@ fn is_terrain_relation_matched(
         let terrain = cell.surface.terrain;
         let neighbour_terrain = neighbour
             .tile
-            .map(|t| match t.terrain_visible_type() {
+            .and_then(|t| match t.terrain_visible_type() {
                 TerrainVisibleType::Diff(terrain_visible_type) => Some(terrain_visible_type),
                 _ => None,
             })
-            .flatten()
             .unwrap_or(neighbour.surface.terrain);
         match relation {
             TerrainRelation::Same | TerrainRelation::Eq => neighbour_terrain == terrain,
@@ -229,7 +228,7 @@ impl TileGenerator {
                     [vertical_neighbour_indexes, horizontal_neighbour_indexes]
                         .concat()
                         .into_iter()
-                        .map(|neighbour_index| {
+                        .filter_map(|neighbour_index| {
                             Some((
                                 get_neighbour_tile(
                                     &neighborhood[neighbour_index],
@@ -238,7 +237,6 @@ impl TileGenerator {
                                 neighbour_index,
                             ))
                         })
-                        .flatten()
                 {
                     if (neighbour_tile.horizontal_mirroring() == horizontal_mirroring)
                         && (neighbour_tile.vertical_mirroring() == vertical_mirroring)
