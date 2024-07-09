@@ -218,7 +218,11 @@ impl ObstacleMap {
             true
         };
 
-        area.indexes().iter().rev().find(|&&index| is_valid_index(index)).copied()
+        area.indexes()
+            .iter()
+            .rev()
+            .find(|&&index| is_valid_index(index))
+            .copied()
     }
 
     pub fn add_obstacle(
