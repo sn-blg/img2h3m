@@ -3,7 +3,7 @@ use super::FilenameToTemplateIndexMap;
 use crate::common::position::generic::{DeltaPos, Position, SignedDeltaPos};
 use crate::h3m::result::*;
 use crate::h3m::terrain_map::TerrainMap;
-pub use located_obstacle::{LocatedObstacle, OverlappingObstacle};
+pub use located_obstacle::LocatedObstacle;
 pub use obstacle_map_area::*;
 pub use obstacle_map_cell::{NeighborhoodSameRelation, ObstacleMapCell};
 use rand::{rngs::ThreadRng, Rng};
