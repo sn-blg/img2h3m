@@ -56,6 +56,7 @@ pub fn read_header<RS: Read + Seek>(input: &mut RS) -> H3mResult<H3mHeaderInfo> 
         0x00000001 => Ok(2),
         0x00000003 => Ok(6),
         0x00000006 => Ok(11),
+        0x00000007 => Ok(12),
         other => Err(H3mError::Parsing(ParsingError::new(
             input.stream_position()?,
             format!("Unexpected hota subversion value 0x{:08x}.", other),
