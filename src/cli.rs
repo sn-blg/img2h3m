@@ -39,6 +39,11 @@ pub fn get_config() -> Config {
                        (attention, this option is only available for blank maps without any objects)"),
         )
         .arg(
+            Arg::with_name("integration mode")
+                .short("i")
+                .help("Connect new tiles with existing ones on the map"),
+        )
+        .arg(
             Arg::with_name("transparent")
                 .short("t")
                 .help(
@@ -60,6 +65,7 @@ pub fn get_config() -> Config {
         map_path: matches.value_of("map").unwrap().to_string(),
         obstacles: matches.is_present("obstacles"),
         one_tile_water: matches.is_present("onetile water"),
+        integration_mode: matches.is_present("integration mode"),
         transparent_color: if matches.is_present("transparent") {
             Some(transparent_color)
         } else {

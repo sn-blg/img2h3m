@@ -6,5 +6,6 @@ pub struct Config {
     pub map_path: String,
     pub obstacles: bool,
     pub one_tile_water: bool,
+    pub integration_mode: bool,
     pub transparent_color: Option<RgbColor>,
 }
