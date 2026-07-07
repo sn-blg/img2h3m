@@ -1,3 +1,4 @@
+use crate::h3m::result::*;
 use strum_macros::EnumIter;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, EnumIter)]
@@ -17,6 +18,27 @@ pub enum Terrain {
 }
 
 impl Terrain {
+    pub fn from_code(code: u8) -> H3mResult<Terrain> {
+        match code {
+            0 => Ok(Terrain::Dirt),
+            1 => Ok(Terrain::Sand),
+            2 => Ok(Terrain::Grass),
+            3 => Ok(Terrain::Snow),
+            4 => Ok(Terrain::Swamp),
+            5 => Ok(Terrain::Rough),
+            6 => Ok(Terrain::Subterranean),
+            7 => Ok(Terrain::Lava),
+            8 => Ok(Terrain::Water),
+            9 => Ok(Terrain::Rock),
+            10 => Ok(Terrain::Highlands),
+            11 => Ok(Terrain::Wasteland),
+            _ => Err(H3mError::Internal(InternalError::new(format!(
+                "Can't convert code {} to Terrain type.",
+                code
+            )))),
+        }
+    }
+
     pub fn is_ground(self) -> bool {
         !matches!(self, Terrain::Water | Terrain::Rock)
     }

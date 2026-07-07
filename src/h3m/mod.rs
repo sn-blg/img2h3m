@@ -78,6 +78,7 @@ impl H3m {
     pub fn set_surfaces(
         &mut self,
         one_tile_water: bool,
+        integration_mode: bool,
         obstacles: bool,
         underground: bool,
         surfaces: &[Option<Surface>],
@@ -87,6 +88,25 @@ impl H3m {
                 "Unable to add obstacles: there are several objects on the input map.",
             )));
         }
+
+        let mut integrated_surfaces;
+        let surfaces = if integration_mode {
+            integrated_surfaces = Vec::with_capacity(self.map_size());
+            for (index, surface) in surfaces.iter().enumerate() {
+                if surface.is_some() {
+                    integrated_surfaces.push(*surface);
+                } else {
+                    let current_map_surface = Surface {
+                        terrain: self.get_terrain_by_index(index, underground)?,
+                        obstacle: false,
+                    };
+                    integrated_surfaces.push(Some(current_map_surface));
+                }
+            }
+            integrated_surfaces.as_slice()
+        } else {
+            surfaces
+        };
 
         let terrain_map =
             TerrainMap::generate(self.map_size(), one_tile_water, underground, surfaces)?;
@@ -140,5 +160,28 @@ impl H3m {
         set_map_cell(map_cell, data);
 
         Ok(())
+    }
+
+    fn get_terrain_by_index(&self, index: usize, underground: bool) -> H3mResult<Terrain> {
+        let map_length = self.map_size() * self.map_size();
+        if index >= map_length {
+            return Err(H3mError::Parameter(ParameterError::new(format!(
+                "Invalid map index: {}, map length: {}.",
+                index, map_length
+            ))));
+        }
+
+        let offset = if underground {
+            self.info.underground_offset.ok_or_else(|| {
+                H3mError::Parameter(ParameterError::new(
+                    "Can't read underground map, input map has not underground.",
+                ))
+            })?
+        } else {
+            self.info.land_offset
+        } + index * MAP_CELL_SIZE;
+
+        let data = &self.raw_map[offset..offset + MAP_CELL_SIZE];
+        Terrain::from_code(data[0])
     }
 }
